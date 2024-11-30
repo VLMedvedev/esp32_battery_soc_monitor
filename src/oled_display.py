@@ -9,6 +9,7 @@
 
 from enhanced_display import Enhanced_Display
 
+
 class OLED_Display:
     def __init__(self):
         self.display = None
@@ -28,6 +29,14 @@ class OLED_Display:
 
     def get_display(self):
        return self.display
+
+    def view_info(self, wifi_mode):
+        #TODO view_info()
+        if wifi_mode == 0:
+            print(f"wifi_mode {wifi_mode} AP")
+        else:
+            print(f"wifi_mode {wifi_mode} client")
+        return None
 
     def battery_charge_level_ico(self, level: int):
         self.display.rect(3, 7, 20, 38, 1)

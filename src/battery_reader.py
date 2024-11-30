@@ -1,20 +1,20 @@
-import random
-from menu import PylontechMenu, print_dict
+import esp32_soc
+#import time
 
 class Battery_reader:
-    def __init__(self, manualBattcountLimit=3, group=0):
-        self.pylon_menu = PylontechMenu(manualBattcountLimit, group)
+    def __init__(self, rx_pin = 37, tx_pin = 39,
+                 manualBattcountLimit=3, group=0
+                 ):
+
+        ret = esp32_soc.driver_init(rx_pin, tx_pin)
+        print(f" driver init  {ret}")
 
     def get_charge_level(self):
-        data = self.pylon_menu.process_command(key="status")
-        #print(data)
-        print_dict(data)
-        try:
-            charge_level = data['Remaining_%']
-            print(f"charge level is {charge_level}")
-        except:
-            charge_level = 0
-        charge_level = random.randrange(1, 100, 2)
-        return charge_level
+        soc_level = esp32_soc.read_soc_level(0)
+        print(f"soc_level  {soc_level}")
+        if soc_level == 123:
+            return None
+        else:
+            return soc_level
 
 
