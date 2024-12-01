@@ -33,7 +33,7 @@ class OLED_Display:
     def view_info(self, wifi_mode):
         #TODO view_info()
         if wifi_mode == 0:
-            print(f"wifi_mode {wifi_mode} AP")
+            print(f"wifi_mode {wifi_mode} AP ")
         else:
             print(f"wifi_mode {wifi_mode} client")
         return None

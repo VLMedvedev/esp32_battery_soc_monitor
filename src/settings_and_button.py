@@ -6,14 +6,12 @@
 #
 # https://github.com/mark-gladding/packed-font
 #
-
 from enhanced_display import Enhanced_Display
 import time
 from machine import Pin, Timer
 #from debounced_input import DebouncedInput
 from debouncer import Button
 from preferences import DataThree
-
 from enum import Enum
 
 class Rele_control_mode(Enum):
@@ -37,8 +35,6 @@ class Settings():
         self.min_level = 10
         self.max_level = 97
         self.rele_mode = Rele_control_mode.BATTERY_LEVEL
-     #   self.wifi_mode = WiFi_mode.WiFi_AP
-     #   self.wifi_ap_on = False
         self.battery_charge_level = 98
         self.f_rele_is_on = False
         self.f_pressed_buton = False

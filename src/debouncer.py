@@ -9,12 +9,9 @@ from machine import Pin, Timer
 class Button:
     """
     Debounced pin handler
-
     usage e.g.:
-
     def button_callback(pin):
         print("Button (%s) changed to: %r" % (pin, pin.value()))
-
     button_handler = Button(pin=Pin(32, mode=Pin.IN, pull=Pin.PULL_UP), callback=button_callback)
     """
 
