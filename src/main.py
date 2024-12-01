@@ -33,10 +33,8 @@ class OLED_and_check_level:
         rele_is_on = self.settings.get_rele_is_on()
         print(f"rele on {rele_is_on}")
         if rele_is_on:
-            #self.pin_rele.value(1)
             self.pin_rele.on()
         else:
-            #self.pin_rele.value(0)
             self.pin_rele.off()
 
     def check_mode(self):
