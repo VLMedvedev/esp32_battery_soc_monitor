@@ -1,10 +1,13 @@
 #from enum import Enum
 from micropython import const
+from ucollections import namedtuple
 
-#from thonny.plugins.microbit.api_stubs.micropython import const
+MyTuple = namedtuple("MyTuple", ("id", "name"))
+t1 = MyTuple(1, "foo")
+t2 = MyTuple(2, "bar")
 
 
-class WiFi_mode(object):
+WiFi_mode = namedtuple("WiFi_mode", ("ssid", "password"))
     def __init__(self):
         self.WiFi_OFF = const(0)
         self.WiFi_AP = const(1)

@@ -14,7 +14,6 @@ class OLED_and_check_level:
 
     def __init__(self,
                  ):
-
         self.view_mode = View_mode.BATTERY_LEVEL
         self.rele_mode = Rele_control_mode.BATTERY_LEVEL
         self.wifi_mode = WiFi_mode.WiFi_OFF
