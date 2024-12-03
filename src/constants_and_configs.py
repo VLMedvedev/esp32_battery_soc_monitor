@@ -1,38 +1,29 @@
 #from enum import Enum
 from micropython import const
-from ucollections import namedtuple
+#from ucollections import namedtuple
 
-MyTuple = namedtuple("MyTuple", ("id", "name"))
-t1 = MyTuple(1, "foo")
-t2 = MyTuple(2, "bar")
+#MyTuple = namedtuple("MyTuple", ("id", "name"))
+#t1 = MyTuple(1, "foo")
+#t2 = MyTuple(2, "bar")
 
+WiFi_OFF = const(0)
+WiFi_AP = const(1)
+WiFi_client = const(2)
 
-WiFi_mode = namedtuple("WiFi_mode", ("ssid", "password"))
-    def __init__(self):
-        self.WiFi_OFF = const(0)
-        self.WiFi_AP = const(1)
-        self.WiFi_client = const(2)
+RELE_BATTERY_LEVEL = const(0)
+RELE_ALWAYS_OFF = const(1)
+RELE_ALWAYS_ON = const(2)
 
-class Rele_control_mode(object):
-    def __init__(self):
-        self.BATTERY_LEVEL = const(0)
-        self.ALWAYS_OFF = const(1)
-        self.ALWAYS_ON = const(2)
+VIEW_MODE_BATTERY_LEVEL = const(0)
+VIEW_MODE_VIEW_INFO = const(1)
+VIEW_MODE_SETTING_UP = const(2)
+VIEW_MODE_SETTING_DOWN = const(3)
+VIEW_MODE_VIEW_OFF = const(4)
+VIEW_MODE_VIEW_ON = const(6)
 
-class View_mode(object):
-    def __init__(self):
-        self.BATTERY_LEVEL = const(0)
-        self.VIEW_INFO = const(1)
-        self.SETTING_UP = const(2)
-        self.SETTING_DOWN = const(3)
-        self.VIEW_OFF = const(4)
-        self.VIEW_ON = const(6)
-
-class HW_Config(object):
-    def __init__(self):
-        self.LED_PIN = const(15)
-        self.RELE_PIN = const(16)
-        self.CAN_RX_PIN = const(37)
-        self.CAN_TX_PIN = const(39)
+HW_LED_PIN = const(15)
+HW_RELE_PIN = const(16)
+HW_CAN_RX_PIN = const(37)
+HW_CAN_TX_PIN = const(39)
 
 

@@ -5,26 +5,21 @@ from oled_display import OLED_Display
 from settings_and_button import Settings
 from battery_reader import  Battery_reader
 from machine import Pin, Timer
-from constants_and_configs import Rele_control_mode, View_mode, WiFi_mode, HW_Config
+import constants_and_configs as cons
 
 class OLED_and_check_level:
-    View_mode = View_mode()
-    Rele_control_mode = Rele_control_mode()
-    WiFi_mode = WiFi_mode()
-
     def __init__(self,
                  ):
-        self.view_mode = View_mode.BATTERY_LEVEL
-        self.rele_mode = Rele_control_mode.BATTERY_LEVEL
-        self.wifi_mode = WiFi_mode.WiFi_OFF
+        self.view_mode = cons.VIEW_MODE_BATTERY_LEVEL
+        self.rele_mode = cons.RELE_BATTERY_LEVEL
+        self.wifi_mode = cons.WiFi_OFF
         self.wifi_ap_on = False
         self.br = Battery_reader()
         self.battery_charge_level = self.br.get_charge_level()
         print(f"Battery level: {self.battery_charge_level}%")
         self.oled = OLED_Display()
-        HW = HW_Config()
-        self.pin_rele = Pin(HW.RELE_PIN, Pin.OUT)
-        self.pin_led = Pin(HW.LED_PIN, Pin.OUT)
+        self.pin_rele = Pin(cons.HW_RELE_PIN, Pin.OUT)
+        self.pin_led = Pin(cons.HW_LED_PIN, Pin.OUT)
         self.pin_led.on()
         self.f_rele_is_on = False
         self.settings = Settings(chek_and_view=self)
@@ -51,12 +46,12 @@ class OLED_and_check_level:
     def check_mode(self):
         f_change_rele_state = False
         old_f_is_on = self.f_rele_is_on
-        if self.rele_mode == Rele_control_mode.BATTERY_LEVEL:
+        if self.rele_mode == cons.RELE_BATTERY_LEVEL:
             self.compare_levels()
-        elif self.rele_mode == Rele_control_mode.ALWAYS_OFF:
+        elif self.rele_mode == cons.RELE_ALWAYS_OFF:
             print("mode 1 rele is off")
             self.f_rele_is_on = False
-        elif self.rele_mode == Rele_control_mode.ALWAYS_ON:
+        elif self.rele_mode == cons.RELE_ALWAYS_ON:
             print("mode 2 rele is on")
             self.f_rele_is_on = True
         if old_f_is_on != self.f_rele_is_on:
@@ -66,7 +61,7 @@ class OLED_and_check_level:
 
     def compare_levels(self):
         f_change_rele_state = False
-        if self.rele_mode == Rele_control_mode.BATTERY_LEVEL:
+        if self.rele_mode == cons.RELE_BATTERY_LEVEL:
             old_f_is_on = self.f_rele_is_on
             if (self.battery_charge_level <= self.settings.min_level):
                 self.f_rele_is_on = False
@@ -95,18 +90,17 @@ class OLED_and_check_level:
             print(f"Battery level: {battery_level}% - rele is on {self.f_rele_is_on}")
 
     def view_data(self):
-        if self.view_mode == View_mode.BATTERY_LEVEL:
+        if self.view_mode == cons.VIEW_MODE_BATTERY_LEVEL:
             #if not self.f_pressed_buton:
             self.oled.draw_charge_level(self.battery_charge_level, self.f_rele_is_on)
-        elif self.view_mode == View_mode.VIEW_OFF:
+        elif self.view_mode == cons.VIEW_MODE_VIEW_OFF:
             self.oled.draw_off()
-        elif self.view_mode == View_mode.VIEW_ON:
+        elif self.view_mode == cons.VIEW_MODE_VIEW_ON:
             self.oled.draw_on()
-        elif self.view_mode == View_mode.VIEW_INFO:
+        elif self.view_mode == cons.VIEW_MODE_VIEW_INFO:
             self.oled.view_info(self.wifi_mode)
 
 class Main_class():
-    WiFi_mode = WiFi_mode()
     def __init__(self):
         self.logger = logging.getLogger('main_log', 'main.log')
         # logger = logging.getLogger('html')
@@ -123,7 +117,7 @@ class Main_class():
             try:
                 self.logger.info("listening on")
                 time.sleep(1)
-                if self.chek_and_view.wifi_mode == WiFi_mode.WIFI_OFF:
+                if self.chek_and_view.wifi_mode == cons.WiFi_OFF:
                     continue
                 else:
                     continue
