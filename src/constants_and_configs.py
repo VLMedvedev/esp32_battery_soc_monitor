@@ -1,8 +1,9 @@
 from enum import Enum
 
 class WiFi_mode(Enum):
-    WiFi_AP = 0
-    WiFi_client = 1
+    WiFi_OFF = 0
+    WiFi_AP = 1
+    WiFi_client = 2
 
 class Rele_control_mode(Enum):
     BATTERY_LEVEL = 0
@@ -20,5 +21,7 @@ class View_mode(Enum):
 class HW_Config(object):
     LED_PIN = 15
     RELE_PIN = 16
+    CAN_RX_PIN = 37
+    CAN_TX_PIN = 39
 
 

@@ -9,13 +9,12 @@ from constants_and_configs import Rele_control_mode, View_mode, WiFi_mode, HW_Co
 
 class OLED_and_check_level:
     def __init__(self,
-                 manualBattcountLimit=3,
-                 group=0
                  ):
         self.view_mode = View_mode.BATTERY_LEVEL
         self.rele_mode = Rele_control_mode.BATTERY_LEVEL
+        self.wifi_mode = WiFi_mode.WiFi_OFF
         self.wifi_ap_on = False
-        self.br = Battery_reader(manualBattcountLimit, group)
+        self.br = Battery_reader()
         self.battery_charge_level = self.br.get_charge_level()
         print(f"Battery level: {self.battery_charge_level}%")
         self.oled = OLED_Display()
@@ -31,11 +30,12 @@ class OLED_and_check_level:
         read_timer = Timer(0)
         read_timer.init(mode=Timer.PERIODIC, period=5000, callback=self.check_level_and_draw_oled)
 
-
     def get_level(self):
         return self.battery_charge_level
     def get_rele_is_on(self):
         return self.f_rele_is_on
+    def get_wifi_ap_is_on(self):
+        return self.wifi_ap_on
 
     def set_rele(self):
         print(f"rele on {self.f_rele_is_on}")
@@ -101,16 +101,14 @@ class OLED_and_check_level:
         elif self.view_mode == View_mode.VIEW_INFO:
             self.oled.view_info(self.wifi_mode.value)
 
-class Main_class(Enum):
+class Main_class():
     def __init__(self):
         self.logger = logging.getLogger('main_log', 'main.log')
         # logger = logging.getLogger('html')
         self.logger.setLevel(logging.ERROR)
-        self.pref = DataThree()
-        self.read_battery_pref()
-        self.oled = OLED_and_check_level()
+        self.chek_and_view = OLED_and_check_level()
         self.STOP = False
-
+        self.wifi_ap_on = False
 
     def task_run(self):
         self.logger.setLevel(logging.INFO)
@@ -119,8 +117,11 @@ class Main_class(Enum):
             self.logger.debug("Listen for connections")
             try:
                 self.logger.info("listening on")
-
-
+                time.sleep(1)
+                if self.chek_and_view.wifi_mode == WiFi_mode.WIFI_OFF:
+                    continue
+                else:
+                    continue
 
             except OSError as ex:
                 self.logger.exception(ex, 'OSError')
@@ -131,27 +132,13 @@ class Main_class(Enum):
                 #wlan.stop_heartbeat()
                 #wlan.disconnect()
                 raise SystemExit
-            except Exception as ex:
-                self.logger.exception(ex, 'Exception in server loop')
+            except Exception as eex:
+                self.logger.exception(eex, 'Exception in server loop')
             except BaseException as ex:
                 self.logger.exception(ex, 'BaseException in server loop')
             finally:
                 self.logger.info("closing connection")
                 #cl.close()
-
-    def read_battery_pref(self):
-        if (self.pref.begin(key="load_battery_", readMode=True)):
-            self.min_level = self.pref.getInt("min_level", 15)
-            self.max_level = self.pref.getInt("max_level", 95)
-            self.rele_mode = self.pref.getInt("mode", 0)
-            self.battery_charge_level = self.pref.getInt("battery_charge_level", 50)
-            self.f_rele_is_on = self.pref.getBool("f_rele_is_on", False)
-            self.wifi_mode = self.pref.getInt("wifi_mode", 0)
-            self.wifi_ssid = self.pref.getString("wifi_ssid", "A1-C4A220")
-            self.wifi_passwd = self.pref.getString("wifi_passwd", "7KBBBLX7FQ")
-            self.pref.end()
-        print(f"Read battery pref{self.min_level}, {self.max_level},{self.rele_mode}, {self.wifi_mode},  {self.battery_charge_level}, {self.f_rele_is_on}")
-
 
 
 if __name__ == "__main__":
