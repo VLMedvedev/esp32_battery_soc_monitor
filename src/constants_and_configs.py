@@ -1,4 +1,5 @@
 #from enum import Enum
+from micropython import const
 
 #from thonny.plugins.microbit.api_stubs.micropython import const
 
