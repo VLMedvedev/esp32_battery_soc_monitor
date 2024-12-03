@@ -1,3 +1,4 @@
+import random
 import esp32_soc
 import constants_and_configs as cons
 
@@ -10,7 +11,9 @@ class Battery_reader():
         soc_level = esp32_soc.read_soc_level(0)
         print(f"soc_level  {soc_level}")
         if soc_level == 123:
-            return None
+            soc_level = random.randrange(1, 100, 2)
+            return soc_level
+            #return None
         else:
             return soc_level
 
