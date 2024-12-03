@@ -1,10 +1,10 @@
 import esp32_soc
-from constants_and_configs import HW_Config
+import constants_and_configs as cons
 
 class Battery_reader():
     def __init__(self):
         HW = HW_Config()
-        ret = esp32_soc.driver_init(HW.CAN_RX_PIN, HW.CAN_TX_PIN)
+        ret = esp32_soc.driver_init(cons.HW_CAN_RX_PIN, cons.HW_CAN_TX_PIN)
         print(f" driver init  {ret}")
 
     def get_charge_level(self):
