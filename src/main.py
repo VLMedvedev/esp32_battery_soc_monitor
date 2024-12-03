@@ -8,8 +8,13 @@ from machine import Pin, Timer
 from constants_and_configs import Rele_control_mode, View_mode, WiFi_mode, HW_Config
 
 class OLED_and_check_level:
+    View_mode = View_mode()
+    Rele_control_mode = Rele_control_mode()
+    WiFi_mode = WiFi_mode()
+
     def __init__(self,
                  ):
+
         self.view_mode = View_mode.BATTERY_LEVEL
         self.rele_mode = Rele_control_mode.BATTERY_LEVEL
         self.wifi_mode = WiFi_mode.WiFi_OFF
@@ -102,6 +107,7 @@ class OLED_and_check_level:
             self.oled.view_info(self.wifi_mode)
 
 class Main_class():
+    WiFi_mode = WiFi_mode()
     def __init__(self):
         self.logger = logging.getLogger('main_log', 'main.log')
         # logger = logging.getLogger('html')
