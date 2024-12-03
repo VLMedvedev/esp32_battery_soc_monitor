@@ -53,7 +53,7 @@ class Settings():
             print(f"Writing battery pref{self.min_level}, {self.max_level}, {self.rele_mode}, {self.wifi_mode}, {self.battery_charge_level}, {self.f_rele_is_on}")
             self.pref.put("min_level", self.min_level)
             self.pref.put("max_level", self.max_level)
-            self.pref.put("mode", self.chek_and_view.rele_mode.value)
+            self.pref.put("mode", self.chek_and_view.rele_mode)
             self.pref.end()
         time.sleep(1)
         #self.read_battery_pref()

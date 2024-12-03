@@ -99,7 +99,7 @@ class OLED_and_check_level:
         elif self.view_mode == View_mode.VIEW_ON:
             self.oled.draw_on()
         elif self.view_mode == View_mode.VIEW_INFO:
-            self.oled.view_info(self.wifi_mode.value)
+            self.oled.view_info(self.wifi_mode)
 
 class Main_class():
     def __init__(self):
