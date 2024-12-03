@@ -1,3 +1,5 @@
+from dill import settings
+
 import logging
 from preferences import DataThree
 import time
@@ -11,7 +13,7 @@ class OLED_and_check_level:
     def __init__(self,
                  ):
         self.view_mode = cons.VIEW_MODE_BATTERY_LEVEL
-        self.rele_mode = cons.RELE_BATTERY_LEVEL
+       # self.rele_mode = cons.RELE_BATTERY_LEVEL
         self.wifi_mode = cons.WiFi_OFF
         self.wifi_ap_on = False
         self.br = Battery_reader()
@@ -23,6 +25,7 @@ class OLED_and_check_level:
         self.pin_led.on()
         self.f_rele_is_on = False
         self.settings = Settings(chek_and_view=self)
+        self.rele_mode = self.settings.get_rele_mode()
         self.check_mode()
         self.set_rele()
         #read_timer = Timer(-1)
@@ -44,6 +47,7 @@ class OLED_and_check_level:
             self.pin_rele.off()
 
     def check_mode(self):
+        self.rele_mode = self.settings.get_rele_mode()
         f_change_rele_state = False
         old_f_is_on = self.f_rele_is_on
         if self.rele_mode == cons.RELE_BATTERY_LEVEL:

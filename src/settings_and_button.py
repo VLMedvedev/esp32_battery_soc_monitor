@@ -17,6 +17,7 @@ import constants_and_configs as cons
 class Settings():
     def __init__(self, chek_and_view):
         self.chek_and_view = chek_and_view
+        self.rele_mode = cons.RELE_BATTERY_LEVEL
         self.pref = DataThree()
         self.min_level = 10
         self.max_level = 97
@@ -26,6 +27,9 @@ class Settings():
         self.read_battery_pref()
         #self.oled.check_mode()
         self.init_button()
+
+    def get_rele_mode(self):
+        return self.rele_mode
 
     def get_pressed_buton(self):
         return self.f_pressed_buton
@@ -44,7 +48,7 @@ class Settings():
         if (self.pref.begin(key="load_battery_", readMode=True)):
             self.min_level = self.pref.getInt("min_level", 15)
             self.max_level = self.pref.getInt("max_level", 95)
-            self.chek_and_view.rele_mode = self.pref.getInt("mode", 0)
+            self.rele_mode = self.pref.getInt("mode", 0)
             self.pref.end()
         print(f"Read battery pref{self.min_level}, {self.max_level},{self.rele_mode}, {self.wifi_mode},  {self.battery_charge_level}, {self.f_rele_is_on}")
 
@@ -53,7 +57,7 @@ class Settings():
             print(f"Writing battery pref{self.min_level}, {self.max_level}, {self.rele_mode}, {self.wifi_mode}, {self.battery_charge_level}, {self.f_rele_is_on}")
             self.pref.put("min_level", self.min_level)
             self.pref.put("max_level", self.max_level)
-            self.pref.put("mode", self.chek_and_view.rele_mode)
+            self.pref.put("mode", self.rele_mode)
             self.pref.end()
         time.sleep(1)
         #self.read_battery_pref()
