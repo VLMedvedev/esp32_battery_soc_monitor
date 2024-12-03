@@ -3,7 +3,6 @@ import constants_and_configs as cons
 
 class Battery_reader():
     def __init__(self):
-        HW = HW_Config()
         ret = esp32_soc.driver_init(cons.HW_CAN_RX_PIN, cons.HW_CAN_TX_PIN)
         print(f" driver init  {ret}")
 
