@@ -1,7 +1,4 @@
-from dill import settings
-
 import logging
-from preferences import DataThree
 import time
 from oled_display import OLED_Display
 from settings_and_button import Settings
