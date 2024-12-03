@@ -12,37 +12,23 @@ from machine import Pin, Timer
 #from debounced_input import DebouncedInput
 from debouncer import Button
 from preferences import DataThree
-from enum import Enum
-
-class Rele_control_mode(Enum):
-    BATTERY_LEVEL = 0
-    ALWAYS_OFF = 1
-    ALWAYS_ON = 2
-
-class View_mode(Enum):
-    BATTERY_LEVEL = 0
-    VIEW_INFO = 1
-    SETTING_UP = 2
-    SETTING_DOWN = 3
-    VIEW_OFF = 4
-    VIEW_ON = 6
+from constants_and_configs import Rele_control_mode, View_mode
 
 class Settings():
-    def __init__(self,oled):
-        self.oled = oled
+    def __init__(self, chek_and_view):
+        self.chek_and_view = chek_and_view
         self.pref = DataThree()
-        self.view_mode = View_mode.BATTERY_LEVEL
         self.min_level = 10
         self.max_level = 97
-        self.rele_mode = Rele_control_mode.BATTERY_LEVEL
-        self.battery_charge_level = 98
-        self.f_rele_is_on = False
         self.f_pressed_buton = False
         self.f_double_vertical_pressed_buton = False
         self.pressed_timer = Timer(-1)
         self.read_battery_pref()
-        self.oled.check_mode()
+        #self.oled.check_mode()
         self.init_button()
+
+    def get_pressed_buton(self):
+        return self.f_pressed_buton
 
     def init_button(self):
         Button(pin_number_down = 12, callback = self.bt_min_up,
@@ -58,12 +44,7 @@ class Settings():
         if (self.pref.begin(key="load_battery_", readMode=True)):
             self.min_level = self.pref.getInt("min_level", 15)
             self.max_level = self.pref.getInt("max_level", 95)
-            self.rele_mode = self.pref.getInt("mode", 0)
-            self.battery_charge_level = self.pref.getInt("battery_charge_level", 50)
-            self.f_rele_is_on = self.pref.getBool("f_rele_is_on", False)
-        #    self.wifi_mode = self.pref.getInt("wifi_mode", 0)
-       ##     self.wifi_ssid = self.pref.getString("wifi_ssid", "A1-C4A220")
-        #    self.wifi_passwd = self.pref.getString("wifi_passwd", "7KBBBLX7FQ")
+            self.chek_and_view.rele_mode = self.pref.getInt("mode", 0)
             self.pref.end()
         print(f"Read battery pref{self.min_level}, {self.max_level},{self.rele_mode}, {self.wifi_mode},  {self.battery_charge_level}, {self.f_rele_is_on}")
 
@@ -72,27 +53,10 @@ class Settings():
             print(f"Writing battery pref{self.min_level}, {self.max_level}, {self.rele_mode}, {self.wifi_mode}, {self.battery_charge_level}, {self.f_rele_is_on}")
             self.pref.put("min_level", self.min_level)
             self.pref.put("max_level", self.max_level)
-            self.pref.put("mode", self.rele_mode.value)
-            self.pref.put("battery_charge_level", self.battery_charge_level)
-            self.pref.put("f_rele_is_on", self.f_rele_is_on)
-            #   self.pref.put("wifi_mode", self.wifi_mode.value)
-         #   self.pref.put("wifi_ssid", self.wifi_ssid)
-         #   self.pref.put("wifi_passwd", self.wifi_passwd)
+            self.pref.put("mode", self.chek_and_view.rele_mode.value)
             self.pref.end()
         time.sleep(1)
         #self.read_battery_pref()
-
-    def view_data(self):
-        if self.view_mode == View_mode.BATTERY_LEVEL:
-            #if not self.f_pressed_buton:
-            self.oled.draw_charge_level(self.battery_charge_level, self.f_rele_is_on)
-        elif self.view_mode == View_mode.VIEW_OFF:
-            self.oled.draw_off()
-        elif self.view_mode == View_mode.VIEW_ON:
-            self.oled.draw_on()
-        elif self.view_mode == View_mode.VIEW_INFO:
-            self.oled.view_info(self.wifi_mode.value)
-
 
     def _ButtonPressTimerExpired(self, timer):
         print("Button press timer expired")
@@ -100,32 +64,32 @@ class Settings():
             self.f_pressed_buton = False
             self.write_battery_pref()
         self.f_double_vertical_pressed_buton = False
-        self.view_mode = View_mode.BATTERY_LEVEL
-        self.view_data()
+        self.chek_and_view.view_mode = View_mode.BATTERY_LEVEL
+        self.chek_and_view.view_data()
 
 # Define button press/release callback
     def bt_min_up(self, pin, double_button_vertical_pressed,
                         double_button_horizontal_pressed):
         print(f"Pin- {pin}, vertical_pressed {double_button_vertical_pressed} horizontal_pressed {double_button_horizontal_pressed}")
         if double_button_horizontal_pressed:
-            self.wifi_ap_on = True
+            self.chek_and_view.wifi_ap_on = True
             return None
         if double_button_vertical_pressed:
             self.rele_mode = Rele_control_mode.ALWAYS_OFF
             self.f_pressed_buton = False
             self.f_double_vertical_pressed_buton=True
-            self.oled.check_mode()
-            self.view_mode = View_mode.VIEW_OFF
-            self.view_data()
+            self.chek_and_view.check_mode()
+            self.chek_and_view.view_mode = View_mode.VIEW_OFF
+            self.chek_and_view.view_data()
             return None
         self.pressed_timer.init(mode=Timer.ONE_SHOT, period=5000, callback=self._ButtonPressTimerExpired)
         if self.f_pressed_buton:
-            self.rele_mode = Rele_control_mode.BATTERY_LEVEL
+            self.chek_and_view.rele_mode = Rele_control_mode.BATTERY_LEVEL
             self.min_level += 1
             if self.min_level > self.max_level - 1:
                 self.min_level = self.max_level - 1
-        self.view_mode = View_mode.SETTING_UP
-        self.oled.draw_setting_level(self.min_level, button_group="down")
+        self.chek_and_view.view_mode = View_mode.SETTING_UP
+        self.chek_and_view.draw_setting_level(self.min_level, button_group="down")
         if not self.f_double_vertical_pressed_buton:
             self.f_pressed_buton = True
         else:
@@ -135,25 +99,25 @@ class Settings():
                                 double_button_horizontal_pressed):
         print(f"Pin- {pin}, vertical_pressed {double_button_vertical_pressed} horizontal_pressed {double_button_horizontal_pressed}")
         if double_button_horizontal_pressed:
-            self.wifi_ap_on = True
+            self.chek_and_view.wifi_ap_on = True
             return None
         if double_button_vertical_pressed:
             self.rele_mode = Rele_control_mode.ALWAYS_OFF
             self.f_pressed_buton = False
             self.f_double_vertical_pressed_buton = True
-            self.oled.check_mode()
-            self.view_mode = View_mode.VIEW_OFF
-            self.view_data()
+            self.chek_and_view.check_mode()
+            self.chek_and_view.view_mode = View_mode.VIEW_OFF
+            self.chek_and_view.view_data()
             return None
         self.pressed_timer.init(mode=Timer.ONE_SHOT, period=5000, callback=self._ButtonPressTimerExpired)
         if self.f_pressed_buton:
-            self.rele_mode = Rele_control_mode.BATTERY_LEVEL
+            self.chek_and_view.rele_mode = Rele_control_mode.BATTERY_LEVEL
             self.f_pressed_buton = False
             self.min_level -= 1
             if self.min_level < 0:
                 self.min_level = 0
-        self.view_mode = View_mode.SETTING_DOWN
-        self.oled.draw_setting_level(self.min_level, button_group="down")
+        self.chek_and_view.view_mode = View_mode.SETTING_DOWN
+        self.chek_and_view.draw_setting_level(self.min_level, button_group="down")
         if not self.f_double_vertical_pressed_buton:
             self.f_pressed_buton = True
         else:
@@ -163,25 +127,25 @@ class Settings():
                              double_button_horizontal_pressed):
         print(f"Pin- {pin}, vertical_pressed {double_button_vertical_pressed} horizontal_pressed {double_button_horizontal_pressed}")
         if double_button_horizontal_pressed:
-            self.view_mode = View_mode.VIEW_INFO
-            self.view_data()
+            self.chek_and_view.view_mode = View_mode.VIEW_INFO
+            self.chek_and_view.view_data()
             return None
         if double_button_vertical_pressed:
             self.rele_mode = Rele_control_mode.ALWAYS_ON
             self.f_pressed_buton = False
             self.f_double_vertical_pressed_buton = True
-            self.oled.check_mode()
-            self.view_mode = View_mode.VIEW_ON
-            self.view_data()
+            self.chek_and_view.check_mode()
+            self.chek_and_view.view_mode = View_mode.VIEW_ON
+            self.chek_and_view.view_data()
             return None
         self.pressed_timer.init(mode=Timer.ONE_SHOT, period=5000, callback=self._ButtonPressTimerExpired)
         if self.f_pressed_buton:
-            self.rele_mode = Rele_control_mode.BATTERY_LEVEL
+            self.chek_and_view.rele_mode = Rele_control_mode.BATTERY_LEVEL
             self.max_level += 1
             if self.max_level > 100:
                 self.max_level = 100
-        self.view_mode = View_mode.SETTING_UP
-        self.oled.draw_setting_level(self.max_level, button_group="up")
+        self.chek_and_view.view_mode = View_mode.SETTING_UP
+        self.chek_and_view.draw_setting_level(self.max_level, button_group="up")
         if not self.f_double_vertical_pressed_buton:
             self.f_pressed_buton = True
         else:
@@ -191,25 +155,25 @@ class Settings():
                                double_button_horizontal_pressed):
         print(f"Pin- {pin}, vertical_pressed {double_button_vertical_pressed} horizontal_pressed {double_button_horizontal_pressed}")
         if double_button_horizontal_pressed:
-            self.view_mode = View_mode.VIEW_INFO
-            self.view_data()
+            self.chek_and_view.view_mode = View_mode.VIEW_INFO
+            self.chek_and_view.view_data()
             return None
         if double_button_vertical_pressed:
-            self.rele_mode = Rele_control_mode.ALWAYS_ON
+            self.chek_and_view.rele_mode = Rele_control_mode.ALWAYS_ON
             self.f_pressed_buton = False
             self.f_double_vertical_pressed_buton = True
-            self.oled.check_mode()
-            self.view_mode = View_mode.VIEW_ON
-            self.view_data()
+            self.chek_and_view.check_mode()
+            self.chek_and_view.view_mode = View_mode.VIEW_ON
+            self.chek_and_view.view_data()
             return None
         self.pressed_timer.init(mode=Timer.ONE_SHOT, period=5000, callback=self._ButtonPressTimerExpired)
         if self.f_pressed_buton:
-            self.rele_mode = Rele_control_mode.BATTERY_LEVEL
+            self.chek_and_view.rele_mode = Rele_control_mode.BATTERY_LEVEL
             self.max_level -= 1
             if self.max_level < self.min_level + 1:
                 self.max_level = self.min_level + 1
-        self.view_mode = View_mode.SETTING_DOWN
-        self.oled.draw_setting_level(self.max_level, button_group="up")
+        self.chek_and_view.view_mode = View_mode.SETTING_DOWN
+        self.chek_and_view.draw_setting_level(self.max_level, button_group="up")
         if not self.f_double_vertical_pressed_buton:
             self.f_pressed_buton = True
         else:
