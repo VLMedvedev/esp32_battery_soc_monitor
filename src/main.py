@@ -25,6 +25,7 @@ class OLED_and_check_level:
         self.rele_mode = self.settings.get_rele_mode()
         self.check_mode()
         self.set_rele()
+        self.view_data()
         #read_timer = Timer(-1)
         read_timer = Timer(0)
         read_timer.init(mode=Timer.PERIODIC, period=5000, callback=self.check_level_and_draw_oled)
