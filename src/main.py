@@ -83,18 +83,19 @@ class OLED_and_check_level:
         d = time.localtime()
         print(f"{d[3]}:{d[4]}:{d[5]} {d[2]}-{d[1]}-{d[0]} weekday {d[6]} yearday {d[7]}")
         if not self.settings.get_pressed_buton():
-            battery_level = self.br.get_charge_level()
+            self.battery_charge_level = self.br.get_charge_level()
             #print(f"Battery level: {battery_level}%")
             f_change_rele_state = self.check_mode()
             print(f"change state {f_change_rele_state}")
             if f_change_rele_state:
                 self.set_rele()
-            print(f"Battery level: {battery_level}% - rele is on {self.f_rele_is_on}")
+            print(f"Battery level: {self.battery_charge_level}% - rele is on {self.f_rele_is_on}")
+            self.view_data()
 
     def view_data(self):
         if self.view_mode == cons.VIEW_MODE_BATTERY_LEVEL:
-            #if not self.f_pressed_buton:
-            self.oled.draw_charge_level(self.battery_charge_level, self.f_rele_is_on)
+            if not self.settings.get_pressed_buton():
+                self.oled.draw_charge_level(self.battery_charge_level, self.f_rele_is_on)
         elif self.view_mode == cons.VIEW_MODE_VIEW_OFF:
             self.oled.draw_off()
         elif self.view_mode == cons.VIEW_MODE_VIEW_ON:
