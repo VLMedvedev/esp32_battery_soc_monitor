@@ -74,7 +74,8 @@ class Settings():
 # Define button press/release callback
     def bt_min_up(self, pin, double_button_vertical_pressed,
                         double_button_horizontal_pressed):
-        print(f"Pin- {pin}, vertical_pressed {double_button_vertical_pressed} horizontal_pressed {double_button_horizontal_pressed}")
+        print(f"Pin- {pin}, vertical_pressed {double_button_vertical_pressed} "
+              f"horizontal_pressed {double_button_horizontal_pressed}")
         if double_button_horizontal_pressed:
             self.chek_and_view.wifi_ap_on = True
             return None
@@ -93,7 +94,7 @@ class Settings():
             if self.min_level > self.max_level - 1:
                 self.min_level = self.max_level - 1
         self.chek_and_view.view_mode = cons.VIEW_MODE_SETTING_UP
-        self.chek_and_view.draw_setting_level(self.min_level, button_group="down")
+        self.chek_and_view.oled.draw_setting_level(self.min_level, button_group="down")
         if not self.f_double_vertical_pressed_buton:
             self.f_pressed_buton = True
         else:
@@ -101,7 +102,8 @@ class Settings():
 
     def bt_min_down(self, pin, double_button_vertical_pressed,
                                 double_button_horizontal_pressed):
-        print(f"Pin- {pin}, vertical_pressed {double_button_vertical_pressed} horizontal_pressed {double_button_horizontal_pressed}")
+        print(f"Pin- {pin}, vertical_pressed {double_button_vertical_pressed} "
+              f"horizontal_pressed {double_button_horizontal_pressed}")
         if double_button_horizontal_pressed:
             self.chek_and_view.wifi_ap_on = True
             return None
@@ -121,7 +123,7 @@ class Settings():
             if self.min_level < 0:
                 self.min_level = 0
         self.chek_and_view.view_mode = cons.VIEW_MODE_SETTING_DOWN
-        self.chek_and_view.draw_setting_level(self.min_level, button_group="down")
+        self.chek_and_view.oled.draw_setting_level(self.min_level, button_group="down")
         if not self.f_double_vertical_pressed_buton:
             self.f_pressed_buton = True
         else:
@@ -129,7 +131,8 @@ class Settings():
 
     def bt_max_up(self, pin, double_button_vertical_pressed,
                              double_button_horizontal_pressed):
-        print(f"Pin- {pin}, vertical_pressed {double_button_vertical_pressed} horizontal_pressed {double_button_horizontal_pressed}")
+        print(f"Pin- {pin}, vertical_pressed {double_button_vertical_pressed} "
+              f"horizontal_pressed {double_button_horizontal_pressed}")
         if double_button_horizontal_pressed:
             self.chek_and_view.view_mode = cons.VIEW_MODE_VIEW_INFO
             self.chek_and_view.view_data()
@@ -149,7 +152,7 @@ class Settings():
             if self.max_level > 100:
                 self.max_level = 100
         self.chek_and_view.view_mode = cons.VIEW_MODE_SETTING_UP
-        self.chek_and_view.draw_setting_level(self.max_level, button_group="up")
+        self.chek_and_view.oled.draw_setting_level(self.max_level, button_group="up")
         if not self.f_double_vertical_pressed_buton:
             self.f_pressed_buton = True
         else:
@@ -157,7 +160,8 @@ class Settings():
 
     def bt_max_down(self, pin, double_button_vertical_pressed,
                                double_button_horizontal_pressed):
-        print(f"Pin- {pin}, vertical_pressed {double_button_vertical_pressed} horizontal_pressed {double_button_horizontal_pressed}")
+        print(f"Pin- {pin}, vertical_pressed {double_button_vertical_pressed} "
+              f"horizontal_pressed {double_button_horizontal_pressed}")
         if double_button_horizontal_pressed:
             self.chek_and_view.view_mode = cons.VIEW_MODE_VIEW_INFO
             self.chek_and_view.view_data()
@@ -177,7 +181,7 @@ class Settings():
             if self.max_level < self.min_level + 1:
                 self.max_level = self.min_level + 1
         self.chek_and_view.view_mode = cons.VIEW_MODE_SETTING_DOWN
-        self.chek_and_view.draw_setting_level(self.max_level, button_group="up")
+        self.chek_and_view.oled.draw_setting_level(self.max_level, button_group="up")
         if not self.f_double_vertical_pressed_buton:
             self.f_pressed_buton = True
         else:
