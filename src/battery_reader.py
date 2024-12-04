@@ -1,7 +1,11 @@
-import random
+#import random
 import esp32_soc
 import constants_and_configs as cons
-import asyncio
+#import asyncio
+#import machine
+import uasyncio
+import utime
+#import queue
 
 class Battery_reader():
     def __init__(self):
@@ -19,24 +23,33 @@ class Battery_reader():
 
     async def read_from_can(self, cbk):
         soc_level = esp32_soc.read_soc_level(0)
+        print(f'esp32 soc_level={soc_level}')
         cbk(soc_level)
 
-    def get_charge_level(self):
-        asyncio.create_task(self.read_from_can(self.callback_soc))
+    async def get_charge_level(self):
+        print("en create new task")
+        uasyncio.create_task(self.read_from_can(self.callback_soc))
 
-    def start_reading(self):
-        asyncio.run(self.get_charge_level())
+    async def start_reading(self):
+        print("start_reading")
+        uasyncio.run(self.get_charge_level())
 
-    def run(self):
+    async def run(self):
+        print("run")
         self.non_stop = True
-        asyncio.run(self.task_run())
+        uasyncio.run(self.task_run())
 
     def stop(self):
         self.non_stop = False
 
-    def task_run(self):
+    async def task_run(self):
         while self.non_stop:
-            asyncio.create_task(self.read_from_can(self.callback_soc))
-            await asyncio.sleep(1)  # Pause 1s
+            print("cyclic create new task")
+            uasyncio.create_task(self.read_from_can(self.callback_soc))
+            await uasyncio.sleep(1)  # Pause 1s
 
 
+
+if __name__ == "__main__":
+    br = Battery_reader()
+    br.run()
