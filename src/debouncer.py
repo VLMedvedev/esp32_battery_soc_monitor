@@ -15,7 +15,9 @@ class Button:
     button_handler = Button(pin=Pin(32, mode=Pin.IN, pull=Pin.PULL_UP), callback=button_callback)
     """
 
-    def __init__(self, pin_number_down, callback, pin_number_double_vertical, pin_number_double_horizontal, min_ago=300):
+    def __init__(self, pin_number_down, callback,
+                 pin_number_double_vertical,
+                 pin_number_double_horizontal, min_ago=300):
         self.callback = callback
         self.min_ago = min_ago
         self._blocked = False
@@ -27,8 +29,14 @@ class Button:
         self.pin_down.irq(trigger=Pin.IRQ_FALLING, handler=self.debounce_handler)
 
     def call_callback(self, pin):
-        double_button_vertical_pressed = self.pin_double_vertical.value()
-        double_button_horizontal_pressed = self.pin_double_horizontal.value()
+        if self.pin_double_vertical.value() == 0:
+            double_button_vertical_pressed = True
+        else:
+            double_button_vertical_pressed = False
+        if self.pin_double_horizontal.value() == 0:
+            double_button_horizontal_pressed = True
+        else:
+            double_button_horizontal_pressed = False
         self.callback(pin, double_button_vertical_pressed, double_button_horizontal_pressed)
 
     def debounce_handler(self, pin):
