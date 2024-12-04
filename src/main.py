@@ -14,6 +14,7 @@ class OLED_and_check_level:
         self.wifi_mode = cons.WiFi_OFF
         self.wifi_ap_on = False
         self.br = Battery_reader()
+        self.br.run()
         self.battery_charge_level = self.br.get_charge_level()
         print(f"Battery level: {self.battery_charge_level}%")
         self.oled = OLED_Display()
@@ -83,8 +84,10 @@ class OLED_and_check_level:
         d = time.localtime()
         print(f"{d[3]}:{d[4]}:{d[5]} {d[2]}-{d[1]}-{d[0]} weekday {d[6]} yearday {d[7]}")
         if not self.settings.get_pressed_buton():
+            tim_start = time.time()
+            print(f"begin can {tim_start}")
             self.battery_charge_level = self.br.get_charge_level()
-            #print(f"Battery level: {battery_level}%")
+            print(f"Battery level: {self.battery_charge_level}% time {time.time() - tim_start}")
             f_change_rele_state = self.check_mode()
             print(f"change state {f_change_rele_state}")
             if f_change_rele_state:
