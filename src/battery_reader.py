@@ -24,6 +24,9 @@ class Battery_reader():
     def get_charge_level(self):
         asyncio.create_task(self.read_from_can(self.callback_soc))
 
+    def start_reading(self):
+        asyncio.run(self.get_charge_level())
+
     def run(self):
         self.non_stop = True
         asyncio.run(self.task_run())
