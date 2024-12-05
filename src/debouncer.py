@@ -1,8 +1,7 @@
-import time
+import utime
+from machine import Pin
 
-#from micropython import const
-from machine import Pin, Timer
-
+##from micropython import const
 #BUTTON_A_PIN = const(32)
 #BUTTON_B_PIN = const(33)
 
@@ -21,7 +20,7 @@ class Button:
         self.callback = callback
         self.min_ago = min_ago
         self._blocked = False
-        self._next_call = time.ticks_ms() + self.min_ago
+        self._next_call = utime.ticks_ms() + self.min_ago
 
         self.pin_double_vertical = Pin(pin_number_double_vertical, mode=Pin.IN, pull=Pin.PULL_UP)
         self.pin_double_horizontal = Pin(pin_number_double_horizontal, mode=Pin.IN, pull=Pin.PULL_UP)
@@ -40,8 +39,8 @@ class Button:
         self.callback(pin, double_button_vertical_pressed, double_button_horizontal_pressed)
 
     def debounce_handler(self, pin):
-        if time.ticks_ms() > self._next_call:
-            self._next_call = time.ticks_ms() + self.min_ago
+        if utime.ticks_ms() > self._next_call:
+            self._next_call = utime.ticks_ms() + self.min_ago
             self.call_callback(pin)
         # else:
         #    print("debounce: %s" % (self._next_call - time.ticks_ms()))
