@@ -218,7 +218,7 @@ def view_data():
 
 # Define coroutine function
 async def read_soc_by_can_and_check_level():
-    global STOP
+    global STOP, battery_charge_level
     while not STOP:
         await asyncio.sleep(1)
         print(f"read can, button press {f_pressed_buton} ")
@@ -228,8 +228,7 @@ async def read_soc_by_can_and_check_level():
                 pin_led.off()
             else:
                 pin_led.on()
-            d = utime.localtime()
-            print(f"{d[3]}:{d[4]}:{d[5]} {d[2]}-{d[1]}-{d[0]} weekday {d[6]} yearday {d[7]}")
+
             if not f_pressed_buton:
                 tim_start = utime.time()
                 print(f"begin can {tim_start}")
@@ -291,7 +290,7 @@ async def wifi_server():
 
 
 async def checkButtonPressTimerExpired():
-    global STOP
+    global STOP, f_double_pressed_buton, f_pressed_buton, view_mode
     while not STOP:
         await asyncio.sleep(5)
         print("check button press timer")
@@ -306,6 +305,8 @@ async def checkButtonPressTimerExpired():
 
 # Define the main function to run the event loop
 async def main():
+    d = utime.localtime()
+    print(f"{d[3]}:{d[4]}:{d[5]} {d[2]}-{d[1]}-{d[0]} weekday {d[6]} yearday {d[7]}")
     ret = esp32_soc.driver_init(cons.HW_CAN_RX_PIN, cons.HW_CAN_TX_PIN)
     print(f" driver init  {ret}")
     read_battery_pref()
