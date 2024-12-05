@@ -39,11 +39,12 @@ class Button:
         self.callback(pin, double_button_vertical_pressed, double_button_horizontal_pressed)
 
     def debounce_handler(self, pin):
+        print(f"debounce_handler pin {pin} ")
         if utime.ticks_ms() > self._next_call:
             self._next_call = utime.ticks_ms() + self.min_ago
             self.call_callback(pin)
-        # else:
-        #    print("debounce: %s" % (self._next_call - time.ticks_ms()))
+        else:
+            print(f"debounce: {self._next_call - utime.ticks_ms()}")
 
 #def button_a_callback(pin):
    # print("Button A (%s) changed to: %r" % (pin, pin.value()))

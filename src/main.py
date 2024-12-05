@@ -207,6 +207,7 @@ def check_mode_and_set_rele():
 
 def view_data():
     global f_pressed_buton, view_mode, oled, wifi_mode, battery_charge_level, f_rele_is_on
+    print(f"view_data mode = {view_mode} f_pressed_buton {f_pressed_buton}")
     if view_mode == cons.VIEW_MODE_BATTERY_LEVEL:
         if not f_pressed_buton:
             oled.draw_charge_level(battery_charge_level, f_rele_is_on)
@@ -232,14 +233,14 @@ async def read_soc_by_can_and_check_level():
 
             if not f_pressed_buton:
                 tim_start = utime.time()
-                print(f"begin can {tim_start}")
+               # print(f"begin can {tim_start}")
                 battery_charge_level = esp32_soc.read_soc_level(0)
-                print(f"Battery level: {battery_charge_level}% time {utime.time() - tim_start}")
-                if battery_charge_level != battery_charge_level:
+                if battery_charge_level != old_battery_charge_level:
+                    print(f"Battery level: {battery_charge_level}% time {utime.time() - tim_start}")
                     view_data()
                 old_battery_charge_level = battery_charge_level
                 check_mode_and_set_rele()
-                print(f"Battery level: {battery_charge_level}% - rele is on {f_rele_is_on}")
+             #   print(f"Battery level: {battery_charge_level}% - rele is on {f_rele_is_on}")
                 #view_data()
 
         except OSError as ex:
