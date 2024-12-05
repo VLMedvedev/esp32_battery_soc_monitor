@@ -25,11 +25,10 @@ pin_led = Pin(cons.HW_LED_PIN, Pin.OUT)
 pin_led.on()
 f_rele_is_on = False
 f_pressed_buton = False
-f_double_vertical_pressed_buton = False
+f_double_pressed_buton = False
 pref = DataThree()
 min_level = 10
 max_level = 97
-pressed_timer = Timer(-1)
 
 Button(pin_number_down=12, callback=bt_min_up,
        pin_number_double_vertical=11, pin_number_double_horizontal=7)
@@ -57,8 +56,6 @@ def write_battery_pref():
         pref.end()
     utime.sleep(1)
 
-
-
 # Define button press/release callback
 def bt_min_up(pin, double_button_vertical_pressed,
                     double_button_horizontal_pressed):
@@ -66,16 +63,20 @@ def bt_min_up(pin, double_button_vertical_pressed,
           f"horizontal_pressed {double_button_horizontal_pressed}")
     if double_button_horizontal_pressed:
         wifi_ap_on = True
+        f_pressed_buton = False
+        f_double_pressed_buton=True
+        view_mode = cons.VIEW_MODE_VIEW_INFO
+        view_data()
         return None
     if double_button_vertical_pressed:
         rele_mode = cons.RELE_ALWAYS_OFF
-        f_pressed_buton = False
-        f_double_vertical_pressed_buton=True
         check_mode_and_set_rele()
+        f_pressed_buton = False
+        f_double_pressed_buton=True
         view_mode =  cons.VIEW_MODE_VIEW_OFF
         view_data()
         return None
-    pressed_timer.init(mode=Timer.ONE_SHOT, period=5000, callback=_ButtonPressTimerExpired)
+
     if f_pressed_buton:
         rele_mode = cons.RELE_BATTERY_LEVEL
         min_level += 1
@@ -83,10 +84,10 @@ def bt_min_up(pin, double_button_vertical_pressed,
             min_level = max_level - 1
     view_mode = cons.VIEW_MODE_SETTING_UP
     oled.draw_setting_level(min_level, button_group="down")
-    if not f_double_vertical_pressed_buton:
+    if not f_double_pressed_buton:
         f_pressed_buton = True
     else:
-        f_double_vertical_pressed_buton = False
+        f_double_pressed_buton = False
 
 def bt_min_down(pin, double_button_vertical_pressed,
                             double_button_horizontal_pressed):
@@ -94,16 +95,20 @@ def bt_min_down(pin, double_button_vertical_pressed,
           f"horizontal_pressed {double_button_horizontal_pressed}")
     if double_button_horizontal_pressed:
         wifi_ap_on = True
+        f_pressed_buton = False
+        f_double_pressed_buton=True
+        view_mode = cons.VIEW_MODE_VIEW_INFO
+        view_data()
         return None
     if double_button_vertical_pressed:
         rele_mode = cons.RELE_ALWAYS_OFF
         f_pressed_buton = False
-        f_double_vertical_pressed_buton = True
+        f_double_pressed_buton = True
         check_mode_and_set_rele()
         view_mode = cons.VIEW_MODE_VIEW_OFF
         view_data()
         return None
-    pressed_timer.init(mode=Timer.ONE_SHOT, period=5000, callback=_ButtonPressTimerExpired)
+
     if f_pressed_buton:
         rele_mode = cons.RELE_BATTERY_LEVEL
         f_pressed_buton = False
@@ -112,28 +117,31 @@ def bt_min_down(pin, double_button_vertical_pressed,
             min_level = 0
     view_mode = cons.VIEW_MODE_SETTING_DOWN
     oled.draw_setting_level(min_level, button_group="down")
-    if not f_double_vertical_pressed_buton:
+    if not f_double_pressed_buton:
         f_pressed_buton = True
     else:
-        f_double_vertical_pressed_buton = False
+        f_double_pressed_buton = False
 
 def bt_max_up(pin, double_button_vertical_pressed,
                          double_button_horizontal_pressed):
     print(f"Pin- {pin}, vertical_pressed {double_button_vertical_pressed} "
           f"horizontal_pressed {double_button_horizontal_pressed}")
     if double_button_horizontal_pressed:
+        wifi_ap_on = False
+        f_pressed_buton = False
+        f_double_pressed_buton=True
         view_mode = cons.VIEW_MODE_VIEW_INFO
         view_data()
         return None
     if double_button_vertical_pressed:
         rele_mode = cons.RELE_ALWAYS_ON
         f_pressed_buton = False
-        f_double_vertical_pressed_buton = True
+        f_double_pressed_buton = True
         check_mode_and_set_rele()
         view_mode = cons.VIEW_MODE_VIEW_ON
         view_data()
         return None
-    pressed_timer.init(mode=Timer.ONE_SHOT, period=5000, callback=_ButtonPressTimerExpired)
+
     if f_pressed_buton:
         rele_mode = cons.RELE_BATTERY_LEVEL
         max_level += 1
@@ -141,28 +149,31 @@ def bt_max_up(pin, double_button_vertical_pressed,
             max_level = 100
     view_mode = cons.VIEW_MODE_SETTING_UP
     oled.draw_setting_level(max_level, button_group="up")
-    if not f_double_vertical_pressed_buton:
+    if not f_double_pressed_buton:
         f_pressed_buton = True
     else:
-        f_double_vertical_pressed_buton = False
+        f_double_pressed_buton = False
 
 def bt_max_down(pin, double_button_vertical_pressed,
                            double_button_horizontal_pressed):
     print(f"Pin- {pin}, vertical_pressed {double_button_vertical_pressed} "
           f"horizontal_pressed {double_button_horizontal_pressed}")
     if double_button_horizontal_pressed:
+        wifi_ap_on = False
+        f_pressed_buton = False
+        f_double_pressed_buton=True
         view_mode = cons.VIEW_MODE_VIEW_INFO
         view_data()
         return None
     if double_button_vertical_pressed:
         rele_mode = cons.RELE_ALWAYS_ON
         f_pressed_buton = False
-        f_double_vertical_pressed_buton = True
+        f_double_pressed_buton = True
         check_mode_and_set_rele()
         view_mode = cons.VIEW_MODE_VIEW_ON
         view_data()
         return None
-    pressed_timer.init(mode=Timer.ONE_SHOT, period=5000, callback=_ButtonPressTimerExpired)
+
     if f_pressed_buton:
         rele_mode = cons.RELE_BATTERY_LEVEL
         max_level -= 1
@@ -170,17 +181,10 @@ def bt_max_down(pin, double_button_vertical_pressed,
             max_level = min_level + 1
     view_mode = cons.VIEW_MODE_SETTING_DOWN
     oled.draw_setting_level(max_level, button_group="up")
-    if not f_double_vertical_pressed_buton:
+    if not f_double_pressed_buton:
         f_pressed_buton = True
     else:
-        f_double_vertical_pressed_buton = False
-
-def set_rele():
-    print(f"rele on {f_rele_is_on}")
-    if f_rele_is_on:
-        pin_rele.on()
-    else:
-        pin_rele.off()
+        f_double_pressed_buton = False
 
 def check_mode_and_set_rele():
     f_change_rele_state = False
@@ -199,7 +203,10 @@ def check_mode_and_set_rele():
     if old_f_is_on != f_rele_is_on:
         f_change_rele_state = True
         print(f"change state rele {f_rele_is_on}")
-        set_rele()
+        if f_rele_is_on:
+            pin_rele.on()
+        else:
+            pin_rele.off()
     return f_change_rele_state
 
 def view_data():
@@ -288,7 +295,7 @@ async def checkButtonPressTimerExpired():
             write_battery_pref()
             await asyncio.sleep(1)
             print("Button press timer expired")
-            f_double_vertical_pressed_buton = False
+            f_double_pressed_buton = False
             f_pressed_buton = False
             view_mode = cons.VIEW_MODE_BATTERY_LEVEL
             view_data()
@@ -298,7 +305,6 @@ async def main():
     ret = esp32_soc.driver_init(cons.HW_CAN_RX_PIN, cons.HW_CAN_TX_PIN)
     print(f" driver init  {ret}")
     read_battery_pref()
-
 
     # Create tasks for blinking two LEDs concurrently
     asyncio.create_task(read_soc_by_can_and_check_level())
