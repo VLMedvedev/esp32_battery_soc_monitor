@@ -220,6 +220,7 @@ def view_data():
 async def read_soc_by_can_and_check_level():
     global STOP
     while not STOP:
+        print(f"read can, button press {f_pressed_buton} ")
         try:
             led_state = pin_led.value()
             if led_state == 1:
@@ -258,6 +259,7 @@ async def read_soc_by_can_and_check_level():
 async def wifi_server():
     global STOP
     while not STOP:
+        print("start wifi server")
         logger.debug("Listen for connections")
         try:
             logger.info("listening on")
@@ -289,6 +291,7 @@ async def wifi_server():
 async def checkButtonPressTimerExpired():
     global STOP
     while not STOP:
+        print("check button press timer")
         await asyncio.sleep(5)
         if f_pressed_buton:
             write_battery_pref()
@@ -304,8 +307,8 @@ async def main():
     ret = esp32_soc.driver_init(cons.HW_CAN_RX_PIN, cons.HW_CAN_TX_PIN)
     print(f" driver init  {ret}")
     read_battery_pref()
-
-    # Create tasks for blinking two LEDs concurrently
+    print(f" create_tasks ")
+    # Create tasks for
     asyncio.create_task(read_soc_by_can_and_check_level())
     asyncio.create_task(checkButtonPressTimerExpired())
     asyncio.create_task(wifi_server())
