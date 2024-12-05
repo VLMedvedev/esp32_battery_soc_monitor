@@ -14,7 +14,7 @@ logger.setLevel(logging.ERROR)
 
 STOP = False
 battery_charge_level = 123
-old_battery_charge_level = 123
+old_battery_charge_level = 111
 view_mode = cons.VIEW_MODE_BATTERY_LEVEL
 rele_mode = cons.RELE_BATTERY_LEVEL
 wifi_mode = cons.WiFi_OFF
