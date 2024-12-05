@@ -18,7 +18,6 @@ view_mode = cons.VIEW_MODE_BATTERY_LEVEL
 rele_mode = cons.RELE_BATTERY_LEVEL
 wifi_mode = cons.WiFi_OFF
 wifi_ap_on = False
-print(f"Battery level: {battery_charge_level}%")
 oled = OLED_Display()
 pin_rele = Pin(cons.HW_RELE_PIN, Pin.OUT)
 pin_led = Pin(cons.HW_LED_PIN, Pin.OUT)
@@ -29,15 +28,6 @@ f_double_pressed_buton = False
 pref = DataThree()
 min_level = 10
 max_level = 97
-
-Button(pin_number_down=12, callback=bt_min_up,
-       pin_number_double_vertical=11, pin_number_double_horizontal=7)
-Button(pin_number_down=11, callback=bt_min_down,
-       pin_number_double_vertical=12, pin_number_double_horizontal=9)
-Button(pin_number_down=7, callback=bt_max_up,
-       pin_number_double_vertical=9, pin_number_double_horizontal=12)
-Button(pin_number_down=9, callback=bt_max_down,
-       pin_number_double_vertical=7, pin_number_double_horizontal=11)
 
 def read_battery_pref():
     if (pref.begin(key="load_battery_", readMode=True)):
@@ -59,6 +49,7 @@ def write_battery_pref():
 # Define button press/release callback
 def bt_min_up(pin, double_button_vertical_pressed,
                     double_button_horizontal_pressed):
+    global f_pressed_buton, f_double_pressed_buton, f_rele_is_on, min_level, max_level, view_mode , rele_mode, wifi_ap_on
     print(f"Pin- {pin}, vertical_pressed {double_button_vertical_pressed} "
           f"horizontal_pressed {double_button_horizontal_pressed}")
     if double_button_horizontal_pressed:
@@ -91,6 +82,7 @@ def bt_min_up(pin, double_button_vertical_pressed,
 
 def bt_min_down(pin, double_button_vertical_pressed,
                             double_button_horizontal_pressed):
+    global f_pressed_buton, f_double_pressed_buton, f_rele_is_on, min_level, max_level, view_mode, rele_mode, wifi_ap_on
     print(f"Pin- {pin}, vertical_pressed {double_button_vertical_pressed} "
           f"horizontal_pressed {double_button_horizontal_pressed}")
     if double_button_horizontal_pressed:
@@ -124,6 +116,7 @@ def bt_min_down(pin, double_button_vertical_pressed,
 
 def bt_max_up(pin, double_button_vertical_pressed,
                          double_button_horizontal_pressed):
+    global f_pressed_buton, f_double_pressed_buton, f_rele_is_on, min_level, max_level, view_mode, rele_mode, wifi_ap_on
     print(f"Pin- {pin}, vertical_pressed {double_button_vertical_pressed} "
           f"horizontal_pressed {double_button_horizontal_pressed}")
     if double_button_horizontal_pressed:
@@ -156,6 +149,7 @@ def bt_max_up(pin, double_button_vertical_pressed,
 
 def bt_max_down(pin, double_button_vertical_pressed,
                            double_button_horizontal_pressed):
+    global f_pressed_buton, f_double_pressed_buton, f_rele_is_on, min_level, max_level, view_mode, rele_mode, wifi_ap_on
     print(f"Pin- {pin}, vertical_pressed {double_button_vertical_pressed} "
           f"horizontal_pressed {double_button_horizontal_pressed}")
     if double_button_horizontal_pressed:
@@ -187,6 +181,7 @@ def bt_max_down(pin, double_button_vertical_pressed,
         f_double_pressed_buton = False
 
 def check_mode_and_set_rele():
+    global battery_charge_level, f_rele_is_on, rele_mode
     f_change_rele_state = False
     old_f_is_on = f_rele_is_on
     if rele_mode == cons.RELE_BATTERY_LEVEL:
@@ -210,6 +205,7 @@ def check_mode_and_set_rele():
     return f_change_rele_state
 
 def view_data():
+    global f_pressed_buton, view_mode, oled, wifi_mode, battery_charge_level, f_rele_is_on
     if view_mode == cons.VIEW_MODE_BATTERY_LEVEL:
         if not f_pressed_buton:
             oled.draw_charge_level(battery_charge_level, f_rele_is_on)
@@ -222,6 +218,7 @@ def view_data():
 
 # Define coroutine function
 async def read_soc_by_can_and_check_level():
+    global STOP
     while not STOP:
         try:
             led_state = pin_led.value()
@@ -259,6 +256,7 @@ async def read_soc_by_can_and_check_level():
 
 # Define coroutine function
 async def wifi_server():
+    global STOP
     while not STOP:
         logger.debug("Listen for connections")
         try:
@@ -289,6 +287,7 @@ async def wifi_server():
 
 
 async def checkButtonPressTimerExpired():
+    global STOP
     while not STOP:
         await asyncio.sleep(5)
         if f_pressed_buton:
@@ -310,6 +309,16 @@ async def main():
     asyncio.create_task(read_soc_by_can_and_check_level())
     asyncio.create_task(checkButtonPressTimerExpired())
     asyncio.create_task(wifi_server())
+
+
+Button(pin_number_down=12, callback=bt_min_up,
+       pin_number_double_vertical=11, pin_number_double_horizontal=7)
+Button(pin_number_down=11, callback=bt_min_down,
+       pin_number_double_vertical=12, pin_number_double_horizontal=9)
+Button(pin_number_down=7, callback=bt_max_up,
+       pin_number_double_vertical=9, pin_number_double_horizontal=12)
+Button(pin_number_down=9, callback=bt_max_down,
+       pin_number_double_vertical=7, pin_number_double_horizontal=11)
 
 # Create and run the event loop
 loop = asyncio.get_event_loop()
