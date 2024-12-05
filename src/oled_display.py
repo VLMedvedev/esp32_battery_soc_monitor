@@ -57,9 +57,12 @@ class OLED_Display:
         self.display.invert(0)
         self.display = self.battery_charge_level_ico(level)
         self.display.select_font('text-16')
-        self.display.text(str(level), 15, 2, 1, 0)
-        if level > 0:
-            self.display.text("%", 6, 20, 0, 0, c=2)
+        if level == 123:
+            self.display.text(str("XXX"), 15, 2, 1, 0)
+        else:
+            self.display.text(str(level), 15, 2, 1, 0)
+            if level > 0:
+                self.display.text("%", 6, 20, 0, 0, c=2)
         if f_is_rele_on:
             self.draw_on_mini()
         else:

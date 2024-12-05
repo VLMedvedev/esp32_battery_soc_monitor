@@ -314,7 +314,7 @@ async def main():
     # Create tasks for
     asyncio.create_task(read_soc_by_can_and_check_level())
     asyncio.create_task(checkButtonPressTimerExpired())
-    asyncio.create_task(wifi_server())
+   # asyncio.create_task(wifi_server())
 
 
 Button(pin_number_down=12, callback=bt_min_up,
