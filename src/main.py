@@ -220,6 +220,7 @@ def view_data():
 async def read_soc_by_can_and_check_level():
     global STOP
     while not STOP:
+        await asyncio.sleep(1)
         print(f"read can, button press {f_pressed_buton} ")
         try:
             led_state = pin_led.value()
@@ -237,7 +238,7 @@ async def read_soc_by_can_and_check_level():
                 check_mode_and_set_rele()
                 print(f"Battery level: {battery_charge_level}% - rele is on {f_rele_is_on}")
                 view_data()        
-            await asyncio.sleep(1)
+
         except OSError as ex:
             logger.exception(ex, 'OSError')
         except KeyboardInterrupt:
@@ -259,6 +260,7 @@ async def read_soc_by_can_and_check_level():
 async def wifi_server():
     global STOP
     while not STOP:
+        await asyncio.sleep(2)
         print("start wifi server")
         logger.debug("Listen for connections")
         try:
@@ -285,14 +287,14 @@ async def wifi_server():
         finally:
             logger.info("closing connection")
             # cl.close()
-        await asyncio.sleep(2)
+
 
 
 async def checkButtonPressTimerExpired():
     global STOP
     while not STOP:
-        print("check button press timer")
         await asyncio.sleep(5)
+        print("check button press timer")
         if f_pressed_buton:
             write_battery_pref()
             await asyncio.sleep(1)
