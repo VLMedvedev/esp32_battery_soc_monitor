@@ -24,5 +24,11 @@ HW_LED_PIN = const(15)
 HW_RELE_PIN = const(16)
 HW_CAN_RX_PIN = const(37)
 HW_CAN_TX_PIN = const(39)
+# bt_min_up bt_max_up        12   7
+# bt_min_down bt_max_down    11   9
+HW_BT_LEFT_UP = const(12)
+HW_BT_LEFT_DOWN = const(11)
+HW_BT_RIGTH_UP = const(7)
+HW_BT_RIGTH_DOWN = const(9)
 
 
