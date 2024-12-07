@@ -113,7 +113,7 @@ async def read_soc_by_can_and_check_level():
             else:
                 pin_led.on()
 #            print(f"read can")
-            tim_start = utime.time()
+ #           tim_start = utime.time()
 #                print(f"begin can {tim_start}")
             can_read = esp32_soc.read_soc_level(0)
             #can_read = 55

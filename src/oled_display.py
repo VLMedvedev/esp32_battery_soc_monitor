@@ -47,7 +47,7 @@ class OLED_Display:
         else:
             h_rec=int(level * 34 / 100)
             y_shift = (34 + 9) - h_rec
-            print(h_rec, y_shift)
+        #    print(h_rec, y_shift)
             self.display.fill_rect(6, y_shift, 14, h_rec, 1) #100
         return self.display
 
