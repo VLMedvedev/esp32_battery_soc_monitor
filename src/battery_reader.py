@@ -26,4 +26,9 @@ class Battery_reader():
 
 if __name__ == "__main__":
     br = Battery_reader()
-    br.run()
+    soc = br.get_soc_level()
+    print(soc)
+    utime.sleep(2)
+    print(soc)
+    utime.sleep(30)
+    print(soc)
