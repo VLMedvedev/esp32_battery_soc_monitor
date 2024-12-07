@@ -36,6 +36,6 @@ HW_BT_RIGTH_DOWN = const(9)
 AP_SSID = "ESP32_CaptivePortal"
 AP_PASSWORD = ""
 AUTHMODE=network.AUTH_OPEN
-AP_IP = "192.168.4.1"
+AP_IP = "192.168.54.1"
 
 
