@@ -29,14 +29,6 @@ f_double_pressed_buton = False
 pref = DataThree()
 min_level = 10
 max_level = 97
-# bt_min_up bt_max_up        12   7
-# bt_min_down bt_max_down    11   9
-bt_left_up = Pin(cons.HW_BT_LEFT_UP, Pin.IN, Pin.PULL_UP)
-bt_left_down = Pin(cons.HW_BT_LEFT_DOWN, Pin.IN, Pin.PULL_UP)
-bt_rigth_up = Pin(cons.HW_BT_RIGTH_UP, Pin.IN, Pin.PULL_UP)
-bt_rigth_down = Pin(cons.HW_BT_RIGTH_DOWN, Pin.IN, Pin.PULL_UP)
-
-#br = Battery_reader()
 
 def read_battery_pref():
     if (pref.begin(key="load_battery_", readMode=True)):
@@ -169,6 +161,49 @@ async def wifi_server():
             logger.info("closing connection")
             # cl.close()
 
+async def buttonPressTimerExpired():
+    global f_pressed_buton, view_mode
+    while not STOP:
+        await asyncio.sleep(7)
+        print("Button press timer expired")
+        if f_pressed_buton:
+            f_pressed_buton = False
+            write_battery_pref()
+        view_mode = cons.VIEW_MODE_BATTERY_LEVEL
+        view_data()
+
+def bt_pressed(btn_number, double=False, long=False):
+    f_pressed_buton = True
+    print(f"bt_num = {btn_number} double={double} long={long}")
+
+def button_init():
+    # bt_min_up bt_max_up        12   7
+    # bt_min_down bt_max_down    11   9
+    bt_left_up = Pin(cons.HW_BT_LEFT_UP, Pin.IN, Pin.PULL_UP)
+    bt_left_down = Pin(cons.HW_BT_LEFT_DOWN, Pin.IN, Pin.PULL_UP)
+    bt_rigth_up = Pin(cons.HW_BT_RIGTH_UP, Pin.IN, Pin.PULL_UP)
+    bt_rigth_down = Pin(cons.HW_BT_RIGTH_DOWN, Pin.IN, Pin.PULL_UP)
+
+    bt_min_up = Pushbutton(bt_left_up, suppress=True)
+    bt_min_up.release_func(bt_pressed(btn_number=cons.HW_BT_LEFT_UP))
+    bt_min_up.double_func(btn_number=cons.HW_BT_LEFT_UP, double=True)
+    bt_min_up.long_func(btn_number=cons.HW_BT_LEFT_UP, long=True)
+
+    bt_min_down = Pushbutton(bt_left_down, suppress=True)
+    bt_min_down.release_func(bt_pressed(btn_number=cons.HW_BT_LEFT_DOWN))
+    bt_min_down.double_func(btn_number=cons.HW_BT_LEFT_DOWN, double=True)
+    bt_min_down.long_func(btn_number=cons.HW_BT_LEFT_DOWN, long=True)
+
+    bt_max_up = Pushbutton(bt_rigth_up, suppress=True)
+    bt_max_up.release_func(bt_pressed(btn_number=cons.HW_BT_RIGTH_UP))
+    bt_max_up.double_func(btn_number=cons.HW_BT_RIGTH_UP, double=True)
+    bt_max_up.long_func(btn_number=cons.HW_BT_RIGTH_UP, long=True)
+
+    bt_max_down = Pushbutton(bt_rigth_down, suppress=True)
+    bt_max_down.release_func(bt_pressed(btn_number=cons.HW_BT_RIGTH_DOWN))
+    bt_max_down.double_func(btn_number=cons.HW_BT_RIGTH_DOWN, double=True)
+    bt_max_down.long_func(btn_number=cons.HW_BT_RIGTH_DOWN, long=True)
+
 # Define the main function to run the event loop
 async def main():
     d = utime.localtime()
@@ -177,29 +212,12 @@ async def main():
     print(f" driver init  {ret}")
     read_battery_pref()
     print("set button")
-    bt_min_up = Pushbutton(bt_left_up, suppress=True)
-    bt_min_up.release_func(print, ("SHORT-lu",))
-    bt_min_up.double_func(print, ("DOUBLE-lu",))
-    bt_min_up.long_func(print, ("LONG-lu",))
-
-    bt_min_down = Pushbutton(bt_left_down, suppress=True)
-    bt_min_down.release_func(print, ("SHORT-ld",))
-    bt_min_down.double_func(print, ("DOUBLE-ld",))
-    bt_min_down.long_func(print, ("LONG-ld",))
-
-    bt_max_up = Pushbutton(bt_rigth_up, suppress=True)
-    bt_max_up.release_func(print, ("SHORT-ru",))
-    bt_max_up.double_func(print, ("DOUBLE-ru",))
-    bt_max_up.long_func(print, ("LONG-ru",))
-
-    bt_max_down = Pushbutton(bt_rigth_down, suppress=True)
-    bt_max_down.release_func(print, ("SHORT-rd",))
-    bt_max_down.double_func(print, ("DOUBLE-rd",))
-    bt_max_down.long_func(print, ("LONG-rd",))
+    button_init()
 
     print(f" create_tasks ")
     # Create tasks for
     asyncio.create_task(read_soc_by_can_and_check_level())
+    asyncio.create_task(buttonPressTimerExpired())
    # asyncio.create_task(wifi_server())
 
 
