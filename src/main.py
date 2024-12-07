@@ -8,6 +8,7 @@ from machine import Pin
 from debouncer import Button
 from preferences import DataThree
 from primitives import Pushbutton
+from battery_reader import Battery_reader
 
 logger = logging.getLogger('main_log', 'main.log')
 # logger = logging.getLogger('html')
@@ -36,6 +37,8 @@ bt_left_up = Pin(cons.HW_BT_LEFT_UP, Pin.IN, Pin.PULL_UP)
 bt_left_down = Pin(cons.HW_BT_LEFT_DOWN, Pin.IN, Pin.PULL_UP)
 bt_rigth_up = Pin(cons.HW_BT_RIGTH_UP, Pin.IN, Pin.PULL_UP)
 bt_rigth_down = Pin(cons.HW_BT_RIGTH_DOWN, Pin.IN, Pin.PULL_UP)
+
+br = Battery_reader()
 
 def read_battery_pref():
     if (pref.begin(key="load_battery_", readMode=True)):
@@ -93,7 +96,7 @@ def view_data():
 
 # Define coroutine function
 async def read_soc_by_can_and_check_level():
-    global STOP, battery_charge_level, old_battery_charge_level
+    global br, STOP, battery_charge_level, old_battery_charge_level
     while not STOP:
         await asyncio.sleep(1)
         print(f"read can, button press {f_pressed_buton} ")
@@ -107,10 +110,11 @@ async def read_soc_by_can_and_check_level():
             if not f_pressed_buton:
                 tim_start = utime.time()
                # print(f"begin can {tim_start}")
-                battery_charge_level = esp32_soc.read_soc_level(0)
-                if battery_charge_level != old_battery_charge_level:
-                    print(f"Battery level: {battery_charge_level}% time {utime.time() - tim_start}")
-                    view_data()
+                #battery_charge_level = await esp32_soc.read_soc_level(0)
+                battery_charge_level = br.get_soc_level()
+                #if battery_charge_level != old_battery_charge_level:
+                print(f"Battery level: {battery_charge_level}% time {utime.time() - tim_start}")
+                view_data()
                 old_battery_charge_level = battery_charge_level
                 check_mode_and_set_rele()
              #   print(f"Battery level: {battery_charge_level}% - rele is on {f_rele_is_on}")
@@ -165,22 +169,6 @@ async def wifi_server():
             logger.info("closing connection")
             # cl.close()
 
-
-
-async def checkButtonPressTimerExpired():
-    global STOP, f_double_pressed_buton, f_pressed_buton, view_mode
-    while not STOP:
-        await asyncio.sleep(5)
-        print(f"check button press timer f_pressed_buton = {f_pressed_buton}")
-        if f_pressed_buton:
-            write_battery_pref()
-            await asyncio.sleep(1)
-            print("Button press timer expired")
-            f_double_pressed_buton = False
-            f_pressed_buton = False
-            view_mode = cons.VIEW_MODE_BATTERY_LEVEL
-            view_data()
-
 # Define the main function to run the event loop
 async def main():
     d = utime.localtime()
@@ -212,7 +200,6 @@ async def main():
     print(f" create_tasks ")
     # Create tasks for
     asyncio.create_task(read_soc_by_can_and_check_level())
-    asyncio.create_task(checkButtonPressTimerExpired())
    # asyncio.create_task(wifi_server())
 
 

@@ -110,61 +110,55 @@ static MP_DEFINE_CONST_FUN_OBJ_2(can_driver_init_obj, can_driver_init);
 // This is the function which will be called from Python as esp32_soc.read_soc_level() return soc from can PYLONTECH.
 static mp_obj_t can_read_soc_level() {
     int counter_error = 0;
-    int soc = 0;
-    while (true) {
-        counter_error += 1;
-        if (counter_error >= 15) {
-            soc = 123;
-            return mp_obj_new_int(soc);
-        }
-        // Check if alert happened
-        uint32_t alerts_triggered;
-        twai_read_alerts(&alerts_triggered, pdMS_TO_TICKS(POLLING_RATE_MS));
-        // Check if message is received
-        if (alerts_triggered & TWAI_ALERT_RX_DATA) {
+    int soc = 123;
+    // Check if alert happened
+    uint32_t alerts_triggered;
+    twai_read_alerts(&alerts_triggered, pdMS_TO_TICKS(POLLING_RATE_MS));
+    // Check if message is received
+    if (alerts_triggered & TWAI_ALERT_RX_DATA) {
             // One or more messages received. Handle all.
-            twai_message_t message;
-            while (twai_receive(&message, 0) == ESP_OK) {
-               if (!(message.rtr)) {
-                  int byte_0 = 0;
-                 // int byte_1 = 0;
-                  switch (message.identifier)
-                  {
-                    case 0x18904001:
-                        //DALY https://robu.in/wp-content/uploads/2021/10/Daly-CAN-Communications-Protocol-V1.0-1.pdf
-                        byte_0 = message.data[6];
-                        break;
-                    case 0x4210:
-                        //DEYE_2_HV
-                        byte_0 = message.data[6];
-                        break;
-                    case 0x4211:
-                        //DEYE_2_HV
-                        byte_0 = message.data[6];
-                        break;
-                    case 0x355:
-                        //PYLONTECH
-                        byte_0 = message.data[0];
-                      //  byte_1 = message.data[1];
-                        break;
-                    case 0x313:
-                        //GROWATT
-                        byte_0 = message.data[6];
-                        break;
-                    case 0x457:
-                        //GOODWE  250kbs
-                        byte_0 = message.data[0];
-                        break;
-                    default:
-                        byte_0 = 155;
-                        break;
-                  }
-                  soc = byte_0;
-                  if (soc != 155) return mp_obj_new_int(soc);
-               }
-            }
+        twai_message_t message;
+        while (twai_receive(&message, 0) == ESP_OK) {
+           if (!(message.rtr)) {
+              int byte_0 = 0;
+             // int byte_1 = 0;
+              switch (message.identifier)
+              {
+                case 0x18904001:
+                    //DALY https://robu.in/wp-content/uploads/2021/10/Daly-CAN-Communications-Protocol-V1.0-1.pdf
+                    byte_0 = message.data[6];
+                    break;
+                case 0x4210:
+                    //DEYE_2_HV
+                    byte_0 = message.data[6];
+                    break;
+                case 0x4211:
+                    //DEYE_2_HV
+                    byte_0 = message.data[6];
+                    break;
+                case 0x355:
+                    //PYLONTECH
+                    byte_0 = message.data[0];
+                  //  byte_1 = message.data[1];
+                    break;
+                case 0x313:
+                    //GROWATT
+                    byte_0 = message.data[6];
+                    break;
+                case 0x457:
+                    //GOODWE  250kbs
+                    byte_0 = message.data[0];
+                    break;
+                default:
+                    byte_0 = 155;
+                    break;
+              }
+              soc = byte_0;
+              if (soc != 155) return mp_obj_new_int(soc);
+           }
         }
     }
+    else return mp_obj_new_int(soc);
 }
 // Define a Python reference to the function above.
 static MP_DEFINE_CONST_FUN_OBJ_1(can_read_soc_level_obj, can_read_soc_level);
