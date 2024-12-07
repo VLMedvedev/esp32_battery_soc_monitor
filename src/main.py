@@ -131,9 +131,6 @@ async def read_soc_by_can_and_check_level():
                 pin_led.off()
             else:
                 pin_led.on()
-#            print(f"read can")
- #           tim_start = utime.time()
-#                print(f"begin can {tim_start}")
             can_read = esp32_soc.read_soc_level(0)
             #can_read = 55
             stable_5 = get_stable_value(can_read)
@@ -145,7 +142,6 @@ async def read_soc_by_can_and_check_level():
                 view_data()
             old_battery_charge_level = battery_charge_level
             check_mode_and_set_rele()
-            #print(f"Battery level: {battery_charge_level}% - rele is on {f_rele_is_on}")
 
         except OSError as ex:
             logger.exception(ex, 'OSError')
@@ -286,8 +282,7 @@ async def main():
     print(f" create_tasks ")
     # Create tasks for
     asyncio.create_task(read_soc_by_can_and_check_level())
-   # asyncio.create_task(buttonPressTimerExpired())
-   # asyncio.create_task(wifi_server())
+    asyncio.create_task(wifi_server())
 
 
 
