@@ -7,6 +7,7 @@ import asyncio
 from machine import Pin
 from preferences import DataThree
 from primitives import Pushbutton
+from captive_portal import start_ap, stop_ap
 
 logger = logging.getLogger('main_log', 'main.log')
 # logger = logging.getLogger('html')
@@ -229,12 +230,14 @@ def bt_pressed(btn_number, double=False, long=False):
         if btn_number == cons.HW_BT_RIGTH_DOWN:
             wifi_ap_on = False
             wifi_mode = cons.WiFi_OFF
+            stop_ap()
         elif btn_number == cons.HW_BT_LEFT_DOWN:
             wifi_ap_on = True
             wifi_mode = cons.WiFi_client
         elif btn_number == cons.HW_BT_RIGTH_UP:
             wifi_ap_on = False
             wifi_mode = cons.WiFi_AP
+            start_ap()
         view_mode = cons.VIEW_MODE_VIEW_INFO
     elif long:
         if btn_number == cons.HW_BT_LEFT_DOWN:
@@ -282,7 +285,7 @@ async def main():
     print(f" create_tasks ")
     # Create tasks for
     asyncio.create_task(read_soc_by_can_and_check_level())
-    asyncio.create_task(wifi_server())
+    #asyncio.create_task(wifi_server())
 
 
 
@@ -290,3 +293,7 @@ async def main():
 loop = asyncio.get_event_loop()
 loop.create_task(main())  # Create a task to run the main function
 loop.run_forever()  # Run the event loop indefinitely
+
+import memory
+memory.check_ram()
+memory.check_pico_storage()

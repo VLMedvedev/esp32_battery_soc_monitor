@@ -1,5 +1,6 @@
 #from enum import Enum
 from micropython import const
+import network
 #from ucollections import namedtuple
 #MyTuple = namedtuple("MyTuple", ("id", "name"))
 #t1 = MyTuple(1, "foo")
@@ -31,5 +32,10 @@ HW_BT_LEFT_UP = const(12)
 HW_BT_LEFT_DOWN = const(11)
 HW_BT_RIGTH_UP = const(7)
 HW_BT_RIGTH_DOWN = const(9)
+
+AP_SSID = "ESP32_CaptivePortal"
+AP_PASSWORD = ""
+AUTHMODE=network.AUTH_OPEN
+AP_IP = "192.168.4.1"
 
 
