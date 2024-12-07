@@ -98,7 +98,7 @@ async def read_soc_by_can_and_check_level():
     while not STOP:
         if view_mode > cons.VIEW_MODE_BATTERY_LEVEL:
             press_button_counter += 1
-            await asyncio.sleep(5)
+            await asyncio.sleep(3)
             if press_button_counter > 2:
                 print("Button press timer expired")
                 if f_pressed_buton:
@@ -120,14 +120,14 @@ async def read_soc_by_can_and_check_level():
 #                print(f"begin can {tim_start}")
             can_read = esp32_soc.read_soc_level(0)
             #can_read = 55
-#            print(f"Battery level: {battery_charge_level}% time {utime.time() - tim_start}")
-            if can_read <= 100:
+            print(f"Battery level: {battery_charge_level}% can_read {can_read}")
+            if can_read <= 100 or can_read == 123:
                 battery_charge_level = can_read
             if battery_charge_level != old_battery_charge_level:
-                print(f"Battery level: {battery_charge_level}% - rele is on {f_rele_is_on}")
                 view_data()
             old_battery_charge_level = battery_charge_level
             check_mode_and_set_rele()
+            #print(f"Battery level: {battery_charge_level}% - rele is on {f_rele_is_on}")
 
         except OSError as ex:
             logger.exception(ex, 'OSError')
