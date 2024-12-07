@@ -109,7 +109,6 @@ static MP_DEFINE_CONST_FUN_OBJ_2(can_driver_init_obj, can_driver_init);
 
 // This is the function which will be called from Python as esp32_soc.read_soc_level() return soc from can PYLONTECH.
 static mp_obj_t can_read_soc_level() {
-    int counter_error = 0;
     int soc = 123;
     // Check if alert happened
     uint32_t alerts_triggered;
@@ -158,7 +157,7 @@ static mp_obj_t can_read_soc_level() {
            }
         }
     }
-    else return mp_obj_new_int(soc);
+    return mp_obj_new_int(soc);
 }
 // Define a Python reference to the function above.
 static MP_DEFINE_CONST_FUN_OBJ_1(can_read_soc_level_obj, can_read_soc_level);
