@@ -25,6 +25,7 @@ pin_led = Pin(cons.HW_LED_PIN, Pin.OUT)
 pin_led.on()
 f_rele_is_on = False
 f_pressed_buton = False
+press_button_counter = 0
 pref = DataThree()
 min_level = 10
 max_level = 97
@@ -93,16 +94,18 @@ def view_data():
 
 # Define coroutine function
 async def read_soc_by_can_and_check_level():
-    global f_pressed_buton, STOP, battery_charge_level, old_battery_charge_level, view_mode
+    global f_pressed_buton, STOP, battery_charge_level, old_battery_charge_level, view_mode, press_button_counter
     while not STOP:
         if view_mode > cons.VIEW_MODE_BATTERY_LEVEL:
-            await asyncio.sleep(10)
-            print("Button press timer expired")
-            if f_pressed_buton:
-                f_pressed_buton = False
-                write_battery_pref()
-            view_mode = cons.VIEW_MODE_BATTERY_LEVEL
-            view_data()
+            press_button_counter += 1
+            await asyncio.sleep(5)
+            if press_button_counter > 2:
+                print("Button press timer expired")
+                if f_pressed_buton:
+                    f_pressed_buton = False
+                    write_battery_pref()
+                view_mode = cons.VIEW_MODE_BATTERY_LEVEL
+                view_data()
             continue
         else:
             await asyncio.sleep(1)
@@ -176,8 +179,8 @@ async def wifi_server():
             # cl.close()
 
 def bt_pressed(btn_number, double=False, long=False):
-    global f_pressed_buton, f_rele_is_on, min_level, max_level, view_mode, rele_mode, wifi_ap_on
-    #f_pressed_buton = True
+    global f_pressed_buton, f_rele_is_on, min_level, max_level, view_mode, rele_mode, wifi_ap_on, press_button_counter
+    press_button_counter = 0
     print(f"bt_num = {btn_number} double={double} long={long}")
     if not double and not long:
         if btn_number == cons.HW_BT_LEFT_UP:
