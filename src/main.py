@@ -36,6 +36,7 @@ bt_rigth_up = Pin(cons.HW_BT_RIGTH_UP, Pin.IN, Pin.PULL_UP)
 bt_rigth_down = Pin(cons.HW_BT_RIGTH_DOWN, Pin.IN, Pin.PULL_UP)
 
 def read_battery_pref():
+    global pref, min_level, max_level, rele_mode
     if (pref.begin(key="load_battery_", readMode=True)):
         min_level = pref.getInt("min_level", 15)
         max_level = pref.getInt("max_level", 95)
@@ -44,6 +45,7 @@ def read_battery_pref():
     print(f"Read battery pref{min_level}, {max_level},{rele_mode}, ")
 
 def write_battery_pref():
+    global pref, min_level, max_level, rele_mode
     if (pref.begin(key="load_battery_", readMode=False)):
         print(f"Writing battery pref{min_level}, {max_level}, {rele_mode},")
         pref.put("min_level", min_level)
