@@ -94,7 +94,13 @@ async def read_soc_by_can_and_check_level():
     global f_pressed_buton, STOP, battery_charge_level, old_battery_charge_level, view_mode
     while not STOP:
         if view_mode > cons.VIEW_MODE_BATTERY_LEVEL:
-            await asyncio.sleep(5)
+            await asyncio.sleep(7)
+            print("Button press timer expired")
+            if f_pressed_buton:
+                f_pressed_buton = False
+                write_battery_pref()
+            view_mode = cons.VIEW_MODE_BATTERY_LEVEL
+            view_data()
             continue
         else:
             await asyncio.sleep(1)
@@ -167,17 +173,6 @@ async def wifi_server():
         finally:
             logger.info("closing connection")
             # cl.close()
-
-async def buttonPressTimerExpired():
-    global f_pressed_buton, view_mode
-    while not STOP:
-        await asyncio.sleep(7)
-        print("Button press timer expired")
-        if f_pressed_buton:
-            f_pressed_buton = False
-            write_battery_pref()
-        view_mode = cons.VIEW_MODE_BATTERY_LEVEL
-        view_data()
 
 def bt_pressed(btn_number, double=False, long=False):
     global f_pressed_buton, f_rele_is_on, min_level, max_level, view_mode, rele_mode, wifi_ap_on
@@ -272,7 +267,7 @@ async def main():
     print(f" create_tasks ")
     # Create tasks for
     asyncio.create_task(read_soc_by_can_and_check_level())
-    asyncio.create_task(buttonPressTimerExpired())
+   # asyncio.create_task(buttonPressTimerExpired())
    # asyncio.create_task(wifi_server())
 
 
