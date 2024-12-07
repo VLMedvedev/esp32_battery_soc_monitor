@@ -96,7 +96,7 @@ async def read_soc_by_can_and_check_level():
     global f_pressed_buton, STOP, battery_charge_level, old_battery_charge_level, view_mode
     while not STOP:
         if view_mode > cons.VIEW_MODE_BATTERY_LEVEL:
-            await asyncio.sleep(7)
+            await asyncio.sleep(10)
             print("Button press timer expired")
             if f_pressed_buton:
                 f_pressed_buton = False
@@ -121,11 +121,10 @@ async def read_soc_by_can_and_check_level():
             if can_read <= 100:
                 battery_charge_level = can_read
             if battery_charge_level != old_battery_charge_level:
+                print(f"Battery level: {battery_charge_level}% - rele is on {f_rele_is_on}")
                 view_data()
             old_battery_charge_level = battery_charge_level
             check_mode_and_set_rele()
-            print(f"Battery level: {battery_charge_level}% - rele is on {f_rele_is_on}")
-            #view_data()
 
         except OSError as ex:
             logger.exception(ex, 'OSError')
