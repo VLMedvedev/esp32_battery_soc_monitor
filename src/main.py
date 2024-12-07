@@ -179,52 +179,52 @@ async def wifi_server():
             # cl.close()
 
 def bt_pressed(btn_number, double=False, long=False):
-    global f_pressed_buton, f_rele_is_on, min_level, max_level, view_mode, rele_mode, wifi_ap_on, press_button_counter
+    global f_pressed_buton, f_rele_is_on, min_level, max_level, view_mode, rele_mode, wifi_ap_on, wifi_mode, press_button_counter
     press_button_counter = 0
     print(f"bt_num = {btn_number} double={double} long={long}")
-    if not double and not long:
+    if not double and not long and f_pressed_buton:
         if btn_number == cons.HW_BT_LEFT_UP:
-            if f_pressed_buton:
-                rele_mode = cons.RELE_BATTERY_LEVEL
-                min_level += 1
-                if min_level > max_level - 1:
-                    min_level = max_level - 1
+            rele_mode = cons.RELE_BATTERY_LEVEL
+            min_level += 1
+            if min_level > max_level - 1:
+                min_level = max_level - 1
             view_mode = cons.VIEW_MODE_SETTING_UP
             oled.draw_setting_level(min_level, button_group="down")
         elif btn_number == cons.HW_BT_LEFT_DOWN:
-            if f_pressed_buton:
-                rele_mode = cons.RELE_BATTERY_LEVEL
-                f_pressed_buton = False
-                min_level -= 1
-                if min_level < 0:
-                    min_level = 0
+            rele_mode = cons.RELE_BATTERY_LEVEL
+            f_pressed_buton = False
+            min_level -= 1
+            if min_level < 0:
+                min_level = 0
             view_mode = cons.VIEW_MODE_SETTING_DOWN
             oled.draw_setting_level(min_level, button_group="down")
         elif btn_number == cons.HW_BT_RIGTH_UP:
-            if f_pressed_buton:
-                rele_mode = cons.RELE_BATTERY_LEVEL
-                max_level += 1
-                if max_level > 100:
-                    max_level = 100
+            rele_mode = cons.RELE_BATTERY_LEVEL
+            max_level += 1
+            if max_level > 100:
+                max_level = 100
             view_mode = cons.VIEW_MODE_SETTING_UP
             oled.draw_setting_level(max_level, button_group="up")
         elif btn_number == cons.HW_BT_RIGTH_DOWN:
-            if f_pressed_buton:
-                rele_mode = cons.RELE_BATTERY_LEVEL
-                max_level -= 1
-                if max_level < min_level + 1:
-                    max_level = min_level + 1
+            rele_mode = cons.RELE_BATTERY_LEVEL
+            max_level -= 1
+            if max_level < min_level + 1:
+                max_level = min_level + 1
             view_mode = cons.VIEW_MODE_SETTING_DOWN
             oled.draw_setting_level(max_level, button_group="up")
         f_pressed_buton = True
     elif double:
-        if btn_number == cons.HW_BT_LEFT_DOWN:
+        if btn_number == cons.HW_BT_RIGTH_DOWN:
             wifi_ap_on = False
-        elif btn_number == cons.HW_BT_RIGTH_DOWN:
+            wifi_mode = cons.WiFi_OFF
+        elif btn_number == cons.HW_BT_LEFT_DOWN:
             wifi_ap_on = True
+            wifi_mode = cons.WiFi_client
+        elif btn_number == cons.HW_BT_RIGTH_UP:
+            wifi_ap_on = False
+            wifi_mode = cons.WiFi_AP
         f_pressed_buton = False
         view_mode = cons.VIEW_MODE_VIEW_INFO
-        #view_data()
     elif long:
         if btn_number == cons.HW_BT_LEFT_DOWN:
             rele_mode = cons.RELE_ALWAYS_OFF

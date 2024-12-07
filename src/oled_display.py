@@ -6,8 +6,20 @@
 #
 # https://github.com/mark-gladding/packed-font
 #
+"""Render a text string to the display in the currently selected font, with optional alignment.
+Args:
+    text (string): Text to render.
+    x (int): X coordinate to begin text rendering.
+    y (int): Y coordinate to begin text rendering.
+    horiz_align (int, optional): 0 = Left, 1 = Center, 2 = Right. Defaults to 0.
+    vert_align (int, optional): 0 = Top, 1 = Center, 2 = Bottom. Defaults to 0.
+    max_width (int, optional): Width of the box to align text horizontally within. Defaults to display width.
+    max_height (int, optional): Height of the box to align text vertically within. Defaults to display height.
+    c (int, optional): Color to render text in. Defaults to 1.
+"""
 
 from enhanced_display import Enhanced_Display
+import constants_and_configs as cons
 
 
 class OLED_Display:
@@ -31,11 +43,35 @@ class OLED_Display:
        return self.display
 
     def view_info(self, wifi_mode):
-        #TODO view_info()
-        if wifi_mode == 0:
+        # TODO view_info()
+        if wifi_mode == cons.WiFi_AP:
             print(f"wifi_mode {wifi_mode} AP ")
-        else:
+            self.display.clear()
+            self.display.fill(0)
+            self.display.invert(0)
+            self.display.select_font('text-16')
+            self.display.text(str("Wi-Fi"), 2, 2, 1, 0)
+            self.display.text(str("AP ON"), 2, 20, 1, 0)
+            self.display.show()
+        elif wifi_mode == cons.WiFi_OFF :
+            print(f"wifi_mode {wifi_mode} off")
+            self.display.clear()
+            self.display.fill(0)
+            self.display.invert(0)
+            self.display.select_font('text-16')
+            self.display.text(str("Wi-Fi"), 2, 2, 1, 0)
+            self.display.text(str("AP OFF"), 2, 20, 1, 0)
+            self.display.show()
+        elif wifi_mode == cons.WiFi_client :
             print(f"wifi_mode {wifi_mode} client")
+            self.display.clear()
+            self.display.fill(0)
+            self.display.invert(0)
+            self.display.select_font('text-16')
+            self.display.text(str("Wi-Fi"), 2, 2, 1, 0)
+            self.display.text(str("client"), 2, 20, 1, 0)
+            self.display.show()
+
         return None
 
     def battery_charge_level_ico(self, level: int):
