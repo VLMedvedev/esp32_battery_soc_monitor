@@ -29,6 +29,8 @@ press_button_counter = 0
 pref = DataThree()
 min_level = 10
 max_level = 97
+stable_counter = 0
+prev_number = None
 # bt_min_up bt_max_up        12   7
 # bt_min_down bt_max_down    11   9
 bt_left_up = Pin(cons.HW_BT_LEFT_UP, Pin.IN, Pin.PULL_UP)
@@ -94,6 +96,18 @@ def view_data():
     elif view_mode == cons.VIEW_MODE_SETTINGS:
         oled.view_settings()
 
+def get_stable_value(input_number, set_stable_counter=5):
+    global stable_counter, prev_number
+    if input_number == prev_number:
+        stable_counter += 1
+    else:
+        stable_counter = 1
+    prev_number = input_number
+    if stable_counter >= set_stable_counter:
+    #    print(f"more {set_stable_counter}: {input_number}")
+        return input_number
+    return None
+
 # Define coroutine function
 async def read_soc_by_can_and_check_level():
     global f_pressed_buton, STOP, battery_charge_level, old_battery_charge_level, view_mode, press_button_counter
@@ -122,9 +136,11 @@ async def read_soc_by_can_and_check_level():
 #                print(f"begin can {tim_start}")
             can_read = esp32_soc.read_soc_level(0)
             #can_read = 55
-            print(f"Battery level: {battery_charge_level}% can_read {can_read}")
-            if can_read <= 100 or can_read == 123:
-                battery_charge_level = can_read
+            stable_5 = get_stable_value(can_read)
+            print(f"Battery level: {battery_charge_level}% can_read {can_read} stable_5 {stable_5}")
+            if stable_5 is not None:
+                if can_read <= 100 or can_read == 123:
+                    battery_charge_level = can_read
             if battery_charge_level != old_battery_charge_level:
                 view_data()
             old_battery_charge_level = battery_charge_level
@@ -237,7 +253,6 @@ def bt_pressed(btn_number, double=False, long=False):
     f_pressed_buton = True
     view_data()
 
-
 def button_init():
     bt_min_up = Pushbutton(bt_left_up, suppress=True)
     bt_min_up.release_func(bt_pressed , (cons.HW_BT_LEFT_UP, False, False,))
@@ -258,7 +273,6 @@ def button_init():
     bt_max_down.release_func(bt_pressed , (cons.HW_BT_RIGTH_DOWN, False, False,))
     bt_max_down.double_func(bt_pressed , (cons.HW_BT_RIGTH_DOWN, True, False,))
     bt_max_down.long_func(bt_pressed , (cons.HW_BT_RIGTH_DOWN, False, True,))
-
 # Define the main function to run the event loop
 async def main():
     d = utime.localtime()
