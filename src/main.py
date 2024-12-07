@@ -91,12 +91,14 @@ def view_data():
         oled.draw_on()
     elif view_mode == cons.VIEW_MODE_VIEW_INFO:
         oled.view_info(wifi_mode)
+    elif view_mode == cons.VIEW_MODE_SETTINGS:
+        oled.view_settings()
 
 # Define coroutine function
 async def read_soc_by_can_and_check_level():
     global f_pressed_buton, STOP, battery_charge_level, old_battery_charge_level, view_mode, press_button_counter
     while not STOP:
-        if view_mode > cons.VIEW_MODE_BATTERY_LEVEL:
+        if view_mode > cons.VIEW_MODE_BATTERY_LEVEL or f_pressed_buton:
             press_button_counter += 1
             await asyncio.sleep(3)
             if press_button_counter > 2:
@@ -192,7 +194,6 @@ def bt_pressed(btn_number, double=False, long=False):
             oled.draw_setting_level(min_level, button_group="down")
         elif btn_number == cons.HW_BT_LEFT_DOWN:
             rele_mode = cons.RELE_BATTERY_LEVEL
-            f_pressed_buton = False
             min_level -= 1
             if min_level < 0:
                 min_level = 0
@@ -212,7 +213,6 @@ def bt_pressed(btn_number, double=False, long=False):
                 max_level = min_level + 1
             view_mode = cons.VIEW_MODE_SETTING_DOWN
             oled.draw_setting_level(max_level, button_group="up")
-        f_pressed_buton = True
     elif double:
         if btn_number == cons.HW_BT_RIGTH_DOWN:
             wifi_ap_on = False
@@ -223,7 +223,6 @@ def bt_pressed(btn_number, double=False, long=False):
         elif btn_number == cons.HW_BT_RIGTH_UP:
             wifi_ap_on = False
             wifi_mode = cons.WiFi_AP
-        f_pressed_buton = False
         view_mode = cons.VIEW_MODE_VIEW_INFO
     elif long:
         if btn_number == cons.HW_BT_LEFT_DOWN:
@@ -232,8 +231,10 @@ def bt_pressed(btn_number, double=False, long=False):
         elif btn_number == cons.HW_BT_RIGTH_DOWN:
             rele_mode = cons.RELE_ALWAYS_ON
             view_mode = cons.VIEW_MODE_VIEW_ON
-        f_pressed_buton = True
         check_mode_and_set_rele()
+    else:
+        view_mode = cons.VIEW_MODE_SETTINGS
+    f_pressed_buton = True
     view_data()
 
 

@@ -42,6 +42,16 @@ class OLED_Display:
     def get_display(self):
        return self.display
 
+    def view_settings(self):
+        print(f"view settings ")
+        self.display.clear()
+        self.display.fill(0)
+        self.display.invert(0)
+        self.display.select_font('text-16')
+        self.display.text(str("Setup"), 2, 2, 1, 0)
+        #self.display.text(str("AP ON"), 2, 20, 1, 0)
+        self.display.show()
+
     def view_info(self, wifi_mode):
         # TODO view_info()
         if wifi_mode == cons.WiFi_AP:

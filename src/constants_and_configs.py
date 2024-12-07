@@ -19,6 +19,7 @@ VIEW_MODE_SETTING_UP = const(2)
 VIEW_MODE_SETTING_DOWN = const(3)
 VIEW_MODE_VIEW_OFF = const(4)
 VIEW_MODE_VIEW_ON = const(6)
+VIEW_MODE_SETTINGS = const(7)
 
 HW_LED_PIN = const(15)
 HW_RELE_PIN = const(16)
