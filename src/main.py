@@ -164,7 +164,7 @@ async def read_soc_by_can_and_check_level():
 async def wifi_server():
     global STOP
     while not STOP:
-        await asyncio.sleep(2)
+        await asyncio.sleep_ms(200)
         print("start wifi server")
         logger.debug("Listen for connections")
         try:
