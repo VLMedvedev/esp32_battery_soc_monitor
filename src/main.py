@@ -5,10 +5,8 @@ import constants_and_configs as cons
 import esp32_soc
 import asyncio
 from machine import Pin
-from debouncer import Button
 from preferences import DataThree
 from primitives import Pushbutton
-from battery_reader import Battery_reader
 
 logger = logging.getLogger('main_log', 'main.log')
 # logger = logging.getLogger('html')
@@ -38,7 +36,7 @@ bt_left_down = Pin(cons.HW_BT_LEFT_DOWN, Pin.IN, Pin.PULL_UP)
 bt_rigth_up = Pin(cons.HW_BT_RIGTH_UP, Pin.IN, Pin.PULL_UP)
 bt_rigth_down = Pin(cons.HW_BT_RIGTH_DOWN, Pin.IN, Pin.PULL_UP)
 
-br = Battery_reader()
+#br = Battery_reader()
 
 def read_battery_pref():
     if (pref.begin(key="load_battery_", readMode=True)):
@@ -110,8 +108,10 @@ async def read_soc_by_can_and_check_level():
             if not f_pressed_buton:
                 tim_start = utime.time()
                # print(f"begin can {tim_start}")
-                #battery_charge_level = await esp32_soc.read_soc_level(0)
-                battery_charge_level = br.get_soc_level()
+                can_read = esp32_soc.read_soc_level(0)
+                if can_read <= 100:
+                    battery_charge_level = can_read
+                #battery_charge_level = br.get_soc_level()
                 #if battery_charge_level != old_battery_charge_level:
                 print(f"Battery level: {battery_charge_level}% time {utime.time() - tim_start}")
                 view_data()
