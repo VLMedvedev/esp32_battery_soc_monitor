@@ -58,6 +58,10 @@ def start_http_server():
         request = conn.recv(1024).decode("utf-8")
         print(request)
         body = f"<p>Connecting from {addr}.</p>"
+        html_form = '<form action="/" id="choiceform" method="get">' \
+                    '<label>Choose a command and battery:</label>' \
+                    '<input type="submit" value="Request"></form>'
+        body += html_form
         portal_html = get_html_page(body=body)
         conn.send(portal_html)
         conn.close()

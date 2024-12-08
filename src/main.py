@@ -230,14 +230,14 @@ def bt_pressed(btn_number, double=False, long=False):
         if btn_number == cons.HW_BT_RIGTH_DOWN:
             wifi_ap_on = False
             wifi_mode = cons.WiFi_OFF
-            stop_ap()
+          #  stop_ap()
         elif btn_number == cons.HW_BT_LEFT_DOWN:
             wifi_ap_on = True
             wifi_mode = cons.WiFi_client
         elif btn_number == cons.HW_BT_RIGTH_UP:
             wifi_ap_on = False
             wifi_mode = cons.WiFi_AP
-            start_ap()
+          #  start_ap()
         view_mode = cons.VIEW_MODE_VIEW_INFO
     elif long:
         if btn_number == cons.HW_BT_LEFT_DOWN:
