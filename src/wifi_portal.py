@@ -2,6 +2,7 @@ from phew import access_point, connect_to_wifi, is_connected_to_wifi, dns, serve
 from phew.template import render_template
 import json
 import machine
+import network
 import os
 import utime
 import _thread
@@ -13,6 +14,8 @@ APP_TEMPLATE_PATH = "app_templates"
 WIFI_FILE = "wifi.json"
 WIFI_MAX_ATTEMPTS = 3
 
+
+
 def machine_reset():
     utime.sleep(1)
     print("Resetting...")
@@ -20,7 +23,19 @@ def machine_reset():
 
 def setup_mode():
     print("Entering setup mode...")
-    
+
+    def scan_wifi_ap():
+        ap_str = ""
+        wlan_sta = network.WLAN(network.STA_IF)
+        wlan_sta.active(True)
+        for ssid, *_ in wlan_sta.scan():
+            ssid = ssid.decode("utf-8")
+            ap_str += f"""
+                         <p><input type="radio" name="ssid" value="{0}" id="{0}"><label for="{0}">&nbsp;{0}</label></p>
+             """
+            print(ap_str)
+        return ap_str
+
     def ap_index(request):
         if request.headers.get("host").lower() != AP_DOMAIN.lower():
             return render_template(f"{AP_TEMPLATE_PATH}/redirect.html", domain = AP_DOMAIN.lower())
@@ -43,6 +58,9 @@ def setup_mode():
             return render_template(f"{AP_TEMPLATE_PATH}/redirect.html", domain = AP_DOMAIN)
 
         return "Not found.", 404
+
+    ap_str = scan_wifi_ap()
+    print(ap_str)
 
     server.add_route("/", handler = ap_index, methods = ["GET"])
     server.add_route("/configure", handler = ap_configure, methods = ["POST"])
