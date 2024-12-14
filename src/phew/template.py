@@ -3,6 +3,7 @@ from . import logging
 async def render_template(template, **kwargs):
   import time
   start_time = time.ticks_ms()
+  replace_symbol=kwargs.pop('replace_symbol', True)
 
   with open(template, "rb") as f:
     # read the whole template file, we could work on single lines but
@@ -39,13 +40,16 @@ async def render_template(template, **kwargs):
       try:
         if expression.decode("utf-8") in params:
           result = params[expression.decode("utf-8")]
-          result = result.replace("&", "&amp;")
-          result = result.replace('"', "&quot;")
-          result = result.replace("'", "&apos;")
-          result = result.replace(">", "&gt;")
-          result = result.replace("<", "&lt;")
+          if replace_symbol:
+            result = result.replace("&", "&amp;")
+            result = result.replace('"', "&quot;")
+            result = result.replace("'", "&apos;")
+            result = result.replace(">", "&gt;")
+            result = result.replace("<", "&lt;")
         else:
           result = eval(expression, globals(), params)
+
+        print(result)
 
         if type(result).__name__ == "generator":
           # if expression returned a generator then iterate it fully

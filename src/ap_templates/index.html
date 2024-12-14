@@ -10,7 +10,9 @@
         <p>Let&apos;s configure the wifi connection:</p>
         <form action="/configure" method="POST" autocomplete="off" autocapitalize="none">
             <label for="ssid">SSID:</label><br>
-            <input type="text" id="ssid" name="ssid"><br>
+
+            {{ap_str}}
+
             <label for="password">Password:</label><br>
             <input type="text" id="password" name="password"><br><br>
             <button>Save</button>

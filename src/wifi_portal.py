@@ -35,9 +35,7 @@ def setup_mode():
                 continue
             id += 1
             print(ssid_str)
-            ap_str += f"""
-                         <p><input type="radio" name="ssid" value="{ssid_str}" id="{id}"><label for="{ssid_str}">&nbsp;{ssid_str}</label></p>
-             """
+            ap_str += f"""<input type="radio" name="ssid" value="{ssid_str}" id="{id}"><label for="{ssid_str}">&nbsp;{ssid_str}</label><br>"""
 
         return ap_str
 
@@ -45,7 +43,7 @@ def setup_mode():
         if request.headers.get("host").lower() != AP_DOMAIN.lower():
             return render_template(f"{AP_TEMPLATE_PATH}/redirect.html", domain = AP_DOMAIN.lower())
 
-        return render_template(f"{AP_TEMPLATE_PATH}/index.html")
+        return render_template(f"{AP_TEMPLATE_PATH}/index.html", ap_str = scan_wifi_ap(), replace_symbol=False)
 
     def ap_configure(request):
         print("Saving wifi credentials...")
@@ -64,8 +62,8 @@ def setup_mode():
 
         return "Not found.", 404
 
-    ap_str = scan_wifi_ap()
-    print(ap_str)
+    #ap_str = scan_wifi_ap()
+    #print(ap_str)
 
     server.add_route("/", handler = ap_index, methods = ["GET"])
     server.add_route("/configure", handler = ap_configure, methods = ["POST"])
