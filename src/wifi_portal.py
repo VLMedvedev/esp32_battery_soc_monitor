@@ -102,6 +102,11 @@ def application_mode():
         _thread.start_new_thread(machine_reset, ())
         return render_template(f"{APP_TEMPLATE_PATH}/reset.html", access_point_ssid = AP_NAME)
 
+    def app_reboot(request):
+        # Reboot from new thread after we have responded to the user.
+        _thread.start_new_thread(machine_reset, ())
+        return render_template(f"{APP_TEMPLATE_PATH}/reboot.html", access_point_ssid = AP_NAME)
+
     def app_catch_all(request):
         return "Not found.", 404
 
@@ -109,6 +114,7 @@ def application_mode():
     server.add_route("/toggle", handler = app_toggle_led, methods = ["GET"])
     server.add_route("/temperature", handler = app_get_temperature, methods = ["GET"])
     server.add_route("/reset", handler = app_reset, methods = ["GET"])
+    server.add_route("/reboot", handler = app_reboot, methods = ["GET"])
     # Add other routes for your application...
     server.set_callback(app_catch_all)
 
