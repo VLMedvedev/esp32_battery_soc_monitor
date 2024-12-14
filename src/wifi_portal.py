@@ -28,12 +28,17 @@ def setup_mode():
         ap_str = ""
         wlan_sta = network.WLAN(network.STA_IF)
         wlan_sta.active(True)
+        id = 0
         for ssid, *_ in wlan_sta.scan():
-            ssid = ssid.decode("utf-8")
+            ssid_str = ssid.decode("utf-8").strip()
+            if len(ssid_str) == 0:
+                continue
+            id += 1
+            print(ssid_str)
             ap_str += f"""
-                         <p><input type="radio" name="ssid" value="{0}" id="{0}"><label for="{0}">&nbsp;{0}</label></p>
+                         <p><input type="radio" name="ssid" value="{ssid_str}" id="{id}"><label for="{ssid_str}">&nbsp;{ssid_str}</label></p>
              """
-            print(ap_str)
+
         return ap_str
 
     def ap_index(request):
