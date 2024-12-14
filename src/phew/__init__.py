@@ -40,6 +40,7 @@ def get_status_name(status):
     statuses[network.STAT_NO_AP_FOUND] = "access point not found"
     #statuses[network.STAT_CONNECT_FAIL] = "connection failed"
     statuses[network.STAT_GOT_IP] = "got ip address"
+    #print(statuses)
     ret = statuses.get(status,"unknown")
     return ret
   except:
@@ -53,12 +54,12 @@ def connect_to_wifi(ssid, password, timeout_seconds=30):
   print(info_str)
   wlan = network.WLAN(network.STA_IF)
   wlan.active(True)
-  print("connecting to network...")
+  #print("connecting to network...")
   wlan.connect(ssid, password)
   start = time.ticks_ms()
-  print(start)
+  #print(start)
   status = wlan.status()
-  print(status)
+  #print(status)
   status_name = get_status_name(status)
   logging.info(f"  - {status_name}")
 
