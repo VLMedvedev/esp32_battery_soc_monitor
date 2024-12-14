@@ -29,30 +29,44 @@ def is_connected_to_wifi():
   wlan = network.WLAN(network.STA_IF)
   return wlan.isconnected()
 
+def get_status_name(status):
+  import network
+  print(f"status {status}")
+  try:
+    statuses = {}
+    statuses[network.STAT_IDLE] = "idle"
+    statuses[network.STAT_CONNECTING] = "connecting"
+    statuses[network.STAT_WRONG_PASSWORD] = "wrong password"
+    statuses[network.STAT_NO_AP_FOUND] = "access point not found"
+    #statuses[network.STAT_CONNECT_FAIL] = "connection failed"
+    statuses[network.STAT_GOT_IP] = "got ip address"
+    ret = statuses.get(status,"unknown")
+    return ret
+  except:
+    return "status errror"
+
 # helper method to quickly get connected to wifi
 def connect_to_wifi(ssid, password, timeout_seconds=30):
   import network, time
-
-  statuses = {
-    network.STAT_IDLE: "idle",
-    network.STAT_CONNECTING: "connecting",
-    network.STAT_WRONG_PASSWORD: "wrong password",
-    network.STAT_NO_AP_FOUND: "access point not found",
-    network.STAT_CONNECT_FAIL: "connection failed",
-    network.STAT_GOT_IP: "got ip address"
-  }
-
+  info_str = f"Connect to ssid {ssid} with password {password}"
+  logging.info(info_str)
+  print(info_str)
   wlan = network.WLAN(network.STA_IF)
-  wlan.active(True)    
+  wlan.active(True)
+  print("connecting to network...")
   wlan.connect(ssid, password)
   start = time.ticks_ms()
+  print(start)
   status = wlan.status()
+  print(status)
+  status_name = get_status_name(status)
+  logging.info(f"  - {status_name}")
 
-  logging.debug(f"  - {statuses[status]}")
   while not wlan.isconnected() and (time.ticks_ms() - start) < (timeout_seconds * 1000):
     new_status = wlan.status()
     if status != new_status:
-      logging.debug(f"  - {statuses[status]}")
+      status_name = get_status_name(new_status)
+      logging.info(f"  - {status_name}")
       status = new_status
     time.sleep(0.25)
 

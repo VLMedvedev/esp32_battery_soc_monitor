@@ -125,6 +125,7 @@ try:
         
         while (wifi_current_attempt < WIFI_MAX_ATTEMPTS):
             ip_address = connect_to_wifi(wifi_credentials["ssid"], wifi_credentials["password"])
+            print(ip_address)
 
             if is_connected_to_wifi():
                 print(f"Connected to wifi, IP address {ip_address}")
