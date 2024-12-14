@@ -78,6 +78,7 @@ def start_dns_server():
             data, addr = dns_sock.recvfrom(512)
             if data:
                 dns_sock.sendto(build_dns_response(data), addr)
+                print(data)
         except Exception as e:
             print(f"Ошибка DNS: {e}")
 
@@ -90,6 +91,16 @@ def build_dns_response(request):
     response += b'\x00\x01\x00\x01\x00\x00\x00\x3c\x00\x04'
     response += struct.pack(">BBBB", *[int(octet) for octet in AP_IP.split('.')])
     return response
+
+
+def make_dns_response(data: bytes) -> bytes:
+    packet: bytes = data[:2] + b"\x81\x80"
+    packet += data[4:6] + data[4:6] + b"\x00\x00\x00\x00"  # Questions and Answers Counts
+    packet += data[12:]  # Original Domain Name Question
+    packet += b"\xC0\x0C"  # Pointer to domain name
+    packet += b"\x00\x01\x00\x01\x00\x00\x00\x3C\x00\x04"  # Response type, ttl and resource data length -> 4 bytes
+    packet += bytes(map(int, SERVER_IP.split(".")))  # 4bytes of IP
+    return packet
 
 def stop_ap():
     global s, conn, ap, dns_sock

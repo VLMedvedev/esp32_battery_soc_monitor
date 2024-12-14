@@ -1,10 +1,10 @@
-import uasyncio, usocket
+import asyncio, usocket
 from . import logging
 
 async def _handler(socket, ip_address):
   while True:
     try:
-      yield uasyncio.core._io_queue.queue_read(socket)
+      yield asyncio.core._io_queue.queue_read(socket)
       request, client = socket.recvfrom(256)
       response = request[:2] # request id
       response += b"\x81\x80" # response flags
@@ -28,5 +28,5 @@ def run_catchall(ip_address, port=53):
   _socket.setsockopt(usocket.SOL_SOCKET, usocket.SO_REUSEADDR, 1)
   _socket.bind(usocket.getaddrinfo(ip_address, port, 0, usocket.SOCK_DGRAM)[0][-1])
 
-  loop = uasyncio.get_event_loop()
+  loop = asyncio.get_event_loop()
   loop.create_task(_handler(_socket, ip_address))

