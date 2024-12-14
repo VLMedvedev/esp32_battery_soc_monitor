@@ -7,14 +7,12 @@ import os
 import utime
 import _thread
 
-AP_NAME = "pi pico"
-AP_DOMAIN = "pipico.net"
+AP_NAME = "Battery monitor"
+AP_DOMAIN = "power-storage.eu"
 AP_TEMPLATE_PATH = "ap_templates"
 APP_TEMPLATE_PATH = "app_templates"
 WIFI_FILE = "wifi.json"
 WIFI_MAX_ATTEMPTS = 3
-
-
 
 def machine_reset():
     utime.sleep(1)
@@ -116,12 +114,14 @@ def application_mode():
 
 # Figure out which mode to start up in...
 try:
+    print("Testing saved wifi credentials...")
     os.stat(WIFI_FILE)
 
     # File was found, attempt to connect to wifi...
     with open(WIFI_FILE) as f:
         wifi_current_attempt = 1
         wifi_credentials = json.load(f)
+        print(wifi_credentials)
         
         while (wifi_current_attempt < WIFI_MAX_ATTEMPTS):
             ip_address = connect_to_wifi(wifi_credentials["ssid"], wifi_credentials["password"])
