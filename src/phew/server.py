@@ -5,13 +5,11 @@ _routes = []
 catchall_handler = None
 loop = asyncio.get_event_loop()
 
-
 def file_exists(filename):
   try:
     return (os.stat(filename)[0] & 0x4000) == 0
   except OSError:
     return False
-
 
 def urldecode(text):
   text = text.replace("+", " ")
