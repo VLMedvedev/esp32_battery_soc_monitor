@@ -1,106 +1,131 @@
-# example script to show how uri routing and parameters work
-#
-# create a file called secrets.py alongside this one and add the
-# following two lines to it:
-#
-#	WIFI_SSID = "<ssid>"
-#	WIFI_PASSWORD = "<password>"
-#
-# with your wifi details instead of <ssid> and <password>.
-
-from phew import server, connect_to_wifi, access_point
+from phew import access_point, connect_to_wifi, is_connected_to_wifi, dns, server
 from phew.template import render_template
-from phew.dns import run_catchall
-import time
+import json
+import machine
+import os
+import utime
+import _thread
 
-import secrets
+AP_NAME = "pi pico"
+AP_DOMAIN = "pipico.net"
+AP_TEMPLATE_PATH = "ap_templates"
+APP_TEMPLATE_PATH = "app_templates"
+WIFI_FILE = "wifi.json"
+WIFI_MAX_ATTEMPTS = 3
 
-wlan_AP_IF=access_point(secrets.WIFI_SSID)
-#connect_to_wifi(secrets.WIFI_SSID, secrets.WIFI_PASSWORD)
+def machine_reset():
+    utime.sleep(1)
+    print("Resetting...")
+    machine.reset()
 
-# basic response with status code and content type
-@server.route("/basic", methods=["GET", "POST"])
-def basic(request):
-  return "Gosh, a request", 200, "text/html"
+def setup_mode():
+    print("Entering setup mode...")
+    
+    def ap_index(request):
+        if request.headers.get("host").lower() != AP_DOMAIN.lower():
+            return render_template(f"{AP_TEMPLATE_PATH}/redirect.html", domain = AP_DOMAIN.lower())
 
-# basic response with status code and content type
-@server.route("/status-code", methods=["GET", "POST"])
-def status_code(request):
-  return "Here, have a status code", 200, "text/html"
+        return render_template(f"{AP_TEMPLATE_PATH}/index.html")
 
-# url parameter and template render
-@server.route("/hello/<name>", methods=["GET"])
-def hello(request, name):
-  return await render_template("example.html", name=name)
+    def ap_configure(request):
+        print("Saving wifi credentials...")
 
-# response with custom status code
-@server.route("/are/you/a/teapot", methods=["GET"])
-def teapot(request):
-  return "Yes", 418
+        with open(WIFI_FILE, "w") as f:
+            json.dump(request.form, f)
+            f.close()
 
-# custom response object
-@server.route("/response", methods=["GET"])
-def response_object(request):
-  return server.Response("test body", status=302, content_type="text/html", headers={"Cache-Control": "max-age=3600"})
+        # Reboot from new thread after we have responded to the user.
+        _thread.start_new_thread(machine_reset, ())
+        return render_template(f"{AP_TEMPLATE_PATH}/configured.html", ssid = request.form["ssid"])
+        
+    def ap_catch_all(request):
+        if request.headers.get("host") != AP_DOMAIN:
+            return render_template(f"{AP_TEMPLATE_PATH}/redirect.html", domain = AP_DOMAIN)
 
-# query string example
-@server.route("/random", methods=["GET"])
-def random_number(request):
-  import random
-  min = int(request.query.get("min", 0))
-  max = int(request.query.get("max", 100))
-  return str(random.randint(min, max))
+        return "Not found.", 404
 
-# catchall example
-#@server.catchall()
-#def catchall(request):
-#  return "Not found", 404
+    server.add_route("/", handler = ap_index, methods = ["GET"])
+    server.add_route("/configure", handler = ap_configure, methods = ["POST"])
+    server.set_callback(ap_catch_all)
 
-'''
-The html file is being preloaded and saved as Response.
-That way, it doesn't have to be opened everytime it is
-server (when using render_template)
-'''
-with open("templates/goog.html", "r") as html_file:
-    LOGIN_RESPONSE = server.Response(status=200, headers={"Content-Type": "text/html"}, body=html_file.read())
+    ap = access_point(AP_NAME)
+    ip = ap.ifconfig()[0]
+    dns.run_catchall(ip)
 
-# Default response when someone logs in
-SUCCESS_RESPONSE = server.Response(status=200, headers={"Content-Type": "text/html"}, body="Router is offline right now, try again another time.")
-DOMAIN = 'googmail.com'
-captured_time = 0
-WAITING = True
-captured_time = 0
-WAITING = True
-last_capture = {}
-amount_of_captures = 0
-DOMAIN = 'googmail.com'
+def application_mode():
+    print("Entering application mode.")
+    onboard_led = machine.Pin("LED", machine.Pin.OUT)
 
-@server.route("/login", methods=["GET", "POST"])
-def login_page(request):
-  global captured_time, WAITING, last_capture, amount_of_captures, DOMAIN
+    def app_index(request):
+        return render_template(f"{APP_TEMPLATE_PATH}/index.html")
 
-  if request.method == "GET":
-    return LOGIN_RESPONSE
-  else:
-    if request.form:
-      username = request.form['username']
-      password = request.form['password']
-      website = request.form['website']
-      print(f"{username},{password},{website}\n")
+    def app_toggle_led(request):
+        onboard_led.toggle()
+        return "OK"
+    
+    def app_get_temperature(request):
+        # Not particularly reliable but uses built in hardware.
+        # Demos how to incorporate senasor data into this application.
+        # The front end polls this route and displays the output.
+        # Replace code here with something else for a 'real' sensor.
+        # Algorithm used here is from:
+        # https://www.coderdojotc.org/micropython/advanced-labs/03-internal-temperature/
+        sensor_temp = machine.ADC(4)
+        reading = sensor_temp.read_u16() * (3.3 / (65535))
+        temperature = 27 - (reading - 0.706)/0.001721
+        return f"{round(temperature, 1)}"
+    
+    def app_reset(request):
+        # Deleting the WIFI configuration file will cause the device to reboot as
+        # the access point and request new configuration.
+        os.remove(WIFI_FILE)
+        # Reboot from new thread after we have responded to the user.
+        _thread.start_new_thread(machine_reset, ())
+        return render_template(f"{APP_TEMPLATE_PATH}/reset.html", access_point_ssid = AP_NAME)
 
-    captured_time = time.time()
-    last_capture = request.form
-    amount_of_captures += 1
-    WAITING = False
+    def app_catch_all(request):
+        return "Not found.", 404
 
-    return SUCCESS_RESPONSE
+    server.add_route("/", handler = app_index, methods = ["GET"])
+    server.add_route("/toggle", handler = app_toggle_led, methods = ["GET"])
+    server.add_route("/temperature", handler = app_get_temperature, methods = ["GET"])
+    server.add_route("/reset", handler = app_reset, methods = ["GET"])
+    # Add other routes for your application...
+    server.set_callback(app_catch_all)
 
-#DNS catchall to redirect every request
-@server.catchall()
-def catchall(request):
-    return server.redirect("http://" + DOMAIN + "/login")
-    #return server.redirect("http://192.168.4.1/hello/my_name")
+# Figure out which mode to start up in...
+try:
+    os.stat(WIFI_FILE)
 
-run_catchall(wlan_AP_IF.ifconfig()[0])
-# start the webserver
+    # File was found, attempt to connect to wifi...
+    with open(WIFI_FILE) as f:
+        wifi_current_attempt = 1
+        wifi_credentials = json.load(f)
+        
+        while (wifi_current_attempt < WIFI_MAX_ATTEMPTS):
+            ip_address = connect_to_wifi(wifi_credentials["ssid"], wifi_credentials["password"])
+
+            if is_connected_to_wifi():
+                print(f"Connected to wifi, IP address {ip_address}")
+                break
+            else:
+                wifi_current_attempt += 1
+                
+        if is_connected_to_wifi():
+            application_mode()
+        else:
+            
+            # Bad configuration, delete the credentials file, reboot
+            # into setup mode to get new credentials from the user.
+            print("Bad wifi connection!")
+            print(wifi_credentials)
+            os.remove(WIFI_FILE)
+            machine_reset()
+
+except Exception:
+    # Either no wifi configuration file found, or something went wrong, 
+    # so go into setup mode.
+    setup_mode()
+
+# Start the web server...
 server.run()
