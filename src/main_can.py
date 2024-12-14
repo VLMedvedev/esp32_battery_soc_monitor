@@ -287,13 +287,8 @@ async def main():
     asyncio.create_task(read_soc_by_can_and_check_level())
     #asyncio.create_task(wifi_server())
 
-
-
 # Create and run the event loop
 loop = asyncio.get_event_loop()
 loop.create_task(main())  # Create a task to run the main function
 loop.run_forever()  # Run the event loop indefinitely
 
-import memory
-memory.check_ram()
-memory.check_pico_storage()
