@@ -1,4 +1,4 @@
-import logging
+#import logging
 import utime
 from oled_display import OLED_Display
 import constants_and_configs as cons
@@ -9,9 +9,9 @@ from preferences import DataThree
 from primitives import Pushbutton
 from captive_portal import start_ap, stop_ap
 
-logger = logging.getLogger('main_log', 'main.log')
+#logger = logging.getLogger('main_log', 'main.log')
 # logger = logging.getLogger('html')
-logger.setLevel(logging.ERROR)
+#logger.setLevel(logging.ERROR)
 
 STOP = False
 battery_charge_level = 123

@@ -1,7 +1,7 @@
-import logging
-logger = logging.getLogger("memory","memory.log")
+#import logging
+#logger = logging.getLogger("memory","memory.log")
 #logger.setLevel(logging.INFO)
-logger.setLevel(logging.ERROR)
+#logger.setLevel(logging.ERROR)
 
 import sys
 import gc
