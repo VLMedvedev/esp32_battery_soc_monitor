@@ -73,13 +73,13 @@ def setup_mode():
 
 def application_mode():
     print("Entering application mode.")
-    onboard_led = machine.Pin("LED", machine.Pin.OUT)
+    #onboard_led = machine.Pin("LED", machine.Pin.OUT)
 
     def app_index(request):
         return render_template(f"{APP_TEMPLATE_PATH}/index.html")
 
     def app_toggle_led(request):
-        onboard_led.toggle()
+        #onboard_led.toggle()
         return "OK"
     
     def app_get_temperature(request):
@@ -89,9 +89,9 @@ def application_mode():
         # Replace code here with something else for a 'real' sensor.
         # Algorithm used here is from:
         # https://www.coderdojotc.org/micropython/advanced-labs/03-internal-temperature/
-        sensor_temp = machine.ADC(4)
-        reading = sensor_temp.read_u16() * (3.3 / (65535))
-        temperature = 27 - (reading - 0.706)/0.001721
+        #sensor_temp = machine.ADC(4)
+        #reading = sensor_temp.read_u16() * (3.3 / (65535))
+        temperature = 27 #- (reading - 0.706)/0.001721
         return f"{round(temperature, 1)}"
     
     def app_reset(request):

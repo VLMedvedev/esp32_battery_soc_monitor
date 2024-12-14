@@ -27,7 +27,9 @@ def get_ip_address():
 def is_connected_to_wifi():
   import network, time
   wlan = network.WLAN(network.STA_IF)
-  return wlan.isconnected()
+  ret = wlan.isconnected()
+  print(f"isconnected {ret}")
+  return ret
 
 def get_status_name(status):
   import network
@@ -63,15 +65,21 @@ def connect_to_wifi(ssid, password, timeout_seconds=30):
   status_name = get_status_name(status)
   logging.info(f"  - {status_name}")
 
-  while not wlan.isconnected() and (time.ticks_ms() - start) < (timeout_seconds * 1000):
+  while not wlan.isconnected():
+    print("wlan disconected...")
+    if (time.ticks_ms() - start) > (timeout_seconds * 1000):
+      break
     new_status = wlan.status()
+    print(f"  - {get_status_name(new_status)}")
     if status != new_status:
       status_name = get_status_name(new_status)
       logging.info(f"  - {status_name}")
       status = new_status
     time.sleep(0.25)
 
+
   if wlan.status() == network.STAT_GOT_IP:
+    print("return ip address....")
     return wlan.ifconfig()[0]
   return None
 
