@@ -141,14 +141,18 @@ def start_wifi():
                     wifi_current_attempt += 1
 
             if is_connected_to_wifi():
-                application_mode()
+               # application_mode()
+               import webrepl
+               webrepl.start()
+               import main_webrepl
+               main_webrepl.start_turn()
             else:
 
                 # Bad configuration, delete the credentials file, reboot
                 # into setup mode to get new credentials from the user.
                 print("Bad wifi connection!")
                 print(wifi_credentials)
-                os.remove(WIFI_FILE)
+              #  os.remove(WIFI_FILE)
                 machine_reset()
 
     except Exception:

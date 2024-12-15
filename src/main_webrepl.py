@@ -92,13 +92,16 @@ async def tunnelToServer():
 
 # ----------------
 # MAIN
+def start_turn():
+    task = None
+    try:
+        task = uasyncio.create_task(tunnelToServer())
+        uasyncio.run(tunnelToServer())
+    except KeyboardInterrupt:
+        print("Stopped with keyboard")
+        if task is not None:
+            print(f"Stopping task { task }")
+            task.cancel()
 
-task = None
-try:
-    task = uasyncio.create_task(tunnelToServer())
-    uasyncio.run(tunnelToServer())
-except KeyboardInterrupt:
-    print("Stopped with keyboard")
-    if task is not None:
-        print(f"Stopping task { task }")
-        task.cancel()
+if __name__ == '__main__':
+    start_turn()
