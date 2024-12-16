@@ -141,11 +141,11 @@ def start_wifi():
                     wifi_current_attempt += 1
 
             if is_connected_to_wifi():
-               # application_mode()
-               import webrepl
-               webrepl.start()
-               import main_webrepl
-               main_webrepl.start_turn()
+                import webrepl
+                webrepl.start()
+                # import main_webrepl
+                # main_webrepl.start_turn()
+                application_mode()
             else:
 
                 # Bad configuration, delete the credentials file, reboot
