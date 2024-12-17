@@ -3,7 +3,8 @@ __version__ = "0.0.2"
 # highly recommended to set a lowish garbage collection threshold
 # to minimise memory fragmentation as we sometimes want to
 # allocate relatively large blocks of ram.
-import gc, os, machine
+import gc, os
+
 gc.threshold(50000)
 
 # phew! the Pico (or Python) HTTP Endpoint Wrangler
@@ -13,7 +14,7 @@ from . import logging
 # logging truncation
 remote_mount = False
 try:
-  os.statvfs(".") # causes exception if remotely mounted (mpremote/pyboard.py)
+  os.statvfs("") # causes exception if remotely mounted (mpremote/pyboard.py)
 except:
   remote_mount = True
 
@@ -25,7 +26,7 @@ def get_ip_address():
     return None
 
 def is_connected_to_wifi():
-  import network, time
+  import network
   wlan = network.WLAN(network.STA_IF)
   ret = wlan.isconnected()
   print(f"isconnected {ret}")

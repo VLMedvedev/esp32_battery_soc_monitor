@@ -32,7 +32,7 @@ default_branch = 'main'
 
 # Don't remove ugit.py from the ignore_files unless you know what you are doing :D
 # Put the files you don't want deleted or updated here use '/filename.ext'
-ignore_files = ['/ugit.py']
+ignore_files = ['/ugit.py','/not_for_pyboard']
 ignore = ignore_files
 ### -----------END OF USER VARIABLES ----------####
 
@@ -63,7 +63,8 @@ def pull(f_path,raw_url):
   
 def pull_all(tree=call_trees_url,raw = raw,ignore = ignore,isconnected=False):
   if not isconnected:
-      wlan = wificonnect() 
+      print("wificonnect")
+      wlan = wificonnect()
   os.chdir('/')
   tree = pull_git_tree()
   internal_tree = build_internal_tree()
@@ -225,7 +226,7 @@ def remove_item(item,tree):
 def update():
     print('updates ugit.py to newest version')
     raw_url = 'https://raw.githubusercontent.com/turfptax/ugit/master/'
-    pull('ugit.py',raw_url+'ugit.py')
+    pull('ugit.py', raw_url + 'ugit.py')
 
 def backup():
     int_tree = build_internal_tree()
@@ -238,3 +239,6 @@ def backup():
     backup = open('ugit.backup','w')
     backup.write(backup_text)
     backup.close()
+
+if __name__ == '__main__':
+    pull_all()
