@@ -18,7 +18,7 @@ wlan.connect(wifi_conf_dict.get('ssid'),
              wifi_conf_dict.get('password'))
 ugit.update()
 # backup internal files
-ugit.backup() # saves to ugit.backup file
+#ugit.backup() # saves to ugit.backup file
 # Pull single file
 #ugit.pull('file_name.ext','Raw_github_url')
 # Pull all files
