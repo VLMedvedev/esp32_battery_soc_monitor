@@ -12,7 +12,7 @@ print(_SYSNAME)
 import ugit
 #wifi_conf_dict = {"ssid": "A1-C4A220", "password": "7KBBBLX7FQ"}
 #wlan = ugit.wificonnect(wifi_conf_dict.get('ssid'),
-                        wifi_conf_dict.get('password'))
+#                        wifi_conf_dict.get('password'))
 
 #ugit.update()
 # backup internal files
