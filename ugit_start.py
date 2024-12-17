@@ -1,14 +1,3 @@
-import os
-_SYSNAME = os.uname()
-print(_SYSNAME)
-#import wifi_portal
-# connect to network
-#wifi_portal.start_wifi()
-#wm = WifiManager()
-#wm.connect()
-##wm.create_heartbeat()
-#if wm.is_connected():
-#    micropython_OTA.main()
 import ugit
 import network
 wifi_conf_dict = {"ssid": "A1-C4A220", "password": "7KBBBLX7FQ"}
