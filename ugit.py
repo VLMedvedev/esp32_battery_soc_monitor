@@ -19,20 +19,20 @@ global internal_tree
 #### -------------User Variables----------------####
 #### 
 # Default Network to connect using wificonnect()
-ssid = "OpenMuscle"
-password = "3141592653"
+ssid = "A1-C4A220"
+password = "7KBBBLX7FQ"
 
 # CHANGE TO YOUR REPOSITORY INFO
 # Repository must be public if no personal access token is supplied
-user = 'turfptax'
-repository = 'ugit_test'
+user = 'VLMedvedev'
+repository = 'esp32_battery_soc_monitor'
 token = ''
 # Change this variable to 'master' or any other name matching your default branch
 default_branch = 'main'
 
 # Don't remove ugit.py from the ignore_files unless you know what you are doing :D
 # Put the files you don't want deleted or updated here use '/filename.ext'
-ignore_files = ['/ugit.py','/not_for_pyboard']
+ignore_files = ['/ugit.py','/not_for_pyboard','README.md','text-16.pf','phew','lib']
 ignore = ignore_files
 ### -----------END OF USER VARIABLES ----------####
 
