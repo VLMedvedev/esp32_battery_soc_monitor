@@ -9,3 +9,14 @@ print(_SYSNAME)
 ##wm.create_heartbeat()
 #if wm.is_connected():
 #    micropython_OTA.main()
+import ugit
+
+wifi_conf_dict = {"ssid": "A1-C4A220", "password": "7KBBBLX7FQ"}
+wlan = ugit.wificonnect(wifi_conf_dict.get('ssid'),
+                        wifi_conf_dict.get('password'))
+# backup internal files
+ugit.backup() # saves to ugit.backup file
+# Pull single file
+#ugit.pull('file_name.ext','Raw_github_url')
+# Pull all files
+ugit.pull_all()
