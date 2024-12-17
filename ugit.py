@@ -147,6 +147,9 @@ def add_to_tree(dir_item):
       subfile_path = os.getcwd() + dir_item
     try:
       print(f'sub_path: {subfile_path}')
+      if subfile_path in ignore:
+          print(' is in ignore')
+          return None
       hash_file = get_hash(subfile_path)
       if hash_file is not None:
         internal_tree.append([subfile_path,hash_file])
