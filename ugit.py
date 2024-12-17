@@ -147,18 +147,24 @@ def add_to_tree(dir_item):
       subfile_path = os.getcwd() + dir_item
     try:
       print(f'sub_path: {subfile_path}')
-      internal_tree.append([subfile_path,get_hash(subfile_path)])
+      hash_file = get_hash(subfile_path)
+      if hash_file is not None:
+        internal_tree.append([subfile_path,hash_file])
     except OSError: # type: ignore # for removing the type error indicator :)
       print(f'{dir_item} could not be added to tree')
 
 
 def get_hash(file):
   print(f"get_hash  {file}")
-  o_file = open(file)
-  r_file = o_file.read()
-  sha1obj = hashlib.sha1(r_file)
-  hash = sha1obj.digest()
-  return(binascii.hexlify(hash))
+  #if str(file).find(".py"):
+  try:
+      o_file = open(file)
+      r_file = o_file.read()
+      sha1obj = hashlib.sha1(r_file)
+      hash = sha1obj.digest()
+      return(binascii.hexlify(hash))
+  except:
+      return None
 
 def get_data_hash(data):
     sha1obj = hashlib.sha1(data)
