@@ -67,8 +67,11 @@ def pull_all(tree=call_trees_url,raw = raw,ignore = ignore,isconnected=False):
       wlan = wificonnect()
   os.chdir('/')
   tree = pull_git_tree()
+  print(f"tree  {tree}")
   internal_tree = build_internal_tree()
+  print(f"internal_tree  {internal_tree}")
   internal_tree = remove_ignore(internal_tree)
+  #print(f"internal_tree after remove  {internal_tree}")
   print(' ignore removed ----------------------')
   print(internal_tree)
   log = []
@@ -150,7 +153,7 @@ def add_to_tree(dir_item):
 
 
 def get_hash(file):
-  print(file)
+  print(f"get_hash  {file}")
   o_file = open(file)
   r_file = o_file.read()
   sha1obj = hashlib.sha1(r_file)
