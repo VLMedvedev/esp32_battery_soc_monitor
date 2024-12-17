@@ -32,7 +32,7 @@ default_branch = 'main'
 
 # Don't remove ugit.py from the ignore_files unless you know what you are doing :D
 # Put the files you don't want deleted or updated here use '/filename.ext'
-ignore_files = ['/ugit.py','/not_for_pyboard','README.md','text-16.pf','phew','lib']
+ignore_files = ['/ugit.py','/not_for_pyboard','/README.md','/text-16.pf','/phew','/lib']
 ignore = ignore_files
 ### -----------END OF USER VARIABLES ----------####
 
@@ -225,7 +225,7 @@ def remove_item(item,tree):
 
 def update():
     print('updates ugit.py to newest version')
-    raw_url = 'https://raw.githubusercontent.com/turfptax/ugit/master/'
+    raw_url = 'https://raw.githubusercontent.com/VLMedvedev/esp32_battery_soc_monitor/master/'
     pull('ugit.py', raw_url + 'ugit.py')
 
 def backup():
