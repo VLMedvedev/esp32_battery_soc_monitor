@@ -1,6 +1,2 @@
 /tmp/
-/not_for_pyboard/
-/wifi.json
-/lib/
-/phew/
-/.gitignore
+/app/wifi.json
