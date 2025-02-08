@@ -132,7 +132,7 @@ async def read_soc_by_can_and_check_level():
                 pin_led.off()
             else:
                 pin_led.on()
-            can_read = esp32_soc.read_soc_level(0)
+            can_read = esp32_soc.read_soc_level(cons.CAN_ID, cons.CAN_DATA_BYTE)
             #can_read = 55
             stable_5 = get_stable_value(can_read)
             print(f"Battery level: {battery_charge_level}% can_read {can_read} stable_5 {stable_5}")
