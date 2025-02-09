@@ -30,18 +30,6 @@ def can_init():
   #  print(f" driver init  {ret}")
     logging.info(f"driver init  {ret}")
 
-# Coroutine: entry point for asyncio program
-def start_can():
-    print("start can ")
-    can_init()
-    time.sleep(3)
-    can_id_scan()
-    time.sleep(CAN_SOC_CHECK_PERIOD_SEC)
-    #asyncio.create_task(can_soc_read(que_can))
-    while True:
-        can_soc_read()
-        time.sleep(CAN_SOC_CHECK_PERIOD_SEC)
-    #mqtt_th = _thread.start_new_thread(mqtt_start, (mqtt_cli, q))
 
 if __name__ == "__main__":
     start_can()
