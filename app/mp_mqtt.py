@@ -62,7 +62,7 @@ async def wait_button():
         btn_prev = btn.value()
         await asyncio.sleep(0.04)
 # Coroutine: entry point for asyncio program
-async def start_mqtt(q):
+async def start_mqtt(que_mqtt):
     client_id = CLIENT_ID
     if CLIENT_ID=="machine_id":
         client_id = binascii.hexlify(machine.unique_id())
@@ -82,7 +82,7 @@ async def start_mqtt(q):
     # Queue for passing messages
     #q = Queue()
     # Start coroutine as a task and immediately return
-    asyncio.create_task(mqtt_start(mqtt_cli, q))
+    asyncio.create_task(mqtt_start(mqtt_cli, que_mqtt))
     #mqtt_th = _thread.start_new_thread(mqtt_start, (mqtt_cli, q))
 
 
