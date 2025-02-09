@@ -22,13 +22,13 @@ async def wait_button():
 # Coroutine: entry point for asyncio program
 async def main():
     # Start coroutine as a task and immediately return
+    # Queue for passing messages
+    que_mqtt = Queue()
     que_can = Queue()
     if AUTO_START_CAN:
         from mp_can import start_can
-    #    asyncio.create_task(start_can(que_can))
-        start_can(que_can)
-    # Queue for passing messages
-    que_mqtt = Queue()
+        asyncio.create_task(start_can(que_can))
+        #start_can(que_can)
 
     if AUTO_CONNECT_TO_WIFI_AP:
         if is_connected_to_wifi():
