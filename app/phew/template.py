@@ -49,7 +49,7 @@ async def render_template(template, **kwargs):
         else:
           result = eval(expression, globals(), params)
 
-        print(result)
+       # print(result)
 
         if type(result).__name__ == "generator":
           # if expression returned a generator then iterate it fully

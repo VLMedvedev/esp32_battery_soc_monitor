@@ -1,0 +1,3 @@
+HW_CAN_RX_PIN = 37
+HW_CAN_TX_PIN = 39
+

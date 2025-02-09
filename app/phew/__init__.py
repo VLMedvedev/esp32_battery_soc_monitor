@@ -51,7 +51,7 @@ def get_status_name(status):
 
 # helper method to quickly get connected to wifi
 def connect_to_wifi(ssid, password, timeout_seconds=30):
-  import network, time
+  import network, utime
   info_str = f"Connect to ssid {ssid} with password {password}"
   logging.info(info_str)
   print(info_str)
@@ -59,7 +59,7 @@ def connect_to_wifi(ssid, password, timeout_seconds=30):
   wlan.active(True)
   #print("connecting to network...")
   wlan.connect(ssid, password)
-  start = time.ticks_ms()
+  start = utime.ticks_ms()
   #print(start)
   status = wlan.status()
   #print(status)
@@ -68,7 +68,7 @@ def connect_to_wifi(ssid, password, timeout_seconds=30):
 
   while not wlan.isconnected():
     print("wlan disconected...")
-    if (time.ticks_ms() - start) > (timeout_seconds * 1000):
+    if (utime.ticks_ms() - start) > (timeout_seconds * 1000):
       break
     new_status = wlan.status()
     print(f"  - {get_status_name(new_status)}")
@@ -76,7 +76,7 @@ def connect_to_wifi(ssid, password, timeout_seconds=30):
       status_name = get_status_name(new_status)
       logging.info(f"  - {status_name}")
       status = new_status
-    time.sleep(0.25)
+    utime.sleep(0.25)
 
 
   if wlan.status() == network.STAT_GOT_IP:

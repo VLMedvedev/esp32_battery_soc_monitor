@@ -1,0 +1,10 @@
+{{render_template('/web_app/header.html', title=title, style_css_str=style_css_str, config_page_links=config_page_links)}}
+<form style="font-family:'Courier New'" method="POST" autocomplete="off" autocapitalize="none">
+    <label for="username" class="form-label">user</label><br>
+    <input type="text" name="username" class="form-control" id="username" value={{username}}><br>
+    <label for="password" class="form-label">password</label><br>
+    <input type="password" name="password" class="form-control"/><br>
+    <br>
+    <button type="submit" value="login">Submit</button>
+</form>
+{{render_template('/web_app/footer.html')}}

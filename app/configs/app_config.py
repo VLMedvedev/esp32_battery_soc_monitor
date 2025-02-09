@@ -1,0 +1,7 @@
+OFF_LEVEL = 10
+ON_LEVEL = 90
+MODE = "AUTO"
+
+
+
+

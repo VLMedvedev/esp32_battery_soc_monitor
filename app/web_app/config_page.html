@@ -1,0 +1,13 @@
+{{render_template('/web_app/header.html', title=title, style_css_str=style_css_str, config_page_links=config_page_links)}}
+
+<!--<form style="font-family:'Courier New'" action="/config_page" method="POST" autocomplete="off" autocapitalize="none">-->
+<form style="font-family:'Courier New'" method="POST" autocomplete="off" autocapitalize="none">
+    {{config_page}}
+    <br><br>
+    <button id="saveBtn">Save config</button><label>  {{page_info}}</label><br>
+<!--    <button id="rebootBtn">Reboot</button>-->
+<!--    <script src="data:text/javascript,document.getElementById('saveBtn').onclick = function() { window.location.href = '/config_page'; };" defer></script>-->
+<!--    <script src="data:text/javascript,document.getElementById('rebootBtn').onclick = function() { window.location.href = '/reboot'; };" defer></script>-->
+
+</form>
+{{render_template('/web_app/footer.html')}}
