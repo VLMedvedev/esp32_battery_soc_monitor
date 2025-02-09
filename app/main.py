@@ -25,10 +25,6 @@ async def main():
     # Queue for passing messages
     que_mqtt = Queue()
     que_can = Queue()
-    if AUTO_START_CAN:
-        from mp_can import start_can
-        asyncio.create_task(start_can(que_can))
-        #start_can(que_can)
 
     if AUTO_CONNECT_TO_WIFI_AP:
         if is_connected_to_wifi():
@@ -42,6 +38,11 @@ async def main():
             if AUTO_START_WEBAPP:
                 from web_app.web_app import application_mode
                 asyncio.create_task(application_mode(que_can))
+
+    if AUTO_START_CAN:
+        from mp_can import start_can
+        asyncio.create_task(start_can(que_can))
+        #start_can(que_can)
 
     # Main loop
     timestamp = time.time()
