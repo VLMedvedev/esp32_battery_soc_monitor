@@ -1,5 +1,3 @@
-import asyncio
-from primitives import Queue
 from phew import logging
 import esp32_soc
 import time
@@ -16,15 +14,13 @@ def can_id_scan():
         counter += 1
         time.sleep(CAN_SOC_CHECK_PERIOD_SEC)
 
-def can_soc_read(que_can):
-    print("start read can")
-    while True:
-        soc_level = esp32_soc.read_soc_level(CAN_SOC_ID, CAN_SOC_BYTE_NUMBER)
-        #if soc_level != 123:
-        print(f"soc_level_0  {soc_level}")
-        que_can.put(soc_level)
-        time.sleep(CAN_SOC_CHECK_PERIOD_SEC)
-        #await asyncio.sleep(CAN_SOC_CHECK_PERIOD_SEC)
+def can_soc_read():
+    #print("start read can")
+    #while True:
+    soc_level = esp32_soc.read_soc_level(CAN_SOC_ID, CAN_SOC_BYTE_NUMBER)
+    #if soc_level != 123:
+    #print(f"soc_level_0  {soc_level}")
+    return soc_level
 
 def can_init():
     print("start init")
@@ -35,20 +31,17 @@ def can_init():
     logging.info(f"driver init  {ret}")
 
 # Coroutine: entry point for asyncio program
-def start_can(que_can):
+def start_can():
     print("start can ")
     can_init()
     time.sleep(3)
     can_id_scan()
     time.sleep(CAN_SOC_CHECK_PERIOD_SEC)
     #asyncio.create_task(can_soc_read(que_can))
-    can_soc_read(que_can)
+    while True:
+        can_soc_read()
+        time.sleep(CAN_SOC_CHECK_PERIOD_SEC)
     #mqtt_th = _thread.start_new_thread(mqtt_start, (mqtt_cli, q))
 
-def start_main():
-    q = Queue()
-   # asyncio.run(start_can(q))
-    start_can(que_can=q)
-
 if __name__ == "__main__":
-    start_main()
+    start_can()
