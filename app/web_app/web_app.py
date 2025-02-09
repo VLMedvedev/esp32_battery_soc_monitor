@@ -54,12 +54,13 @@ def application_mode(que_can):
         # reading = sensor_temp.read_u16() * (3.3 / (65535))
         soc_level = ""
         if que_can.qsize() > 0:
-            print(f"can_que  {que_can.qsize()}")
-           # soc_level = await que_can.get()
-        #print(f"soc lev {soc_level}")# - (reading - 0.706)/0.001721
+           # print(f"can_que  {que_can.qsize()}")
+            soc_level = await que_can.get()
+        print(f"soc lev {soc_level}")# - (reading - 0.706)/0.001721
         soc_level = 27
-        print(f"can soc {soc_level}   can_que  {que_can.qsize()}")
-        return soc_level
+        #print(f"can soc {soc_level}   can_que  {que_can.qsize()}")
+        out_str = f"{soc_level}"
+        return out_str
 
     def app_reset(request):
         # Deleting the WIFI configuration file will cause the device to reboot as
