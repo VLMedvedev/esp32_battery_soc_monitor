@@ -40,7 +40,7 @@ def application_mode(q):
             onboard_led.off()
         return "OK"
 
-    def app_get_temperature(request):
+    def app_get_soc(request):
         # Not particularly reliable but uses built in hardware.
         # Demos how to incorporate senasor data into this application.
         # The front end polls this route and displays the output.
@@ -49,8 +49,8 @@ def application_mode(q):
         # https://www.coderdojotc.org/micropython/advanced-labs/03-internal-temperature/
         # sensor_temp = machine.ADC(4)
         # reading = sensor_temp.read_u16() * (3.3 / (65535))
-        temperature = 27  # - (reading - 0.706)/0.001721
-        return f"{round(temperature, 1)}"
+        soc_level = 27  # - (reading - 0.706)/0.001721
+        return f"{round(soc_level, 1)}"
 
     def app_reset(request):
         # Deleting the WIFI configuration file will cause the device to reboot as
@@ -356,7 +356,7 @@ def application_mode(q):
     server.add_route("/log_viewer", handler=log_viewer, methods=["GET"])
     server.add_route("/delete_log", handler=delete_log, methods=["GET"])
     server.add_route("/login", handler=login_form, methods=["POST",'GET'])
-    server.add_route("/temperature", handler=app_get_temperature, methods=["GET"])
+    server.add_route("/soc", handler=app_get_soc, methods=["GET"])
     server.add_route("/reset", handler=app_reset, methods=["GET"])
     server.add_route("/reboot", handler=app_reboot, methods=["GET"])
     server.add_route("/app_config_page", handler=app_config_page, methods=["POST",'GET'])
