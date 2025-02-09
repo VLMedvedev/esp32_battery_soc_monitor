@@ -8,8 +8,22 @@ from configs.wifi_ap_config import SSID
 import machine
 import utime
 import os
+import asyncio
 #import _thread
 from configs.constants_saver import ConstansReaderWriter
+
+async def get_soc_level(que_can):
+    print("start check can")
+    wait_counter = 5
+    soc_level = ""
+    while wait_counter > 0:
+        print(que_can.qsize())
+        if not que_can.empty():
+            soc_level = await que_can.get()
+            return soc_level
+        await asyncio.sleep(1)
+        wait_counter -= 1
+    return soc_level
 
 def machine_reset():
     import machine
@@ -17,7 +31,7 @@ def machine_reset():
     print("Resetting...")
     machine.reset()
 
-def application_mode(q):
+def application_mode(que_can):
     print("Entering application mode.")
     CSS_STYLE = ""
     CONFIG_PAGE_LINKS = ""
@@ -49,8 +63,8 @@ def application_mode(q):
         # https://www.coderdojotc.org/micropython/advanced-labs/03-internal-temperature/
         # sensor_temp = machine.ADC(4)
         # reading = sensor_temp.read_u16() * (3.3 / (65535))
-        soc_level = 27  # - (reading - 0.706)/0.001721
-        return f"{round(soc_level, 1)}"
+        soc_level = get_soc_level(que_can) # - (reading - 0.706)/0.001721
+        return soc_level
 
     def app_reset(request):
         # Deleting the WIFI configuration file will cause the device to reboot as
