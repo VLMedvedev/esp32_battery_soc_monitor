@@ -14,10 +14,11 @@ def can_id_scan():
         counter += 1
         time.sleep(CAN_SOC_CHECK_PERIOD_SEC)
 
-def can_soc_read():
+async def can_soc_read():
     #print("start read can")
     #while True:
     soc_level = esp32_soc.read_soc_level(CAN_SOC_ID, CAN_SOC_BYTE_NUMBER)
+    #que_can.put(soc_level)
     #if soc_level != 123:
     #print(f"soc_level_0  {soc_level}")
     return soc_level

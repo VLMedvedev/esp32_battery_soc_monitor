@@ -10,10 +10,12 @@ from configs.hw_config import HW_LED_PIN
 from configs.can_bus_config import CAN_SOC_CHECK_PERIOD_SEC
 from configs.mqtt_config import PUBLISH_TOPIC
 from machine import Pin
+
 # Many ESP8266 boards have active-low "flash" button on GPIO0.
 btn = Pin(HW_BT_RIGTH_UP, Pin.IN, Pin.PULL_UP)
 led = Pin(HW_LED_PIN, Pin.OUT, value=1)
-import mp_can
+from mp_can import can_init, can_id_scan, can_soc_read
+
 
 # Coroutine: only return on button press
 async def wait_button():
@@ -22,10 +24,7 @@ async def wait_button():
         btn_prev = btn.value()
         await asyncio.sleep(0.04)
 
-# Coroutine: only return on button press
-def can_read():
-    soc_level = mp_can.can_soc_read()
-    return soc_level
+
 
 # Coroutine: entry point for asyncio program
 async def main():
@@ -35,14 +34,13 @@ async def main():
     que_can = Queue()
     # Main loop
     if AUTO_START_CAN:
-        mp_can.can_init()
+        can_init()
         time.sleep(3)
-        mp_can.can_id_scan()
+        can_id_scan()
         while True:
-            # read can
-            soc_level = await can_read()
-            await que_can.put(soc_level)
+            soc_level = await can_soc_read()
             print(f"soc_level_0 put {soc_level}")
+            await que_can.put(soc_level)
             await asyncio.sleep(CAN_SOC_CHECK_PERIOD_SEC)
 
     # Main loop
@@ -61,7 +59,7 @@ async def main():
         if is_connected_to_wifi():
             if AUTO_START_UMQTT:
                 from mp_mqtt import start_mqtt
-                #asyncio.create_task(start_mqtt(q))
+                # asyncio.create_task(start_mqtt(q))
                 start_mqtt(que_mqtt)
             if AUTO_START_WEBREPL:
                 import webrepl
@@ -70,6 +68,7 @@ async def main():
                 from web_app.web_app import application_mode
                 asyncio.create_task(application_mode(que_can))
 
+
 # Start event loop and run entry point coroutine
-#def start_main():
+# def start_main():
 asyncio.run(main())
