@@ -35,7 +35,6 @@ async def start_can(que_can):
     can_id_scan()
     await asyncio.sleep(CAN_SOC_CHECK_PERIOD_SEC)
     asyncio.create_task(can_soc_read(que_can))
-
     #mqtt_th = _thread.start_new_thread(mqtt_start, (mqtt_cli, q))
 
 def start_main():
