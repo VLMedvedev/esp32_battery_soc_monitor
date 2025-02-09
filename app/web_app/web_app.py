@@ -8,21 +8,21 @@ from configs.wifi_ap_config import SSID
 import machine
 import utime
 import os
-import asyncio
+#import asyncio
 #import _thread
 from configs.constants_saver import ConstansReaderWriter
 
-async def get_soc_level(que_can):
+def get_soc_level(que_can):
     print("start check can")
     wait_counter = 5
     soc_level = ""
-    while wait_counter > 0:
-        print(que_can.qsize())
-        if not que_can.empty():
-            soc_level = await que_can.get()
-            return soc_level
-        await asyncio.sleep(1)
-        wait_counter -= 1
+    # while wait_counter > 0:
+    print(f"can_que  {que_can.qsize()}")
+    if not que_can.empty():
+        soc_level = que_can.get()
+        return soc_level
+        # await asyncio.sleep(1)
+        # wait_counter -= 1
     return soc_level
 
 def machine_reset():
