@@ -11,7 +11,17 @@ import os
 import asyncio
 import _thread
 from configs.constants_saver import ConstansReaderWriter
+from configs.can_bus_config import CAN_SOC_CHECK_PERIOD_SEC
 
+soc_level = 0
+
+async def get_soc_level(que_can: Queue):
+    global soc_level
+    while True:
+        if que_can.qsize() > 0:
+            #print(f"can_que  {que_can.qsize()}")
+            soc_level = await que_can.get()
+        await asyncio.sleep(CAN_SOC_CHECK_PERIOD_SEC)
 
 def machine_reset():
     import machine
@@ -44,6 +54,7 @@ def application_mode(que_can):
 
     #async def app_get_soc(request):
     def app_get_soc(request):
+        global soc_level
         # Not particularly reliable but uses built in hardware.
         # Demos how to incorporate senasor data into this application.
         # The front end polls this route and displays the output.
@@ -52,12 +63,8 @@ def application_mode(que_can):
         # https://www.coderdojotc.org/micropython/advanced-labs/03-internal-temperature/
         # sensor_temp = machine.ADC(4)
         # reading = sensor_temp.read_u16() * (3.3 / (65535))
-        soc_level = ""
-        # if que_can.qsize() > 0:
-        #    # print(f"can_que  {que_can.qsize()}")
-        #     soc_level = await que_can.get()
+        #soc_level = que_can.get()
         ## - (reading - 0.706)/0.001721
-        soc_level = 27
         #print(f"can soc {soc_level}   can_que  {que_can.qsize()}")
         print(f"soc lev {soc_level}")
         out_str = f"{soc_level}"
@@ -378,7 +385,7 @@ def application_mode(que_can):
 
     # Add other routes for your application...
     server.set_callback(app_catch_all)
-
+    asyncio.create_task(get_soc_level(que_can))
     server.run()
 
 

@@ -35,6 +35,7 @@ async def can_processing(que_can: Queue):
             soc_level = ""
         # print(f"soc_level_0 put {soc_level}")
         await que_can.put(soc_level)
+        #que_can.put(soc_level)
         await asyncio.sleep(CAN_SOC_CHECK_PERIOD_SEC)
 
 async def button_processing(que_mqtt: Queue):
