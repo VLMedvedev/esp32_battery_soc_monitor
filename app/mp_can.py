@@ -1,12 +1,13 @@
 import asyncio
 from phew import logging
 import esp32_soc
+import time
 from configs.can_bus_config import *
 
 # Coroutine: only return on button press
-async def can_id_scan():
+def can_id_scan():
     print("start scan can id")
-    await msg_id_list = esp32_soc.scan_can_id()
+    msg_id_list = esp32_soc.scan_can_id()
     print(f"msg_id_list  {msg_id_list}")
     logging.info(f"msg_id_list {msg_id_list}")
 
@@ -19,12 +20,12 @@ async def can_soc_read(que_can):
         que_can.put(soc_level)
         await asyncio.sleep(CAN_SOC_CHECK_PERIOD_SEC)
 
-async def can_init():
+def can_init():
     print("start init")
     rx_pin = HW_CAN_RX_PIN
     tx_pin = HW_CAN_TX_PIN
     await asyncio.sleep(CAN_SOC_CHECK_PERIOD_SEC)
-    await ret = esp32_soc.driver_init(rx_pin, tx_pin)
+    ret = esp32_soc.driver_init(rx_pin, tx_pin)
     print(f" driver init  {ret}")
     logging.info(f"driver init  {ret}")
 
