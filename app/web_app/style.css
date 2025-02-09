@@ -68,6 +68,11 @@ li.dropdown {
     font-family: 'Courier New';
 }
 
+.value_font {
+    font-family: 'Courier New';
+    font-size: xxx-large;
+}
+
 /* Style the footer */
 .footer {
     position: fixed;

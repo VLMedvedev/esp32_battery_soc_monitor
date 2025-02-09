@@ -1,20 +1,20 @@
     <h1>Success</h1>
     <p>The Battery monitor is connected to the network!</p>
     <h1>The Battery SOC: <br>
-        <span id="tempValue"></span>%.</h1>
+        <span class="value_font" id="socValue"></span> %.</h1>
     <br/>
     <button id="toggleBtn">Toggle LED</button>
-<!--    <script src="data:text/javascript,-->
-<!--                 async function getSoc() {-->
-<!--                 const elem = document.getElementById('socValue');-->
-<!--                 elem.innerHTML = 'Updating...';-->
-<!--                 const t = await fetch('/soc');-->
-<!--                 const tVal = await t.text();-->
-<!--                 elem.innerHTML = tVal;-->
-<!--                 setTimeout(getSoc, 10000)};-->
-<!--                 getSoc();"-->
-<!--            defer></script>-->
-    <script src="data:text/javascript,async function getTemp() { const elem = document.getElementById('tempValue'); elem.innerHTML = 'Updating...'; const t = await fetch('/soc'); const tVal = await t.text(); elem.innerHTML = tVal; setTimeout(getTemp, 10000)}; getTemp();" defer></script>
+    <script src="data:text/javascript,
+                 async function getSoc() {
+                 const elem = document.getElementById('socValue');
+                 elem.innerHTML = 'Updating...';
+                 const t = await fetch('/soc');
+                 const tVal = await t.text();
+                 elem.innerHTML = tVal;
+                 setTimeout(getSoc, 10000)};
+                 getSoc();"
+            defer></script>
+<!--    <script src="data:text/javascript,async function getTemp() { const elem = document.getElementById('tempValue'); elem.innerHTML = 'Updating...'; const t = await fetch('/soc'); const tVal = await t.text(); elem.innerHTML = tVal; setTimeout(getTemp, 10000)}; getTemp();" defer></script>-->
 <!--    <button id="resetBtn">Reset Wifi</button>-->
 <!--    <button id="rebootBtn">Reboot</button>-->
     <script src="data:text/javascript,document.getElementById('toggleBtn').onclick = async function() { await fetch('/toggle'); };" defer></script>
