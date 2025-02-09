@@ -44,7 +44,7 @@ async def mqtt_start(mqtt_cli, q):
     print("start check msg")
     while True:
         mqtt_cli.check_msg()
-        print(q.qsize())
+        #print(q.qsize())
         if not q.empty():
             q_msg, q_topic = await q.get()
             print(f"q get  {q_msg}")
@@ -55,12 +55,6 @@ async def mqtt_start(mqtt_cli, q):
 
     #mqtt_cli.disconnect()
 
-# Coroutine: only return on button press
-async def wait_button():
-    btn_prev = btn.value()
-    while (btn.value() == 1) or (btn.value() == btn_prev):
-        btn_prev = btn.value()
-        await asyncio.sleep(0.04)
 # Coroutine: entry point for asyncio program
 async def start_mqtt(que_mqtt):
     client_id = CLIENT_ID
