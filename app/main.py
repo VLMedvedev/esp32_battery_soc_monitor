@@ -48,7 +48,7 @@ async def button_processing(que_mqtt: Queue):
         q_msg = "toggle"
         msg_topic = (q_msg, q_topic)
         await que_mqtt.put(msg_topic)
-        print(f"put {que_mqtt.qsize()}")
+        #print(f"put {que_mqtt.qsize()}")
 
 # Coroutine: entry point for asyncio program
 async def main():
@@ -66,8 +66,8 @@ async def main():
         if is_connected_to_wifi():
             if AUTO_START_UMQTT:
                 from mp_mqtt import start_mqtt
-                # asyncio.create_task(start_mqtt(q))
-                start_mqtt(que_mqtt)
+                asyncio.create_task(start_mqtt(que_mqtt))
+                #start_mqtt(que_mqtt)
             if AUTO_START_WEBREPL:
                 import webrepl
                 asyncio.create_task(webrepl.start())

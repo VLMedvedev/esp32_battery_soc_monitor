@@ -44,10 +44,10 @@ async def mqtt_start(mqtt_cli, q):
     print("start check msg")
     while True:
         mqtt_cli.check_msg()
-        #print(q.qsize())
+        print(q.qsize())
         if not q.empty():
             q_msg, q_topic = await q.get()
-           # print(f"q get  {q_msg}")
+            print(f"q get  {q_msg}")
             msg = bytes(q_msg, 'utf-8')
             topic = bytes(q_topic, 'utf-8')
             mqtt_cli.publish(topic, msg)
