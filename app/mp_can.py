@@ -1,4 +1,5 @@
 import asyncio
+from primitives import Queue
 from phew import logging
 import esp32_soc
 import time
@@ -39,5 +40,8 @@ async def start_can(que_can):
     #mqtt_th = _thread.start_new_thread(mqtt_start, (mqtt_cli, q))
 
 def start_main():
-    q = asyncio.Queue()
+    q = Queue()
     asyncio.run(start_can(q))
+
+if __name__ == "__main__":
+    start_main()
