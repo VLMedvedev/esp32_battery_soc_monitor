@@ -8,22 +8,10 @@ from configs.wifi_ap_config import SSID
 import machine
 import utime
 import os
-#import asyncio
-#import _thread
+import asyncio
+import _thread
 from configs.constants_saver import ConstansReaderWriter
 
-def get_soc_level(que_can):
-    print("start check can")
-    wait_counter = 5
-    soc_level = ""
-    # while wait_counter > 0:
-    print(f"can_que  {que_can.qsize()}")
-    if not que_can.empty():
-        soc_level = que_can.get()
-        return soc_level
-        # await asyncio.sleep(1)
-        # wait_counter -= 1
-    return soc_level
 
 def machine_reset():
     import machine
@@ -54,6 +42,7 @@ def application_mode(que_can):
             onboard_led.off()
         return "OK"
 
+    #async def app_get_soc(request):
     def app_get_soc(request):
         # Not particularly reliable but uses built in hardware.
         # Demos how to incorporate senasor data into this application.
@@ -63,7 +52,13 @@ def application_mode(que_can):
         # https://www.coderdojotc.org/micropython/advanced-labs/03-internal-temperature/
         # sensor_temp = machine.ADC(4)
         # reading = sensor_temp.read_u16() * (3.3 / (65535))
-        soc_level = get_soc_level(que_can) # - (reading - 0.706)/0.001721
+        soc_level = ""
+        if que_can.qsize() > 0:
+            print(f"can_que  {que_can.qsize()}")
+           # soc_level = await que_can.get()
+        #print(f"soc lev {soc_level}")# - (reading - 0.706)/0.001721
+        soc_level = 27
+        print(f"can soc {soc_level}   can_que  {que_can.qsize()}")
         return soc_level
 
     def app_reset(request):
@@ -81,7 +76,7 @@ def application_mode(que_can):
 
     def app_reboot(request):
         # Reboot from new thread after we have responded to the user.
-   #     _thread.start_new_thread(machine_reset, ())
+        _thread.start_new_thread(machine_reset, ())
         return render_template("/web_app/reboot.html", access_point_ssid=SSID)
 
     def app_catch_all(request):

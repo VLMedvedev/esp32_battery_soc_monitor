@@ -29,7 +29,11 @@ async def can_processing(que_can: Queue):
     can_id_scan()
     while True:
         soc_level = await can_soc_read()
-        print(f"soc_level_0 put {soc_level}")
+        try:
+            soc_level = int(soc_level)
+        except ValueError:
+            soc_level = ""
+        # print(f"soc_level_0 put {soc_level}")
         await que_can.put(soc_level)
         await asyncio.sleep(CAN_SOC_CHECK_PERIOD_SEC)
 
@@ -50,7 +54,7 @@ async def main():
     # Start coroutine as a task and immediately return
     # Queue for passing messages
     que_mqtt = Queue()
-    que_can = Queue()
+    que_can = Queue(maxsize=1)
     # Main loop
     if AUTO_START_CAN:
         asyncio.create_task(can_processing(que_can))
