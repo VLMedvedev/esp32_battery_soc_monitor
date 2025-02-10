@@ -17,10 +17,13 @@ bt_rigth_down = Pin(HW_BT_RIGTH_DOWN, Pin.IN, Pin.PULL_UP)
 def button_controller(que_mqtt):
     def bt_pressed(btn_number, double=False, long=False):
         print(f"press btn,  bt_num = {btn_number} double={double} long={long}")
-        q_msg = (btn_number, double, long)
-        q_topic = "press btn"
-        msg_topic = (q_msg, q_topic)
-        await que_mqtt.put(msg_topic)
+        msg_dict = {"press_btn":
+                        {"btn_number": btn_number,
+                         "double": double,
+                         "long": long}
+                        }
+                    }
+        await que_mqtt.put(msg_dict)
 
     def button_init():
         bt_min_up = Pushbutton(bt_left_up, suppress=True)
