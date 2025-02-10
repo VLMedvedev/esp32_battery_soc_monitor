@@ -54,7 +54,7 @@ async def button_processing(que_mqtt: Queue):
 async def main():
     # Start coroutine as a task and immediately return
     # Queue for passing messages
-    que_mqtt = Queue()
+    que_mqtt = Queue(maxsize=1)
     que_can = Queue(maxsize=1)
     # Main loop
     if AUTO_START_CAN:

@@ -4,7 +4,7 @@
     <option name="activeStubsPackage" />
     <option name="areStubsEnabled" value="false" />
     <option name="pluginEnabled" value="true" />
-    <option name="portName" value="/dev/ttyACM1" />
+    <option name="portName" value="/dev/ttyACM0" />
     <option name="settingsVersion" value="1" />
   </component>
 </project>
