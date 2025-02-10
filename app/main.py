@@ -12,17 +12,9 @@ from configs.mqtt_config import PUBLISH_TOPIC
 from machine import Pin
 
 # Many ESP8266 boards have active-low "flash" button on GPIO0.
-btn = Pin(HW_BT_RIGTH_UP, Pin.IN, Pin.PULL_UP)
 led = Pin(HW_LED_PIN, Pin.OUT, value=1)
 from mp_can import can_init, can_id_scan, can_soc_read
 from mp_button import button_controller
-
-# Coroutine: only return on button press
-async def wait_button():
-    btn_prev = btn.value()
-    while (btn.value() == 1) or (btn.value() == btn_prev):
-        btn_prev = btn.value()
-        await asyncio.sleep(0.04)
 
 async def can_processing(que_can: Queue):
     can_init()
@@ -39,16 +31,13 @@ async def can_processing(que_can: Queue):
         #que_can.put(soc_level)
         await asyncio.sleep(CAN_SOC_CHECK_PERIOD_SEC)
 
-async def button_processing(que_mqtt: Queue):
+async def controller_processing(que_mqtt: Queue):
     while True:
-        # Calculate time between button presses
-        await wait_button()
-        print("press btn")
-        q_topic = PUBLISH_TOPIC
-        q_msg = "toggle"
-        msg_topic = (q_msg, q_topic)
-        await que_mqtt.put(msg_topic)
-        #print(f"put {que_mqtt.qsize()}")
+        print(f"que {que_mqtt.qsize()}")
+        if not que_mqtt.empty():
+            q_msg = await que_mqtt.get()
+            print(f"q get  {q_msg} ")
+        await asyncio.sleep(0.1)
 
 # Coroutine: entry point for asyncio program
 async def main():
@@ -60,7 +49,7 @@ async def main():
     if AUTO_START_CAN:
         asyncio.create_task(can_processing(que_can))
     # Main loop
-    #asyncio.create_task(button_processing(que_mqtt))
+    asyncio.create_task(controller_processing(que_mqtt))
     button_controller(que_mqtt)
 
     if AUTO_CONNECT_TO_WIFI_AP:

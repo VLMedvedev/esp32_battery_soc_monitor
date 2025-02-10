@@ -20,7 +20,7 @@ def button_controller(que_mqtt):
         msg_dict = {"press_btn":
                         {"btn_number": btn_number,
                          "double": double,
-                         "long": long}
+                         "long": long,
                         }
                     }
         await que_mqtt.put(msg_dict)
