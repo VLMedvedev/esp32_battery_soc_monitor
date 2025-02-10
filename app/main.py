@@ -15,6 +15,7 @@ from machine import Pin
 btn = Pin(HW_BT_RIGTH_UP, Pin.IN, Pin.PULL_UP)
 led = Pin(HW_LED_PIN, Pin.OUT, value=1)
 from mp_can import can_init, can_id_scan, can_soc_read
+from mp_button import button_controller
 
 # Coroutine: only return on button press
 async def wait_button():
@@ -43,7 +44,6 @@ async def button_processing(que_mqtt: Queue):
         # Calculate time between button presses
         await wait_button()
         print("press btn")
-        # Send calculated time to blink task
         q_topic = PUBLISH_TOPIC
         q_msg = "toggle"
         msg_topic = (q_msg, q_topic)
@@ -60,7 +60,8 @@ async def main():
     if AUTO_START_CAN:
         asyncio.create_task(can_processing(que_can))
     # Main loop
-    asyncio.create_task(button_processing(que_mqtt))
+    #asyncio.create_task(button_processing(que_mqtt))
+    button_controller(que_mqtt)
 
     if AUTO_CONNECT_TO_WIFI_AP:
         if is_connected_to_wifi():
