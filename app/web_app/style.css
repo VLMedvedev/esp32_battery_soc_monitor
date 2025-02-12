@@ -82,3 +82,11 @@ li.dropdown {
     padding: 10px;
     text-align: center;
 }
+
+.header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: #f1f1f1;
+    padding: 10px;
+}
