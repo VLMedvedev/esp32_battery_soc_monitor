@@ -1,10 +1,10 @@
 {{render_template('/web_app/header.html', title=title, style_css_str=style_css_str, config_page_links=config_page_links)}}
-
+<main class="main">
 <button id="deleteLogBtn">Delete log file</button>
 <script src="data:text/javascript,document.getElementById('deleteLogBtn').onclick = async function() { await fetch('/delete_log'); };" defer></script>
 <div class="container bg-light rounder m-3 p-3">
 <h1 class="display-5">This is log.txt </h1>
 {{log_txt}}
 </div>"
-
+</main>
 {{render_template('/web_app/footer.html')}}

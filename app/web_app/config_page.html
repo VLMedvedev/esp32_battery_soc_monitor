@@ -1,5 +1,5 @@
 {{render_template('/web_app/header.html', title=title, style_css_str=style_css_str, config_page_links=config_page_links)}}
-
+<main class="main">
 <!--<form style="font-family:'Courier New'" action="/config_page" method="POST" autocomplete="off" autocapitalize="none">-->
 <form style="font-family:'Courier New'" method="POST" autocomplete="off" autocapitalize="none">
     {{config_page}}
@@ -10,4 +10,5 @@
 <!--    <script src="data:text/javascript,document.getElementById('rebootBtn').onclick = function() { window.location.href = '/reboot'; };" defer></script>-->
 
 </form>
+</main>
 {{render_template('/web_app/footer.html')}}
