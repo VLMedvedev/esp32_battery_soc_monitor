@@ -84,18 +84,19 @@ li.dropdown {
 }
 
 .header {
+    /*overflow: hidden;*/
     position: fixed;
     top: 0;
     width: 100%;
-    background-color: #f1f1f1;
+    /*background-color: #f1f1f1;*/
     /*padding: 10px;*/
 }
 
 .main {
-    /*position: fixed;*/
-    /*top: 0;*/
+  padding: 16px;
+  margin-top: 40px;
+  /*height: 1500px; !* Used in this example to enable scrolling *!*/
     width: 100%;
     /*background-color: #f1f1f1;*/
-    padding: 10px;
 }
 
