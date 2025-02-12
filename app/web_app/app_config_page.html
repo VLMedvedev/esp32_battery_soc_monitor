@@ -11,11 +11,14 @@
     <input type="number" id="OFF_LEVEL" name="OFF_LEVEL" value={{val_off}}><br>
 
     <br><br>
-    <button id="saveBtn">Save config</button><label>  {{page_info}}</label><br>
+
 <!--    <button id="rebootBtn">Reboot</button>-->
 <!--    <script src="data:text/javascript,document.getElementById('saveBtn').onclick = function() { window.location.href = '/config_page'; };" defer></script>-->
 <!--    <script src="data:text/javascript,document.getElementById('rebootBtn').onclick = function() { window.location.href = '/reboot'; };" defer></script>-->
 
 </form>
+    <keybloc class="keys">
+     <button  id="saveBtn">Save config</button><label>  {{page_info}}</label><br>
+</keybloc>
 </main>
 {{render_template('/web_app/footer.html')}}

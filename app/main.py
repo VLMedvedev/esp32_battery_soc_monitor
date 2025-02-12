@@ -31,11 +31,11 @@ async def can_processing(que_can: Queue):
         #que_can.put(soc_level)
         await asyncio.sleep(CAN_SOC_CHECK_PERIOD_SEC)
 
-async def controller_processing(que_ctl_in: Queue, que_ctl_out: Queue, que_mqtt_pub: Queue):
+async def controller_processing(que_event_in: Queue, que_ctl_out: Queue, que_mqtt_pub: Queue):
     while True:
-        if not que_ctl_in.empty():
+        if not que_event_in.empty():
             #print(f"que {que_mqtt.qsize()}")
-            q_msg = await que_ctl_in.get()
+            q_msg = await que_event_in.get()
             print(f"q get  {q_msg} ")
 
         await asyncio.sleep(0.1)
@@ -44,7 +44,7 @@ async def controller_processing(que_ctl_in: Queue, que_ctl_out: Queue, que_mqtt_
 async def main():
     # Start coroutine as a task and immediately return
     # Queue for passing messages
-    que_ctl_in = Queue(maxsize=1)
+    que_event_in = Queue(maxsize=1)
     que_ctl_out = Queue(maxsize=1)
     que_mqtt_get= Queue(maxsize=1)
     que_mqtt_pub= Queue(maxsize=1)
@@ -53,8 +53,8 @@ async def main():
     if AUTO_START_CAN:
         asyncio.create_task(can_processing(que_can))
     # Main loop
-    asyncio.create_task(controller_processing(que_ctl_in, que_ctl_out, que_mqtt_pub))
-    button_controller(que_ctl_in)
+    asyncio.create_task(controller_processing(que_event_in, que_ctl_out, que_mqtt_pub))
+    button_controller(que_event_in)
 
     if AUTO_CONNECT_TO_WIFI_AP:
         if is_connected_to_wifi():

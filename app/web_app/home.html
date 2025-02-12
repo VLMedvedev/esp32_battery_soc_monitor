@@ -4,7 +4,7 @@
     <h1>The Battery SOC: <br>
         <span class="value_font" id="socValue"></span> %.</h1>
     <br/>
-    <button id="toggleBtn">Toggle LED</button>
+
     <script src="data:text/javascript,
                  async function getSoc() {
                  const elem = document.getElementById('socValue');
@@ -21,4 +21,7 @@
     <script src="data:text/javascript,document.getElementById('toggleBtn').onclick = async function() { await fetch('/toggle'); };" defer></script>
 <!--    <script src="data:text/javascript,document.getElementById('resetBtn').onclick = function() { window.location.href = '/reset'; };" defer></script>-->
 <!--    <script src="data:text/javascript,document.getElementById('rebootBtn').onclick = function() { window.location.href = '/reboot'; };" defer></script>-->
+<keybloc class="keys">
+     <button id="toggleBtn">Toggle LED</button>
+</keybloc>
 </main>

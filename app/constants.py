@@ -1,26 +1,30 @@
 #from enum import Enum
-from micropython import const
 #import network
 #from ucollections import namedtuple
 #MyTuple = namedtuple("MyTuple", ("id", "name"))
 #t1 = MyTuple(1, "foo")
 #t2 = MyTuple(2, "bar")
 
-WiFi_OFF = const(0)
-WiFi_AP = const(1)
-WiFi_client = const(2)
+WiFi_OFF = "WiFi_OFF"
+WiFi_AP = "WiFi_AP"
+WiFi_client = "WiFi_client"
 
-RELE_BATTERY_LEVEL = const(0)
-RELE_ALWAYS_OFF = const(1)
-RELE_ALWAYS_ON = const(2)
+RELE_BATTERY_LEVEL = "RELE_BATTERY_LEVEL"
+RELE_ALWAYS_OFF = "RELE_ALWAYS_OFF"
+RELE_ALWAYS_ON = "RELE_ALWAYS_ON"
 
-VIEW_MODE_BATTERY_LEVEL = const(0)
-VIEW_MODE_VIEW_INFO = const(1)
-VIEW_MODE_SETTING_UP = const(2)
-VIEW_MODE_SETTING_DOWN = const(3)
-VIEW_MODE_VIEW_OFF = const(4)
-VIEW_MODE_VIEW_ON = const(6)
-VIEW_MODE_SETTINGS = const(7)
+VIEW_MODE_BATTERY_LEVEL = "VIEW_MODE_BATTERY_LEVEL"
+VIEW_MODE_VIEW_INFO = "VIEW_MODE_VIEW_INFO"
+VIEW_MODE_SETTING_UP = "VIEW_MODE_SETTING_UP"
+VIEW_MODE_SETTING_DOWN = "VIEW_MODE_SETTING_DOWN"
+VIEW_MODE_VIEW_OFF = "VIEW_MODE_VIEW_OFF"
+VIEW_MODE_VIEW_ON = "VIEW_MODE_VIEW_ON"
+VIEW_MODE_SETTINGS = "VIEW_MODE_SETTINGS"
+
+EVENT_TYPE_PRESS_BUTTON = "press_button"
+EVENT_TYPE_DOUBLE_PRESS_BUTTON = "double_press_button"
+EVENT_TYPE_LONG_PRESS_BUTTON = "long_press_button"
+
 
 
 
