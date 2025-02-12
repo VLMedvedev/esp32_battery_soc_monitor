@@ -31,32 +31,36 @@ async def can_processing(que_can: Queue):
         #que_can.put(soc_level)
         await asyncio.sleep(CAN_SOC_CHECK_PERIOD_SEC)
 
-async def controller_processing(que_mqtt: Queue):
+async def controller_processing(que_ctl_in: Queue, que_ctl_out: Queue, que_mqtt_pub: Queue):
     while True:
-        print(f"que {que_mqtt.qsize()}")
-        if not que_mqtt.empty():
-            q_msg = await que_mqtt.get()
+        if not que_ctl_in.empty():
+            #print(f"que {que_mqtt.qsize()}")
+            q_msg = await que_ctl_in.get()
             print(f"q get  {q_msg} ")
+
         await asyncio.sleep(0.1)
 
 # Coroutine: entry point for asyncio program
 async def main():
     # Start coroutine as a task and immediately return
     # Queue for passing messages
-    que_mqtt = Queue(maxsize=1)
+    que_ctl_in = Queue(maxsize=1)
+    que_ctl_out = Queue(maxsize=1)
+    que_mqtt_get= Queue(maxsize=1)
+    que_mqtt_pub= Queue(maxsize=1)
     que_can = Queue(maxsize=1)
     # Main loop
     if AUTO_START_CAN:
         asyncio.create_task(can_processing(que_can))
     # Main loop
-    asyncio.create_task(controller_processing(que_mqtt))
-    button_controller(que_mqtt)
+    asyncio.create_task(controller_processing(que_ctl_in, que_ctl_out, que_mqtt_pub))
+    button_controller(que_ctl_in)
 
     if AUTO_CONNECT_TO_WIFI_AP:
         if is_connected_to_wifi():
             if AUTO_START_UMQTT:
-                from mp_mqtt import start_mqtt
-                asyncio.create_task(start_mqtt(que_mqtt))
+                from mp_mqtt import start_mqtt_get
+                asyncio.create_task(start_mqtt_get(que_mqtt_get))
                 #start_mqtt(que_mqtt)
             if AUTO_START_WEBREPL:
                 import webrepl
