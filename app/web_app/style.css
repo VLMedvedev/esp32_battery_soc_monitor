@@ -79,7 +79,7 @@ li.dropdown {
     bottom: 0;
     width: 100%;
     background-color: #f1f1f1;
-    padding: 10px;
+    /*padding: 10px;*/
     text-align: center;
 }
 
@@ -88,5 +88,5 @@ li.dropdown {
     top: 0;
     width: 100%;
     background-color: #f1f1f1;
-    padding: 10px;
+    /*padding: 10px;*/
 }
