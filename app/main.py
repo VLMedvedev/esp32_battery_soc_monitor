@@ -40,7 +40,7 @@ async def controller_processing():
     broker.subscribe(EVENT_TYPE_LONG_PRESS_BUTTON, queue)
     broker.subscribe(EVENT_TYPE_DOUBLE_PRESS_BUTTON, queue)
     async for topic, message in queue:
-        print(f"topic {topic}, message {message}")
+        #print(f"topic {topic}, message {message}")
         await asyncio.sleep(0.1)
 
 # Coroutine: entry point for asyncio program

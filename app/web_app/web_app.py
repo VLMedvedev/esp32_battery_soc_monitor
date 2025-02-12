@@ -35,7 +35,7 @@ def application_mode(broker):
         queue = RingbufQueue(20)
         broker.subscribe(EVENT_TYPE_CAN_SOC_READ, queue)
         async for topic, message in queue:
-            print(topic, message)
+            #print(topic, message)
             soc_level = int(message)
 
     def app_index(request):
