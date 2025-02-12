@@ -1,35 +1,35 @@
 import asyncio
+from primitives import Broker, RingbufQueue
 import binascii
 import machine
+from constants import *
 
 from configs.mqtt_config import *
 from umqtt.simple import MQTTClient
 
-async def pub_mqtt(mqtt_pub_queue, msg, topic=None):
-    if topic is None:
-        topic = PUBLISH_TOPIC
-    print(msg, topic)
-    #mqtt_pub_queue.put(msg)
-    await mqtt_pub_queue.put(msg)
-    print(f"qsize {mqtt_pub_queue.qsize()}")
+async def broker_get_pub(mqtt_cli, broker: Broker):
+    print("start broker msg")
+    queue = RingbufQueue(20)
+    broker.subscribe(EVENT_TYPE_CAN_SOC_READ, queue)
+    broker.subscribe(EVENT_TYPE_PRESS_BUTTON, queue)
+    broker.subscribe(EVENT_TYPE_LONG_PRESS_BUTTON, queue)
+    broker.subscribe(EVENT_TYPE_DOUBLE_PRESS_BUTTON, queue)
+    async for topic, message in queue:
+        print(f"topic {topic}, message {message}")
+        msg = bytes(message, 'utf-8')
+        topic = bytes(topic, 'utf-8')
+        mqtt_cli.publish(topic, msg)
+        await asyncio.sleep(0.1)
 
-async def mqtt_start_get(mqtt_cli, q):
+async def mqtt_start_get(mqtt_cli, broker: Broker):
     print("start check msg")
     while True:
         mqtt_cli.check_msg()
-       # print(q.qsize())
-        if not q.empty():
-            q_msg = await q.get()
-            print(f"q get  {q_msg} ")
-          #  msg = bytes(q_msg, 'utf-8')
-          #  topic = bytes(q_topic, 'utf-8')
-          #  mqtt_cli.publish(topic, msg)
         await asyncio.sleep(CHECK_PERIOD_SEC)
-
     #mqtt_cli.disconnect()
 
 # Coroutine: entry point for asyncio program
-async def start_mqtt_get(que_mqtt):
+async def start_mqtt_get(broker):
     client_id = CLIENT_ID
     if CLIENT_ID=="machine_id":
         client_id = binascii.hexlify(machine.unique_id())
@@ -42,14 +42,19 @@ async def start_mqtt_get(que_mqtt):
                           )
     topic_subscribe = bytes(SUBSCRIBE_TOPIC, 'utf-8')
     # Subscribed messages will be delivered to this callback
+    def sub_cb(topic, msg):
+        topic, msg = topic.decode(), msg.decode()
+        print((topic, msg))
+        broker.publish(topic, msg)
     mqtt_cli.set_callback(sub_cb)
+
     mqtt_cli.connect()
     mqtt_cli.subscribe(topic_subscribe)
     print("Connected to %s, subscribed to %s topic" % (SERVER, topic_subscribe))
-    # Queue for passing messages
-    #q = Queue()
+
     # Start coroutine as a task and immediately return
-    asyncio.create_task(mqtt_start_get(mqtt_cli, que_mqtt))
+    asyncio.create_task(broker_get_pub(mqtt_cli, broker))
+    asyncio.create_task(mqtt_start_get(mqtt_cli, broker))
     #mqtt_th = _thread.start_new_thread(mqtt_start, (mqtt_cli, q))
 
 

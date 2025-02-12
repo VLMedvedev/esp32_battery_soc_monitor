@@ -24,6 +24,7 @@ VIEW_MODE_SETTINGS = "VIEW_MODE_SETTINGS"
 EVENT_TYPE_PRESS_BUTTON = "press_button"
 EVENT_TYPE_DOUBLE_PRESS_BUTTON = "double_press_button"
 EVENT_TYPE_LONG_PRESS_BUTTON = "long_press_button"
+EVENT_TYPE_CAN_SOC_READ = "can_soc_read"
 
 
 

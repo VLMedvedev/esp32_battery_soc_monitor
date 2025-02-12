@@ -1,5 +1,5 @@
 from machine import Pin
-import asyncio
+#import asyncio
 from primitives import Pushbutton
 from configs.hw_config import (HW_BT_LEFT_UP,
                                HW_BT_LEFT_DOWN,
@@ -14,11 +14,11 @@ bt_left_down = Pin(HW_BT_LEFT_DOWN, Pin.IN, Pin.PULL_UP)
 bt_rigth_up = Pin(HW_BT_RIGTH_UP, Pin.IN, Pin.PULL_UP)
 bt_rigth_down = Pin(HW_BT_RIGTH_DOWN, Pin.IN, Pin.PULL_UP)
 
-def button_controller(que_event_in):
-    def bt_pressed(btn_number, event_type,):
+def button_controller(broker):
+    def bt_pressed(btn_number, event_type):
         print(f"press btn, event= {event_type} bt_num = {btn_number} ")
-        msg_dict = {"event": event_type, "parameter": btn_number }
-        await que_event_in.put(msg_dict)
+       # msg_dict = {"event": event_type, "parameter": btn_number }
+        broker.publish(event_type, btn_number)
 
     def button_init():
         bt_min_up = Pushbutton(bt_left_up, suppress=True)

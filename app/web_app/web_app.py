@@ -12,16 +12,11 @@ import asyncio
 import _thread
 from configs.constants_saver import ConstansReaderWriter
 from configs.can_bus_config import CAN_SOC_CHECK_PERIOD_SEC
+from primitives import Broker, RingbufQueue
+from constants import *
+import asyncio
 
 soc_level = 0
-
-async def get_soc_level(que_can: Queue):
-    global soc_level
-    while True:
-        if que_can.qsize() > 0:
-            #print(f"can_que  {que_can.qsize()}")
-            soc_level = await que_can.get()
-        await asyncio.sleep(CAN_SOC_CHECK_PERIOD_SEC)
 
 def machine_reset():
     import machine
@@ -29,11 +24,19 @@ def machine_reset():
     print("Resetting...")
     machine.reset()
 
-def application_mode(que_can):
+def application_mode(broker):
     print("Entering application mode.")
     CSS_STYLE = ""
     CONFIG_PAGE_LINKS = ""
     onboard_led = machine.Pin(HW_LED_PIN, machine.Pin.OUT)
+
+    async def get_soc_level():
+        global soc_level
+        queue = RingbufQueue(20)
+        broker.subscribe(EVENT_TYPE_CAN_SOC_READ, queue)
+        async for topic, message in queue:
+            print(topic, message)
+            soc_level = int(message)
 
     def app_index(request):
         #return render_template("/web_app/home.html")
@@ -385,7 +388,7 @@ def application_mode(que_can):
 
     # Add other routes for your application...
     server.set_callback(app_catch_all)
-    asyncio.create_task(get_soc_level(que_can))
+    asyncio.create_task(get_soc_level())
     server.run()
 
 

@@ -62,18 +62,3 @@ def bt_pressed(btn_number, double=False, long=False):
 
 state = 0
 
-def sub_cb(topic, msg):
-    global state
-    print((topic, msg))
-    print(topic.decode(), msg.decode())
-    if msg == b"on":
-        led.value(1)
-        state = 0
-    elif msg == b"off":
-        led.value(0)
-        state = 1
-    elif msg == b"toggle":
-        # LED is inversed, so setting it to current state
-        # value will make it toggle
-        led.value(state)
-        state = 1 - state
