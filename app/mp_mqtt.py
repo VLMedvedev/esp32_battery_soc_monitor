@@ -16,9 +16,10 @@ async def broker_get_pub(mqtt_cli, broker: Broker):
     broker.subscribe(EVENT_TYPE_DOUBLE_PRESS_BUTTON, queue)
     async for topic, message in queue:
         print(f"topic {topic}, message {message}")
-        msg = bytes(message, 'utf-8')
-        topic = bytes(topic, 'utf-8')
-        mqtt_cli.publish(topic, msg)
+        top = PUBLISH_TOPIC + "/" + topic
+        msg = str(message).encode("utf-8")
+        top = str(top).encode("utf-8")
+        mqtt_cli.publish(top, msg)
         await asyncio.sleep(0.1)
 
 async def mqtt_start_get(mqtt_cli, broker: Broker):
@@ -44,7 +45,8 @@ async def start_mqtt_get(broker):
     # Subscribed messages will be delivered to this callback
     def sub_cb(topic, msg):
         topic, msg = topic.decode(), msg.decode()
-        print((topic, msg))
+        topic = topic.replace( f"{SUBSCRIBE_TOPIC[:-1]}" , "")
+        print(topic, msg)
         broker.publish(topic, msg)
     mqtt_cli.set_callback(sub_cb)
 
