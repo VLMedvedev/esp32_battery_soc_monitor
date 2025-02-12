@@ -90,3 +90,12 @@ li.dropdown {
     background-color: #f1f1f1;
     /*padding: 10px;*/
 }
+
+.main {
+    /*position: fixed;*/
+    /*top: 0;*/
+    width: 100%;
+    /*background-color: #f1f1f1;*/
+    padding: 10px;
+}
+
