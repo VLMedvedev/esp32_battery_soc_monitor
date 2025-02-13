@@ -10,6 +10,7 @@ from configs.hw_config import HW_LED_PIN
 from configs.can_bus_config import CAN_SOC_CHECK_PERIOD_SEC
 from configs.mqtt_config import PUBLISH_TOPIC
 from machine import Pin
+from mp_commander import set_level
 
 # Many ESP8266 boards have active-low "flash" button on GPIO0.
 led = Pin(HW_LED_PIN, Pin.OUT, value=1)
@@ -36,11 +37,17 @@ async def can_processing():
 async def controller_processing():
     queue = RingbufQueue(20)
     broker.subscribe(EVENT_TYPE_CAN_SOC_READ, queue)
-    broker.subscribe(EVENT_TYPE_PRESS_BUTTON, queue)
-    broker.subscribe(EVENT_TYPE_LONG_PRESS_BUTTON, queue)
-    broker.subscribe(EVENT_TYPE_DOUBLE_PRESS_BUTTON, queue)
+    broker.subscribe(TOPIC_COMMAND_LEVEL_UP, queue)
+    broker.subscribe(TOPIC_COMMAND_WIFI_MODE, queue)
+    broker.subscribe(TOPIC_COMMAND_RELE_MODE, queue)
+    broker.subscribe(TOPIC_COMMAND_DRAW_LEVEL, queue)
+    broker.subscribe(TOPIC_COMMAND_LEVEL_DOWN, queue)
+    broker.subscribe(TOPIC_COMMAND_LEVEL_UP, queue)
     async for topic, message in queue:
-        #print(f"topic {topic}, message {message}")
+        print(f"topic {topic}, message {message}")
+        if (topic == TOPIC_COMMAND_LEVEL_UP or topic == TOPIC_COMMAND_LEVEL_DOWN):
+            set_level(topic, message)
+
         await asyncio.sleep(0.1)
 
 # Coroutine: entry point for asyncio program
