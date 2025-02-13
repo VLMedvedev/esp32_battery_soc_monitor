@@ -37,7 +37,6 @@ async def can_processing():
 async def controller_processing():
     queue = RingbufQueue(20)
     broker.subscribe(EVENT_TYPE_CAN_SOC_READ, queue)
-    broker.subscribe(TOPIC_COMMAND_LEVEL_UP, queue)
     broker.subscribe(TOPIC_COMMAND_WIFI_MODE, queue)
     broker.subscribe(TOPIC_COMMAND_RELE_MODE, queue)
     broker.subscribe(TOPIC_COMMAND_DRAW_LEVEL, queue)
