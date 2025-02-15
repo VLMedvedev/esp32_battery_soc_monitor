@@ -6,9 +6,9 @@
 #t2 = MyTuple(2, "bar")
 from docutils.parsers.rst.directives.body import Topic
 
-WiFi_OFF = "WiFi_OFF"
-WiFi_AP = "WiFi_AP"
-WiFi_client = "WiFi_client"
+WIFI_MODE_OFF = "WiFi_OFF"
+WIFI_MODE_AP = "WiFi_AP"
+WIFI_MODE_CLIENT = "WiFi_client"
 
 RELE_BATTERY_LEVEL = "RELE_BATTERY_LEVEL"
 RELE_ALWAYS_OFF = "RELE_ALWAYS_OFF"
@@ -26,6 +26,7 @@ EVENT_TYPE_PRESS_BUTTON = "press_button"
 EVENT_TYPE_DOUBLE_PRESS_BUTTON = "double_press_button"
 EVENT_TYPE_LONG_PRESS_BUTTON = "long_press_button"
 EVENT_TYPE_CAN_SOC_READ = "can_soc_read"
+EVENT_TYPE_CONFIG_UPDATED = "config_updated"
 
 TOPIC_COMMAND_RELE_MODE = "rele_mode"
 TOPIC_COMMAND_VIEW_MODE = "view_mode"

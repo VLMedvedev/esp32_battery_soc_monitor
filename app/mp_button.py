@@ -54,13 +54,13 @@ def button_controller(broker):
                 broker.publish(TOPIC_COMMAND_DRAW_LEVEL, "ON_LEVEL")
                 # oled.draw_setting_level(max_level, button_group="up")
         elif event_type == EVENT_TYPE_DOUBLE_PRESS_BUTTON:
-            if btn_number == HW_BT_RIGTH_DOWN:
-                broker.publish(TOPIC_COMMAND_WIFI_MODE,  WiFi_OFF)
+            if btn_number == HW_BT_RIGTH_DOWN or btn_number == HW_BT_LEFT_DOWN:
+                broker.publish(TOPIC_COMMAND_WIFI_MODE, WIFI_MODE_OFF)
             #  stop_ap()
             elif btn_number == HW_BT_LEFT_DOWN:
-                broker.publish(TOPIC_COMMAND_WIFI_MODE, WiFi_client)
+                broker.publish(TOPIC_COMMAND_WIFI_MODE, WIFI_MODE_CLIENT)
             elif btn_number == HW_BT_RIGTH_UP:
-                broker.publish(TOPIC_COMMAND_WIFI_MODE, WiFi_AP)
+                broker.publish(TOPIC_COMMAND_WIFI_MODE, WIFI_MODE_AP)
             #  start_ap()
             broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_VIEW_INFO)
         elif event_type == EVENT_TYPE_LONG_PRESS_BUTTON:

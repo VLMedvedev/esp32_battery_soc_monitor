@@ -3,23 +3,33 @@ from primitives import Broker, RingbufQueue
 from configs.sys_config import *
 from wifi_ap.wifi_portal import is_connected_to_wifi
 import time
-
 # Settings
 from constants import *
-from configs.hw_config import HW_LED_PIN
 from configs.can_bus_config import CAN_SOC_CHECK_PERIOD_SEC
 from configs.mqtt_config import PUBLISH_TOPIC
-from machine import Pin
-from mp_commander import set_level
-
-# Many ESP8266 boards have active-low "flash" button on GPIO0.
-led = Pin(HW_LED_PIN, Pin.OUT, value=1)
 from mp_can import can_init, can_id_scan, can_soc_read
 from mp_button import button_controller
 
 broker = Broker()
 
+from configs.constants_saver import ConstansReaderWriter
+off_level = 10
+on_level = 90
+rele_mode = RELE_BATTERY_LEVEL
+f_rele_is_on = False
+soc_level = 50
+from mp_commander import (set_level_to_config_file,
+                          set_rele_mode_to_config_file,
+                          check_mode_and_calk_rele_state,
+                          set_rele_on_off,
+                          set_wifi_mode)
+from machine import Pin
+from configs.hw_config import HW_LED_PIN, HW_RELE_PIN
+pin_rele = Pin(HW_RELE_PIN, Pin.OUT, value=0)
+pin_led = Pin(HW_LED_PIN, Pin.OUT, value=1)
+
 async def can_processing():
+    global off_level, on_level, rele_mode, f_rele_is_on
     can_init()
     time.sleep(3)
     can_id_scan()
@@ -32,25 +42,58 @@ async def can_processing():
        # print(f"soc_level read, event= {EVENT_TYPE_CAN_SOC_READ} soc_level = {soc_level} ")
        # msg_dict = {"event": , "parameter": soc_level}
         broker.publish(EVENT_TYPE_CAN_SOC_READ, soc_level)
+        f_change_rele_state, f_rele_is_on = check_mode_and_calk_rele_state(rele_mode,
+                                                                           off_level,
+                                                                           on_level,
+                                                                           f_rele_is_on,
+                                                                           soc_level)
+        if f_change_rele_state:
+            set_rele_on_off(pin_rele, f_rele_is_on)
         await asyncio.sleep(CAN_SOC_CHECK_PERIOD_SEC)
 
+
 async def controller_processing():
+    global off_level, on_level, rele_mode, f_rele_is_on
     queue = RingbufQueue(20)
-    broker.subscribe(EVENT_TYPE_CAN_SOC_READ, queue)
     broker.subscribe(TOPIC_COMMAND_WIFI_MODE, queue)
     broker.subscribe(TOPIC_COMMAND_RELE_MODE, queue)
-    broker.subscribe(TOPIC_COMMAND_DRAW_LEVEL, queue)
     broker.subscribe(TOPIC_COMMAND_LEVEL_DOWN, queue)
     broker.subscribe(TOPIC_COMMAND_LEVEL_UP, queue)
     async for topic, message in queue:
         print(f"topic {topic}, message {message}")
         if (topic == TOPIC_COMMAND_LEVEL_UP or topic == TOPIC_COMMAND_LEVEL_DOWN):
-            set_level(topic, message)
+            file_config_name = "app_config"
+            off_level, on_level = set_level_to_config_file(topic, message, file_config_name)
+            #broker.publish(EVENT_TYPE_CONFIG_UPDATED, file_config_name)
+        if topic == TOPIC_COMMAND_RELE_MODE:
+            file_config_name = "app_config"
+            rele_mode = set_rele_mode_to_config_file(message, file_config_name)
+            #broker.publish(EVENT_TYPE_CONFIG_UPDATED, file_config_name)
+        if topic == TOPIC_COMMAND_WIFI_MODE:
+            set_wifi_mode(message)
 
         await asyncio.sleep(0.1)
 
+async def start_oled_display():
+    global off_level, on_level, rele_mode, f_rele_is_on
+    from oled.oled_display import OLED_Display
+    oled =  OLED_Display()
+    queue = RingbufQueue(20)
+    broker.subscribe(TOPIC_COMMAND_DRAW_LEVEL, queue)
+    async for topic, message in queue:
+        print(f"topic {topic}, message {message}")
+
 # Coroutine: entry point for asyncio program
 async def main():
+    global off_level, on_level, rele_mode, f_rele_is_on
+    file_config_name = "app_config"
+    cr = ConstansReaderWriter(file_config_name)
+    c_dict = cr.get_dict()
+    print(c_dict)
+    off_level = c_dict.get("OFF_LEVEL", 10)
+    on_level = c_dict.get("ON_LEVEL", 98)
+    rele_mode = c_dict.get("MODE", RELE_BATTERY_LEVEL)
+
     # Start coroutine as a task and immediately return
     # Main loop
     if AUTO_START_CAN:
@@ -58,6 +101,10 @@ async def main():
     # Main loop
     asyncio.create_task(controller_processing())
     button_controller(broker)
+    time.sleep(2)
+
+    if AUTO_START_OLED:
+        asyncio.create_task(start_oled_display())
 
     if AUTO_CONNECT_TO_WIFI_AP:
         if is_connected_to_wifi():
