@@ -19,17 +19,19 @@ Args:
 """
 
 from enhanced_display import Enhanced_Display
-import constants_and_configs as cons
+from configs.hw_config import HW_OLED_SCL_PIN, HW_OLED_SDA_PIN
+from constants import WIFI_MODE_AP, WIFI_MODE_CLIENT, WIFI_MODE_OFF
 
 
 class OLED_Display:
-    def __init__(self, broker):
-        self.broker = broker
+    def __init__(self):
         self.display = None
         self.init_display()
 
     def init_display(self):
-        self.display = Enhanced_Display(bus=0, scl=35, sda=33)
+        self.display = Enhanced_Display(bus=0,
+                                        scl=HW_OLED_SCL_PIN,
+                                        sda=HW_OLED_SDA_PIN)
         # display.load_fonts(['digits-30', 'text-16'])
         self.display.load_fonts(['text-16'])
         self.display.clear()
@@ -55,7 +57,7 @@ class OLED_Display:
 
     def view_info(self, wifi_mode):
         # TODO view_info()
-        if wifi_mode == cons.WiFi_AP:
+        if wifi_mode == WIFI_MODE_AP:
             print(f"wifi_mode {wifi_mode} AP ")
             self.display.clear()
             self.display.fill(0)
@@ -64,7 +66,7 @@ class OLED_Display:
             self.display.text(str("Wi-Fi"), 2, 2, 1, 0)
             self.display.text(str("AP ON"), 2, 20, 1, 0)
             self.display.show()
-        elif wifi_mode == cons.WiFi_OFF :
+        elif wifi_mode == WIFI_MODE_OFF :
             print(f"wifi_mode {wifi_mode} off")
             self.display.clear()
             self.display.fill(0)
@@ -73,7 +75,7 @@ class OLED_Display:
             self.display.text(str("Wi-Fi"), 2, 2, 1, 0)
             self.display.text(str("AP OFF"), 2, 20, 1, 0)
             self.display.show()
-        elif wifi_mode == cons.WiFi_client :
+        elif wifi_mode == WIFI_MODE_CLIENT :
             print(f"wifi_mode {wifi_mode} client")
             self.display.clear()
             self.display.fill(0)
@@ -188,6 +190,7 @@ class OLED_Display:
         self.display.setContrast(255)
         self.display.show()
         return self.display
+
 
 if __name__ == "__main__":
     pass

@@ -17,64 +17,39 @@ bt_rigth_down = Pin(HW_BT_RIGTH_DOWN, Pin.IN, Pin.PULL_UP)
 def button_controller(broker):
     def bt_pressed(btn_number, event_type):
         print(f"press btn, event= {event_type} bt_num = {btn_number} ")
-        # global f_pressed_buton, f_rele_is_on, min_level, max_level, view_mode, rele_mode, wifi_ap_on, wifi_mode, press_button_counter
-        # press_button_counter = 0
         if event_type == EVENT_TYPE_PRESS_BUTTON:
             broker.publish(TOPIC_COMMAND_RELE_MODE, RELE_BATTERY_LEVEL)
             if btn_number == HW_BT_LEFT_UP:
-                # min_level += 1
-                # if min_level > max_level - 1:
-                #     min_level = max_level - 1
                 broker.publish(TOPIC_COMMAND_LEVEL_UP, "OFF_LEVEL")
-                broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_SETTING_DOWN)
-                broker.publish(TOPIC_COMMAND_DRAW_LEVEL, "OFF_LEVEL")
-                # oled.draw_setting_level(min_level, button_group="down")
+                broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_SETTING_DOWN_ON_LEVEL)
             elif btn_number == HW_BT_LEFT_DOWN:
-                # min_level -= 1
-                # if min_level < 0:
-                #     min_level = 0
                 broker.publish(TOPIC_COMMAND_LEVEL_DOWN, "OFF_LEVEL")
-                broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_SETTING_DOWN)
-                broker.publish(TOPIC_COMMAND_DRAW_LEVEL, "OFF_LEVEL")
-                # oled.draw_setting_level(min_level, button_group="down")
+                broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_SETTING_DOWN_ON_LEVEL)
             elif btn_number == HW_BT_RIGTH_UP:
-                # max_level += 1
-                # if max_level > 100:
-                #     max_level = 100
                 broker.publish(TOPIC_COMMAND_LEVEL_UP, "ON_LEVEL")
-                broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_SETTING_UP)
-                broker.publish(TOPIC_COMMAND_DRAW_LEVEL, "ON_LEVEL")
-                # oled.draw_setting_level(max_level, button_group="up")
+                broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_SETTING_UP_ON_LEVEL)
             elif btn_number == HW_BT_RIGTH_DOWN:
-                # max_level -= 1
-                # if max_level < min_level + 1:
-                #     max_level = min_level + 1
                 broker.publish(TOPIC_COMMAND_LEVEL_DOWN, "ON_LEVEL")
-                broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_SETTING_UP)
-                broker.publish(TOPIC_COMMAND_DRAW_LEVEL, "ON_LEVEL")
-                # oled.draw_setting_level(max_level, button_group="up")
+                broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_SETTING_UP_ON_LEVEL)
         elif event_type == EVENT_TYPE_DOUBLE_PRESS_BUTTON:
             if btn_number == HW_BT_RIGTH_DOWN or btn_number == HW_BT_LEFT_DOWN:
                 broker.publish(TOPIC_COMMAND_WIFI_MODE, WIFI_MODE_OFF)
-            #  stop_ap()
+                broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_WIFI_OFF_INFO)
             elif btn_number == HW_BT_LEFT_DOWN:
                 broker.publish(TOPIC_COMMAND_WIFI_MODE, WIFI_MODE_CLIENT)
+                broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_WIFI_CLI_INFO)
             elif btn_number == HW_BT_RIGTH_UP:
                 broker.publish(TOPIC_COMMAND_WIFI_MODE, WIFI_MODE_AP)
-            #  start_ap()
-            broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_VIEW_INFO)
+                broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_WIFI_AP_INFO)
         elif event_type == EVENT_TYPE_LONG_PRESS_BUTTON:
             if btn_number == HW_BT_LEFT_DOWN:
                 broker.publish(TOPIC_COMMAND_RELE_MODE, RELE_ALWAYS_OFF)
-                broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_VIEW_OFF)
+                broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_RELE_OFF)
             elif btn_number == HW_BT_RIGTH_DOWN:
                 broker.publish(TOPIC_COMMAND_RELE_MODE, RELE_ALWAYS_ON)
-                broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_VIEW_ON)
-            # check_mode_and_set_rele()
+                broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_RELE_ON)
         else:
             broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_SETTINGS)
-        # f_pressed_buton = True
-        # view_data()
 
     def button_init():
         bt_min_up = Pushbutton(bt_left_up, suppress=True)
