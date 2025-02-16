@@ -151,6 +151,7 @@ async def main():
     if AUTO_START_OLED:
         asyncio.create_task(start_oled_display())
         asyncio.create_task(start_screen_timer())
+        broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_RELE_SOC_AUTO)
 
     if AUTO_CONNECT_TO_WIFI_AP:
         if is_connected_to_wifi():
