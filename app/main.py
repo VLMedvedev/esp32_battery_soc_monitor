@@ -19,7 +19,7 @@ on_level = 90
 rele_mode = RELE_BATTERY_LEVEL
 f_rele_is_on = False
 soc_level = 50
-screen_timer = 0
+screen_timer = SCREEN_TIMER_SEC
 settings_mode = True
 
 from mp_commander import (set_level_to_config_file,
@@ -44,14 +44,15 @@ async def can_processing():
                 soc_level = int(soc_level)
             except ValueError:
                 soc_level = 123
-                broker.publish(EVENT_TYPE_CAN_SOC_READ, soc_level)
-                f_change_rele_state, f_rele_is_on = check_mode_and_calk_rele_state(rele_mode,
-                                                                                   off_level,
-                                                                                   on_level,
-                                                                                   f_rele_is_on,
-                                                                                   soc_level)
-                if f_change_rele_state:
-                    set_rele_on_off(pin_rele, f_rele_is_on)
+
+            broker.publish(EVENT_TYPE_CAN_SOC_READ, soc_level)
+            f_change_rele_state, f_rele_is_on = check_mode_and_calk_rele_state(rele_mode,
+                                                                               off_level,
+                                                                               on_level,
+                                                                               f_rele_is_on,
+                                                                               soc_level)
+            if f_change_rele_state:
+                set_rele_on_off(pin_rele, f_rele_is_on)
         # elif screen_timer == 5:
         #     broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_SETTINGS)
         else:
@@ -89,7 +90,7 @@ async def start_screen_timer():
     logging.info("[start_screen_timer]")
     while True:
         await asyncio.sleep(1)
-        #logging.info(f"timer screen... {screen_timer}")
+        logging.info(f"timer screen... {screen_timer}")
         if screen_timer == 1:
             logging.info("redraw screen...")
             broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_RELE_SOC_AUTO)
