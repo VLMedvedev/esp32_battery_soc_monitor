@@ -21,7 +21,7 @@ def check_mode_and_calk_rele_state(rele_mode, off_level, on_level, f_rele_is_on,
         if soc_level >= on_level:
             f_rele_is_on = True
     elif rele_mode == RELE_ALWAYS_OFF:
-        logging.info("mode 1 rele is off")
+       # logging.info("mode 1 rele is off")
         f_rele_is_on = False
     elif rele_mode == RELE_ALWAYS_ON:
         logging.info("mode 2 rele is on")
