@@ -98,34 +98,34 @@ async def start_oled_display():
     async for topic, view_mode in queue:
         logging.info(f"topic {topic}, message {view_mode}")
         if view_mode == VIEW_MODE_SETTING_DOWN_OFF_LEVEL:
-            await oled.draw_setting_level(off_level, button_group="down")
+            oled.draw_setting_level(off_level, button_group="down")
             screen_timer = SCREEN_TIMER_SEC
         elif view_mode == VIEW_MODE_SETTING_DOWN_ON_LEVEL:
-            await oled.draw_setting_level(on_level, button_group="down")
+            oled.draw_setting_level(on_level, button_group="down")
             screen_timer = SCREEN_TIMER_SEC
         elif view_mode == VIEW_MODE_SETTING_UP_OFF_LEVEL:
-            await oled.draw_setting_level(off_level, button_group="up")
+            oled.draw_setting_level(off_level, button_group="up")
             screen_timer = SCREEN_TIMER_SEC
         elif view_mode == VIEW_MODE_SETTING_UP_ON_LEVEL:
-            await oled.draw_setting_level(on_level, button_group="up")
+            oled.draw_setting_level(on_level, button_group="up")
             screen_timer = SCREEN_TIMER_SEC
         elif view_mode == VIEW_MODE_RELE_SOC_AUTO:
-            await oled.draw_charge_level(soc_level, f_rele_is_on)
+            oled.draw_charge_level(soc_level, f_rele_is_on)
         elif view_mode == VIEW_MODE_RELE_OFF:
-            await oled.draw_off()
+            oled.draw_off()
         elif view_mode == VIEW_MODE_RELE_ON:
-            await oled.draw_on()
+            oled.draw_on()
         elif view_mode == VIEW_MODE_WIFI_OFF_INFO:
-            await oled.view_info(WIFI_MODE_OFF)
+            oled.view_info(WIFI_MODE_OFF)
             screen_timer = SCREEN_TIMER_SEC
         elif view_mode == VIEW_MODE_WIFI_AP_INFO:
-            await oled.view_info(WIFI_MODE_AP)
+            oled.view_info(WIFI_MODE_AP)
             screen_timer = SCREEN_TIMER_SEC
         elif view_mode == VIEW_MODE_WIFI_CLI_INFO:
-            await oled.view_info(WIFI_MODE_CLIENT)
+            oled.view_info(WIFI_MODE_CLIENT)
             screen_timer = SCREEN_TIMER_SEC
         elif view_mode == VIEW_MODE_SETTINGS:
-            await oled.view_settings()
+            oled.view_settings()
             screen_timer = SCREEN_TIMER_SEC
 
 # Coroutine: entry point for asyncio program
