@@ -45,16 +45,24 @@ async def can_processing():
             except ValueError:
                 soc_level = 123
 
-            broker.publish(EVENT_TYPE_CAN_SOC_READ, soc_level)
-            f_change_rele_state, f_rele_is_on = check_mode_and_calk_rele_state(rele_mode,
-                                                                               off_level,
-                                                                               on_level,
-                                                                               f_rele_is_on,
-                                                                               soc_level)
-            if f_change_rele_state:
-                set_rele_on_off(pin_rele, f_rele_is_on)
-        # elif screen_timer == 5:
-        #     broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_SETTINGS)
+            if soc_level != 123:
+                broker.publish(EVENT_TYPE_CAN_SOC_READ, soc_level)
+                f_change_rele_state, f_rele_is_on = check_mode_and_calk_rele_state(rele_mode,
+                                                                                   off_level,
+                                                                                   on_level,
+                                                                                   f_rele_is_on,
+                                                                                   soc_level)
+                if f_change_rele_state:
+                    set_rele_on_off(pin_rele, f_rele_is_on)
+            else:
+                rele_mode = RELE_ALWAYS_OFF
+                f_change_rele_state, f_rele_is_on = check_mode_and_calk_rele_state(rele_mode,
+                                                                                   off_level,
+                                                                                   on_level,
+                                                                                   f_rele_is_on,
+                                                                                   soc_level)
+                if f_change_rele_state:
+                    set_rele_on_off(pin_rele, f_rele_is_on)
         else:
             soc_level = 123
         await asyncio.sleep(CAN_SOC_CHECK_PERIOD_SEC)
