@@ -93,6 +93,7 @@ async def start_oled_display():
     from oled.oled_display import OLED_Display
     logging.info("[start_oled_display]")
     oled =  OLED_Display()
+    oled.draw_charge_level(soc_level, f_rele_is_on)
     queue = RingbufQueue(20)
     broker.subscribe(TOPIC_COMMAND_VIEW_MODE, queue)
     async for topic, view_mode in queue:
@@ -131,6 +132,22 @@ async def start_oled_display():
 # Coroutine: entry point for asyncio program
 async def main():
     global off_level, on_level, rele_mode, f_rele_is_on
+        elif view_mode == VIEW_MODE_WIFI_OFF_INFO:
+            oled.view_info(WIFI_MODE_OFF)
+            screen_timer = SCREEN_TIMER_SEC
+        elif view_mode == VIEW_MODE_WIFI_AP_INFO:
+            oled.view_info(WIFI_MODE_AP)
+            screen_timer = SCREEN_TIMER_SEC
+        elif view_mode == VIEW_MODE_WIFI_CLI_INFO:
+            oled.view_info(WIFI_MODE_CLIENT)
+            screen_timer = SCREEN_TIMER_SEC
+        elif view_mode == VIEW_MODE_SETTINGS:
+            oled.view_settings()
+            screen_timer = SCREEN_TIMER_SEC
+
+# Coroutine: entry point for asyncio program
+async def main():
+    global off_level, on_level, rele_mode, f_rele_is_on
     file_config_name = "app_config"
     cr = ConstansReaderWriter(file_config_name)
     c_dict = cr.get_dict()
@@ -151,7 +168,7 @@ async def main():
     if AUTO_START_OLED:
         asyncio.create_task(start_oled_display())
         asyncio.create_task(start_screen_timer())
-        broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_RELE_SOC_AUTO)
+       # broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_RELE_SOC_AUTO)
 
     if AUTO_CONNECT_TO_WIFI_AP:
         if is_connected_to_wifi():
