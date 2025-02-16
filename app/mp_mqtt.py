@@ -20,7 +20,7 @@ async def broker_get_pub(mqtt_cli, broker: Broker):
         msg = str(message).encode("utf-8")
         top = str(top).encode("utf-8")
         mqtt_cli.publish(top, msg)
-        await asyncio.sleep(0.1)
+        await asyncio.sleep(1)
 
 async def mqtt_start_get(mqtt_cli, broker: Broker):
     print("start check msg")
