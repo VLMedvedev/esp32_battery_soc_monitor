@@ -68,6 +68,7 @@ async def controller_processing():
     broker.subscribe(TOPIC_COMMAND_LEVEL_UP, queue)
     async for topic, message in queue:
         settings_mode = True
+        screen_timer = SCREEN_TIMER_SEC
         logging.info(f"topic {topic}, message {message}")
         if (topic == TOPIC_COMMAND_LEVEL_UP or topic == TOPIC_COMMAND_LEVEL_DOWN):
             file_config_name = "app_config"
@@ -88,12 +89,14 @@ async def start_screen_timer():
     logging.info("[start_screen_timer]")
     while True:
         await asyncio.sleep(1)
-        if screen_timer > 0:
-            screen_timer -= 1
-            if screen_timer < 0:
-                logging.info("redraw screen...")
-                broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_RELE_SOC_AUTO)
-                settings_mode = False
+        #logging.info(f"timer screen... {screen_timer}")
+        if screen_timer == 1:
+            logging.info("redraw screen...")
+            broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_RELE_SOC_AUTO)
+            settings_mode = False
+        screen_timer -= 1
+        if screen_timer < 0:
+            screen_timer = 0
 
 async def start_oled_display():
     global soc_level, off_level, on_level, rele_mode, f_rele_is_on, screen_timer
