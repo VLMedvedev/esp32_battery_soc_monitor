@@ -32,26 +32,27 @@ pin_rele = Pin(HW_RELE_PIN, Pin.OUT, value=0)
 pin_led = Pin(HW_LED_PIN, Pin.OUT, value=1)
 
 async def can_processing():
-    global off_level, on_level, rele_mode, f_rele_is_on
+    global soc_level, off_level, on_level, rele_mode, f_rele_is_on, screen_timer
     can_init()
     time.sleep(3)
     can_id_scan()
     while True:
-        soc_level = await can_soc_read()
-        try:
-            soc_level = int(soc_level)
-        except ValueError:
+        if screen_timer == 0:
+            soc_level = await can_soc_read()
+            try:
+                soc_level = int(soc_level)
+            except ValueError:
+                soc_level = 123
+                broker.publish(EVENT_TYPE_CAN_SOC_READ, soc_level)
+                f_change_rele_state, f_rele_is_on = check_mode_and_calk_rele_state(rele_mode,
+                                                                                   off_level,
+                                                                                   on_level,
+                                                                                   f_rele_is_on,
+                                                                                   soc_level)
+                if f_change_rele_state:
+                    set_rele_on_off(pin_rele, f_rele_is_on)
+        else:
             soc_level = 123
-       # print(f"soc_level read, event= {EVENT_TYPE_CAN_SOC_READ} soc_level = {soc_level} ")
-       # msg_dict = {"event": , "parameter": soc_level}
-        broker.publish(EVENT_TYPE_CAN_SOC_READ, soc_level)
-        f_change_rele_state, f_rele_is_on = check_mode_and_calk_rele_state(rele_mode,
-                                                                           off_level,
-                                                                           on_level,
-                                                                           f_rele_is_on,
-                                                                           soc_level)
-        if f_change_rele_state:
-            set_rele_on_off(pin_rele, f_rele_is_on)
         await asyncio.sleep(CAN_SOC_CHECK_PERIOD_SEC)
 
 async def controller_processing():
