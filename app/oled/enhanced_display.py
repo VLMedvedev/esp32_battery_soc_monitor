@@ -95,7 +95,7 @@ class Enhanced_Display:
         """
         if self.is_present:
             select_font(self.selected_font)
-            text(self._display, text, x, y, max_width, horiz_align, max_height, vert_align, c)
+            pack_text(self._display, text, x, y, max_width, horiz_align, max_height, vert_align, c)
 
     def clear(self):
         """Clear the display and show the blank screen.

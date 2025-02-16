@@ -97,14 +97,14 @@ async def start_oled_display():
     broker.subscribe(TOPIC_COMMAND_VIEW_MODE, queue)
     async for topic, view_mode in queue:
         logging.info(f"topic {topic}, message {view_mode}")
-        if view_mode == VIEW_MODE_SETTING_DOWN_ON_LEVEL:
+        if view_mode == VIEW_MODE_SETTING_DOWN_OFF_LEVEL:
             await oled.draw_setting_level(off_level, button_group="down")
             screen_timer = SCREEN_TIMER_SEC
         elif view_mode == VIEW_MODE_SETTING_DOWN_ON_LEVEL:
-            await oled.draw_setting_level(off_level, button_group="down")
+            await oled.draw_setting_level(on_level, button_group="down")
             screen_timer = SCREEN_TIMER_SEC
-        elif view_mode == VIEW_MODE_SETTING_UP_ON_LEVEL:
-            await oled.draw_setting_level(on_level, button_group="up")
+        elif view_mode == VIEW_MODE_SETTING_UP_OFF_LEVEL:
+            await oled.draw_setting_level(off_level, button_group="up")
             screen_timer = SCREEN_TIMER_SEC
         elif view_mode == VIEW_MODE_SETTING_UP_ON_LEVEL:
             await oled.draw_setting_level(on_level, button_group="up")

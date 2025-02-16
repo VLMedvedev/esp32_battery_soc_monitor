@@ -114,7 +114,7 @@ def get_text_size(text):
         height = max(height, char_definition['char_height'])
     return width, height
 
-def text(display, text, x, y, max_width=0, horiz_align=0, max_height=0, vert_align=0, c=1):
+def pack_text(display, text, x, y, max_width=0, horiz_align=0, max_height=0, vert_align=0, c=1):
     """Render a text string to the display in the currently selected font, with optional alignment.
 
     Args:
