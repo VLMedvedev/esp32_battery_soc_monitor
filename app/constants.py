@@ -1,11 +1,3 @@
-#from enum import Enum
-#import network
-#from ucollections import namedtuple
-#MyTuple = namedtuple("MyTuple", ("id", "name"))
-#t1 = MyTuple(1, "foo")
-#t2 = MyTuple(2, "bar")
-from docutils.parsers.rst.directives.body import Topic
-
 WIFI_MODE_OFF = "WiFi_OFF"
 WIFI_MODE_AP = "WiFi_AP"
 WIFI_MODE_CLIENT = "WiFi_client"
