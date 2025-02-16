@@ -98,7 +98,7 @@ async def start_screen_timer():
     logging.info("[start_screen_timer]")
     while True:
         await asyncio.sleep(1)
-        logging.info(f"timer screen... {screen_timer}")
+       # logging.info(f"timer screen... {screen_timer}")
         if screen_timer == 1:
             logging.info("redraw screen...")
             broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_RELE_SOC_AUTO)
