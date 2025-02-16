@@ -22,10 +22,10 @@ def button_controller(broker):
             broker.publish(TOPIC_COMMAND_RELE_MODE, RELE_BATTERY_LEVEL)
             if btn_number == HW_BT_LEFT_UP:
                 broker.publish(TOPIC_COMMAND_LEVEL_UP, "OFF_LEVEL")
-                broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_SETTING_DOWN_ON_LEVEL)
+                broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_SETTING_UP_OFF_LEVEL)
             elif btn_number == HW_BT_LEFT_DOWN:
                 broker.publish(TOPIC_COMMAND_LEVEL_DOWN, "OFF_LEVEL")
-                broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_SETTING_DOWN_ON_LEVEL)
+                broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_SETTING_DOWN_OFF_LEVEL)
             elif btn_number == HW_BT_RIGTH_UP:
                 broker.publish(TOPIC_COMMAND_LEVEL_UP, "ON_LEVEL")
                 broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_SETTING_UP_ON_LEVEL)
