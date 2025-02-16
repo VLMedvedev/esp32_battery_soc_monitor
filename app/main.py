@@ -95,7 +95,7 @@ async def start_oled_display():
     oled =  OLED_Display()
     queue = RingbufQueue(20)
     broker.subscribe(TOPIC_COMMAND_VIEW_MODE, queue)
-    async for topic, message in queue:
+    async for topic, view_mode in queue:
         logging.info(f"topic {topic}, message {view_mode}")
         if view_mode == VIEW_MODE_SETTING_DOWN_ON_LEVEL:
             await oled.draw_setting_level(off_level, button_group="down")
