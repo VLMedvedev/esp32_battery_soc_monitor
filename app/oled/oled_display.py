@@ -130,9 +130,9 @@ class OLED_Display:
             self.display.line(26, 10, 28, 6, 1)
             self.display.line(26, 10, 28, 14, 1)
             self.display.text(str(level), 14, 14, 1, 0)
-            self.display.text("ON", 13, 30, 1, 0)
+            self.display.text("XXX", 13, 30, 1, 0)
         else:
-            self.display.text("OFF", 16, 3, 1, 0)
+            self.display.text("XXX", 16, 3, 1, 0)
             self.display.text(str(level), 14, 20, 1, 0)
             self.display.hline(26, 38, self.display.width - 10, 1)
             self.display.line(26, 38, 28, 34, 1)
