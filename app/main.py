@@ -68,6 +68,7 @@ async def controller_processing():
             file_config_name = "app_config"
             off_level, on_level = set_level_to_config_file(topic, message, file_config_name)
             #broker.publish(EVENT_TYPE_CONFIG_UPDATED, file_config_name)
+            logging.info(f"off_level {off_level}, on_level {on_level}")
         if topic == TOPIC_COMMAND_RELE_MODE:
             file_config_name = "app_config"
             rele_mode = set_rele_mode_to_config_file(message, file_config_name)
