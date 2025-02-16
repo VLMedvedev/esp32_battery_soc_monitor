@@ -108,9 +108,9 @@ async def start_oled_display():
         if view_mode == VIEW_MODE_SETTING_DOWN_OFF_LEVEL:
             oled.draw_setting_level(off_level, button_group="down")
         elif view_mode == VIEW_MODE_SETTING_DOWN_ON_LEVEL:
-            oled.draw_setting_level(on_level, button_group="down")
+            oled.draw_setting_level(on_level, button_group="up")
         elif view_mode == VIEW_MODE_SETTING_UP_OFF_LEVEL:
-            oled.draw_setting_level(off_level, button_group="up")
+            oled.draw_setting_level(off_level, button_group="down")
         elif view_mode == VIEW_MODE_SETTING_UP_ON_LEVEL:
             oled.draw_setting_level(on_level, button_group="up")
         elif view_mode == VIEW_MODE_RELE_SOC_AUTO:
