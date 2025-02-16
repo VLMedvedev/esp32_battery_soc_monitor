@@ -26,7 +26,7 @@ def load_font(font_name):
 
 def _load_packed_font(font_name):
     font = None
-    with open(f'{font_name}.pf', 'rb') as f:
+    with open(f'oled/{font_name}.pf', 'rb') as f:
         header = f.read(4)    
         if len(header) < 4 or header[0] != ord('P') or header[1] != ord('F'):
             print(f'{font_name}.pf has an unknown file format')
