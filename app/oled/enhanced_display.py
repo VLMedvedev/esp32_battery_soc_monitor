@@ -12,7 +12,7 @@
 
 from oled.dev_SSD1306 import *
 import math
-import oled.packed_font
+from oled.packed_font import *
 import struct
 
 class Enhanced_Display:
@@ -39,7 +39,7 @@ class Enhanced_Display:
             font_name (string): Name of the font, without the .pf extension.
         """
         if self.is_present:
-            packed_font.load_font(font_name)
+            load_font(font_name)
 
     def load_fonts(self, font_name_list):
         """Load a list of packed fonts into memory for use. Once loaded, a font must be selected for use.
@@ -49,12 +49,12 @@ class Enhanced_Display:
         """
         if self.is_present:
             for font_name in font_name_list:
-                packed_font.load_font(font_name)
+                load_font(font_name)
 
     def unload_all_fonts(self):
         """ Unload all fonts and select the built in font as the current font."""
         if self.is_present:
-            packed_font.unload_all_fonts()
+            unload_all_fonts()
             self.selected_font = None
 
     def select_font(self, font_name):
@@ -76,8 +76,8 @@ class Enhanced_Display:
         """
 
         if self.is_present:
-            packed_font.select_font(self.selected_font)
-            return packed_font.get_text_size(text)
+            select_font(self.selected_font)
+            return get_text_size(text)
         return 0, 0
 
     def text(self, text, x, y, horiz_align=0, vert_align=0, max_width=WIDTH, max_height=HEIGHT, c=1):
@@ -94,8 +94,8 @@ class Enhanced_Display:
             c (int, optional): Color to render text in. Defaults to 1.
         """
         if self.is_present:
-            packed_font.select_font(self.selected_font)
-            packed_font.text(self._display, text, x, y, max_width, horiz_align, max_height, vert_align, c)
+            select_font(self.selected_font)
+            text(self._display, text, x, y, max_width, horiz_align, max_height, vert_align, c)
 
     def clear(self):
         """Clear the display and show the blank screen.
