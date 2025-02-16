@@ -78,7 +78,7 @@ async def controller_processing():
     async for topic, message in queue:
         settings_mode = True
         screen_timer = SCREEN_TIMER_SEC
-        logging.info(f"topic {topic}, message {message}")
+        logging.info(f"[controller_processing] topic {topic}, message {message}")
         if (topic == TOPIC_COMMAND_LEVEL_UP or topic == TOPIC_COMMAND_LEVEL_DOWN):
             file_config_name = "app_config"
             off_level, on_level = set_level_to_config_file(topic, message, file_config_name)
@@ -115,30 +115,35 @@ async def start_oled_display():
     oled.draw_charge_level(soc_level, f_rele_is_on)
     queue = RingbufQueue(20)
     broker.subscribe(TOPIC_COMMAND_VIEW_MODE, queue)
+    broker.publish(EVENT_TYPE_CAN_SOC_READ, soc_level)
     async for topic, view_mode in queue:
-        logging.info(f"topic {topic}, message {view_mode}")
-        if view_mode == VIEW_MODE_SETTING_DOWN_OFF_LEVEL:
-            oled.draw_setting_level(off_level, button_group="down")
-        elif view_mode == VIEW_MODE_SETTING_DOWN_ON_LEVEL:
-            oled.draw_setting_level(on_level, button_group="up")
-        elif view_mode == VIEW_MODE_SETTING_UP_OFF_LEVEL:
-            oled.draw_setting_level(off_level, button_group="down")
-        elif view_mode == VIEW_MODE_SETTING_UP_ON_LEVEL:
-            oled.draw_setting_level(on_level, button_group="up")
-        elif view_mode == VIEW_MODE_RELE_SOC_AUTO:
+        logging.info(f" [start_oled_display] topic {topic}, message {view_mode}")
+        if topic == TOPIC_COMMAND_VIEW_MODE:
+            if view_mode == VIEW_MODE_SETTING_DOWN_OFF_LEVEL:
+                oled.draw_setting_level(off_level, button_group="down")
+            elif view_mode == VIEW_MODE_SETTING_DOWN_ON_LEVEL:
+                oled.draw_setting_level(on_level, button_group="up")
+            elif view_mode == VIEW_MODE_SETTING_UP_OFF_LEVEL:
+                oled.draw_setting_level(off_level, button_group="down")
+            elif view_mode == VIEW_MODE_SETTING_UP_ON_LEVEL:
+                oled.draw_setting_level(on_level, button_group="up")
+            elif view_mode == VIEW_MODE_RELE_SOC_AUTO:
+                oled.draw_charge_level(soc_level, f_rele_is_on)
+            elif view_mode == VIEW_MODE_RELE_OFF:
+                oled.draw_off()
+            elif view_mode == VIEW_MODE_RELE_ON:
+                oled.draw_on()
+            elif view_mode == VIEW_MODE_WIFI_OFF_INFO:
+                oled.view_info(WIFI_MODE_OFF)
+            elif view_mode == VIEW_MODE_WIFI_AP_INFO:
+                oled.view_info(WIFI_MODE_AP)
+            elif view_mode == VIEW_MODE_WIFI_CLI_INFO:
+                oled.view_info(WIFI_MODE_CLIENT)
+            elif view_mode == VIEW_MODE_SETTINGS:
+                oled.view_settings()
+        elif topic == EVENT_TYPE_CAN_SOC_READ:
             oled.draw_charge_level(soc_level, f_rele_is_on)
-        elif view_mode == VIEW_MODE_RELE_OFF:
-            oled.draw_off()
-        elif view_mode == VIEW_MODE_RELE_ON:
-            oled.draw_on()
-        elif view_mode == VIEW_MODE_WIFI_OFF_INFO:
-            oled.view_info(WIFI_MODE_OFF)
-        elif view_mode == VIEW_MODE_WIFI_AP_INFO:
-            oled.view_info(WIFI_MODE_AP)
-        elif view_mode == VIEW_MODE_WIFI_CLI_INFO:
-            oled.view_info(WIFI_MODE_CLIENT)
-        elif view_mode == VIEW_MODE_SETTINGS:
-            oled.view_settings()
+
 
 # Coroutine: entry point for asyncio program
 async def main():
