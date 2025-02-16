@@ -1,9 +1,10 @@
 from constants import (TOPIC_COMMAND_LEVEL_UP, TOPIC_COMMAND_LEVEL_DOWN,
                        RELE_BATTERY_LEVEL, RELE_ALWAYS_ON, RELE_ALWAYS_OFF)
 from configs.constants_saver import ConstansReaderWriter
+from phew import logging
 
 def set_rele_on_off(pin_rele, f_rele_is_on):
-    print(f"change state rele {f_rele_is_on}")
+    logging.info(f"change state rele {f_rele_is_on}")
     if f_rele_is_on:
         pin_rele.on()
     else:
@@ -18,14 +19,14 @@ def check_mode_and_calk_rele_state(rele_mode, off_level, on_level, f_rele_is_on,
         if soc_level >= on_level:
             f_rele_is_on = True
     elif rele_mode == RELE_ALWAYS_OFF:
-        print("mode 1 rele is off")
+        logging.info("mode 1 rele is off")
         f_rele_is_on = False
     elif rele_mode == RELE_ALWAYS_ON:
-        print("mode 2 rele is on")
+        logging.info("mode 2 rele is on")
         f_rele_is_on = True
     if old_f_is_on != f_rele_is_on:
         f_change_rele_state = True
-        print(f"change state rele {f_rele_is_on}")
+        logging.info(f"change state rele {f_rele_is_on}")
     return f_change_rele_state, f_rele_is_on
 
 def set_rele_mode_to_config_file(rele_mode, file_config_name):
@@ -35,6 +36,7 @@ def set_rele_mode_to_config_file(rele_mode, file_config_name):
     const_dict = {'MODE': rele_mode }
     cr.set_constants_from_config_dict(const_dict)
     cr.save_constants_to_file()
+    logging.info(f"save to file rele mode to {rele_mode}")
     return rele_mode
 
 def set_level_to_config_file(topic_command, level_type, file_config_name):
@@ -69,9 +71,9 @@ def set_level_to_config_file(topic_command, level_type, file_config_name):
         const_dict = {level_type: min_level}
     cr.set_constants_from_config_dict(const_dict)
     cr.save_constants_to_file()
-
+    logging.info(f"save to file app_config {const_dict}")
     return min_level, max_level
 
 def set_wifi_mode(wifi_mode):
-
+    logging.info(f"change wifi_mode {wifi_mode}")
     return wifi_mode

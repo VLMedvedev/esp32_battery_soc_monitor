@@ -1,4 +1,5 @@
 import asyncio
+from phew import logging
 from primitives import Broker, RingbufQueue
 from configs.sys_config import *
 from wifi_ap.wifi_portal import is_connected_to_wifi
@@ -18,6 +19,8 @@ on_level = 90
 rele_mode = RELE_BATTERY_LEVEL
 f_rele_is_on = False
 soc_level = 50
+screen_timer = 0
+
 from mp_commander import (set_level_to_config_file,
                           set_rele_mode_to_config_file,
                           check_mode_and_calk_rele_state,
@@ -51,16 +54,16 @@ async def can_processing():
             set_rele_on_off(pin_rele, f_rele_is_on)
         await asyncio.sleep(CAN_SOC_CHECK_PERIOD_SEC)
 
-
 async def controller_processing():
     global off_level, on_level, rele_mode, f_rele_is_on
+    logging.info("[controller_processing]")
     queue = RingbufQueue(20)
     broker.subscribe(TOPIC_COMMAND_WIFI_MODE, queue)
     broker.subscribe(TOPIC_COMMAND_RELE_MODE, queue)
     broker.subscribe(TOPIC_COMMAND_LEVEL_DOWN, queue)
     broker.subscribe(TOPIC_COMMAND_LEVEL_UP, queue)
     async for topic, message in queue:
-        print(f"topic {topic}, message {message}")
+        logging.info(f"topic {topic}, message {message}")
         if (topic == TOPIC_COMMAND_LEVEL_UP or topic == TOPIC_COMMAND_LEVEL_DOWN):
             file_config_name = "app_config"
             off_level, on_level = set_level_to_config_file(topic, message, file_config_name)
@@ -74,22 +77,38 @@ async def controller_processing():
 
         await asyncio.sleep(0.1)
 
+async def start_screen_timer():
+    global screen_timer
+    logging.info("[start_screen_timer]")
+    while True:
+        await asyncio.sleep(1)
+        if screen_timer > 0:
+            screen_timer -= 1
+            if screen_timer < 0:
+                logging.info("redraw screen...")
+                broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_RELE_SOC_AUTO)
+
 async def start_oled_display():
-    global soc_level, off_level, on_level, rele_mode, f_rele_is_on
+    global soc_level, off_level, on_level, rele_mode, f_rele_is_on, screen_timer
     from oled.oled_display import OLED_Display
+    logging.info("[start_oled_display]")
     oled =  OLED_Display()
     queue = RingbufQueue(20)
     broker.subscribe(TOPIC_COMMAND_VIEW_MODE, queue)
     async for topic, message in queue:
-        print(f"topic {topic}, message {view_mode}")
+        logging.info(f"topic {topic}, message {view_mode}")
         if view_mode == VIEW_MODE_SETTING_DOWN_ON_LEVEL:
             await oled.draw_setting_level(off_level, button_group="down")
+            screen_timer = SCREEN_TIMER_SEC
         elif view_mode == VIEW_MODE_SETTING_DOWN_ON_LEVEL:
             await oled.draw_setting_level(off_level, button_group="down")
+            screen_timer = SCREEN_TIMER_SEC
         elif view_mode == VIEW_MODE_SETTING_UP_ON_LEVEL:
             await oled.draw_setting_level(on_level, button_group="up")
+            screen_timer = SCREEN_TIMER_SEC
         elif view_mode == VIEW_MODE_SETTING_UP_ON_LEVEL:
             await oled.draw_setting_level(on_level, button_group="up")
+            screen_timer = SCREEN_TIMER_SEC
         elif view_mode == VIEW_MODE_RELE_SOC_AUTO:
             await oled.draw_charge_level(soc_level, f_rele_is_on)
         elif view_mode == VIEW_MODE_RELE_OFF:
@@ -98,12 +117,16 @@ async def start_oled_display():
             await oled.draw_on()
         elif view_mode == VIEW_MODE_WIFI_OFF_INFO:
             await oled.view_info(WIFI_MODE_OFF)
+            screen_timer = SCREEN_TIMER_SEC
         elif view_mode == VIEW_MODE_WIFI_AP_INFO:
             await oled.view_info(WIFI_MODE_AP)
+            screen_timer = SCREEN_TIMER_SEC
         elif view_mode == VIEW_MODE_WIFI_CLI_INFO:
             await oled.view_info(WIFI_MODE_CLIENT)
+            screen_timer = SCREEN_TIMER_SEC
         elif view_mode == VIEW_MODE_SETTINGS:
             await oled.view_settings()
+            screen_timer = SCREEN_TIMER_SEC
 
 # Coroutine: entry point for asyncio program
 async def main():
@@ -111,7 +134,7 @@ async def main():
     file_config_name = "app_config"
     cr = ConstansReaderWriter(file_config_name)
     c_dict = cr.get_dict()
-    print(c_dict)
+    logging.info(f"c_dict: {c_dict}")
     off_level = c_dict.get("OFF_LEVEL", 10)
     on_level = c_dict.get("ON_LEVEL", 98)
     rele_mode = c_dict.get("MODE", RELE_BATTERY_LEVEL)
@@ -127,13 +150,13 @@ async def main():
 
     if AUTO_START_OLED:
         asyncio.create_task(start_oled_display())
+        asyncio.create_task(start_screen_timer())
 
     if AUTO_CONNECT_TO_WIFI_AP:
         if is_connected_to_wifi():
             if AUTO_START_UMQTT:
                 from mp_mqtt import start_mqtt_get
                 asyncio.create_task(start_mqtt_get(broker))
-                #start_mqtt(que_mqtt)
             if AUTO_START_WEBREPL:
                 import webrepl
                 asyncio.create_task(webrepl.start())
@@ -142,5 +165,4 @@ async def main():
                 asyncio.create_task(application_mode(broker))
 
 # Start event loop and run entry point coroutine
-# def start_main():
 asyncio.run(main())

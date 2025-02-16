@@ -1,3 +1,4 @@
+from phew import logging
 from machine import Pin
 #import asyncio
 from primitives import Pushbutton
@@ -16,7 +17,7 @@ bt_rigth_down = Pin(HW_BT_RIGTH_DOWN, Pin.IN, Pin.PULL_UP)
 
 def button_controller(broker):
     def bt_pressed(btn_number, event_type):
-        print(f"press btn, event= {event_type} bt_num = {btn_number} ")
+        logging.info(f"press btn, event= {event_type} bt_num = {btn_number} ")
         if event_type == EVENT_TYPE_PRESS_BUTTON:
             broker.publish(TOPIC_COMMAND_RELE_MODE, RELE_BATTERY_LEVEL)
             if btn_number == HW_BT_LEFT_UP:
