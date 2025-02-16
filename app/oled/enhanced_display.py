@@ -10,9 +10,9 @@
 # https://github.com/mark-gladding/packed-font
 #
 
-from dev_SSD1306 import *
+from oled.dev_SSD1306 import *
 import math
-import packed_font
+import oled.packed_font
 import struct
 
 class Enhanced_Display:

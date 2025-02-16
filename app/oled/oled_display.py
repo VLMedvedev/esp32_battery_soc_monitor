@@ -18,7 +18,7 @@ Args:
     c (int, optional): Color to render text in. Defaults to 1.
 """
 
-from enhanced_display import Enhanced_Display
+from oled.enhanced_display import Enhanced_Display
 from configs.hw_config import HW_OLED_SCL_PIN, HW_OLED_SDA_PIN
 from constants import WIFI_MODE_AP, WIFI_MODE_CLIENT, WIFI_MODE_OFF
 

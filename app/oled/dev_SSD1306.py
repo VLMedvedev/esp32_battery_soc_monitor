@@ -33,7 +33,7 @@ WIDTH = 64
 HEIGHT = 48
 ZERO_WIDTH = 32
 
-from dev_Unified import *
+from oled.dev_Unified import *
 from math import cos,sin,radians
 import framebuf
 
