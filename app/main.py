@@ -41,7 +41,7 @@ async def can_processing():
         try:
             soc_level = int(soc_level)
         except ValueError:
-            soc_level = ""
+            soc_level = 123
        # print(f"soc_level read, event= {EVENT_TYPE_CAN_SOC_READ} soc_level = {soc_level} ")
        # msg_dict = {"event": , "parameter": soc_level}
         broker.publish(EVENT_TYPE_CAN_SOC_READ, soc_level)

@@ -13,7 +13,7 @@ def set_rele_on_off(pin_rele, f_rele_is_on):
 def check_mode_and_calk_rele_state(rele_mode, off_level, on_level, f_rele_is_on, soc_level):
     f_change_rele_state = False
     old_f_is_on = f_rele_is_on
-    if rele_mode == RELE_BATTERY_LEVEL:
+    if rele_mode == RELE_BATTERY_LEVEL and soc_level <= 100 and soc_level >= 0:
         if soc_level <= off_level:
             f_rele_is_on = False
         if soc_level >= on_level:
