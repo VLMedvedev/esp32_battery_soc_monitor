@@ -78,6 +78,7 @@ async def can_processing():
             broker.publish(EVENT_TYPE_CAN_SOC_READ_OLED, soc_level)
             broker.publish(EVENT_TYPE_CAN_SOC_READ_WEB, soc_level)
             broker.publish(EVENT_TYPE_CAN_SOC_READ_MQTT, soc_level)
+            broker.publish(EVENT_TYPE_RELE_ON_OFF_MQTT, f_rele_is_on)
         await asyncio.sleep(CAN_SOC_CHECK_PERIOD_SEC)
 
 async def controller_processing():
