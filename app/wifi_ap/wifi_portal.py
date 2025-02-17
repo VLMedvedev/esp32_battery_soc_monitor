@@ -60,9 +60,15 @@ def setup_wifi_mode():
     server.set_callback(ap_catch_all)
     start_captive_portal()
 
-def start_captive_portal():
+
+def start_ap():
     ap = access_point(APP_NAME)
     ip = ap.ifconfig()[0]
+    print(f"Starting ap... ip {ip}")
+    return ip
+
+def start_captive_portal():
+    ip = start_ap()
     print(f"Starting captive portal... ip {ip}")
     dns.run_catchall(ip)
     server.run()

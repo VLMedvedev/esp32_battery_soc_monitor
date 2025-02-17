@@ -2,7 +2,7 @@ import asyncio
 from phew import logging
 from primitives import Broker, RingbufQueue
 from configs.sys_config import *
-from wifi_ap.wifi_portal import connect_to_wifi_ap, setup_wifi_mode, set_rtc, start_captive_portal, is_connected_to_wifi
+from wifi_ap.wifi_portal import connect_to_wifi_ap, setup_wifi_mode, set_rtc, start_captive_portal, start_ap
 import time
 # Settings
 from constants import *
@@ -201,7 +201,10 @@ async def main():
     else:
         if AUTO_START_CAPTIVE_PORTAL:
             logging.info("create task captive_portal")
-            asyncio.create_task(task_captive_portal())
+            #asyncio.create_task(task_captive_portal())
+           # task_captive_portal()
+            ip_addres = start_ap()
+            #asyncio.create_task(start_captive_portal())
 
     time.sleep(5)
     print(f"ip_addres: {ip_addres}")
