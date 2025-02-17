@@ -199,14 +199,10 @@ async def main():
             import mp_git
             mp_git.main()
     else:
-        if AUTO_START_CAPTIVE_PORTAL:
-            logging.info("create task captive_portal")
-            #asyncio.create_task(task_captive_portal())
-           # task_captive_portal()
+        if AUTO_START_WIFI_AP:
+            logging.info("[AUTO_START_WIFI_AP]")
             ip_addres = start_ap()
-            #asyncio.create_task(start_captive_portal())
-
-    time.sleep(5)
+    time.sleep(2)
     print(f"ip_addres: {ip_addres}")
 
     # Main loop
