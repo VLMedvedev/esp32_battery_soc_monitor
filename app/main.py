@@ -39,6 +39,7 @@ async def can_processing():
     time.sleep(3)
     can_id_scan()
     while True:
+        f_view_redraw = False
         if not settings_mode:
             old_soc_level = soc_level
             soc_level = await can_soc_read()
@@ -49,7 +50,6 @@ async def can_processing():
 
             if soc_level != 123:
                 rele_mode = RELE_BATTERY_LEVEL
-                f_view_redraw = False
                 if old_soc_level != soc_level:
                     f_view_redraw = True
                 f_change_rele_state, f_rele_is_on = check_mode_and_calk_rele_state(rele_mode,
@@ -60,11 +60,6 @@ async def can_processing():
                 if f_change_rele_state:
                     set_rele_on_off(pin_rele, f_rele_is_on)
                     f_view_redraw = True
-                if f_view_redraw:
-                    logging.info(f"[can_processing] soc_level {soc_level} f_rele_is_on {f_rele_is_on}")
-                    broker.publish(EVENT_TYPE_CAN_SOC_READ_OLED, soc_level)
-                    broker.publish(EVENT_TYPE_CAN_SOC_READ_WEB, soc_level)
-
             else:
                 rele_mode = RELE_ALWAYS_OFF
                 f_change_rele_state, f_rele_is_on = check_mode_and_calk_rele_state(rele_mode,
@@ -74,8 +69,14 @@ async def can_processing():
                                                                                    soc_level)
                 if f_change_rele_state:
                     set_rele_on_off(pin_rele, f_rele_is_on)
+                    f_view_redraw = True
         else:
             soc_level = 123
+
+        if f_view_redraw:
+            logging.info(f"[can_processing] soc_level {soc_level} f_rele_is_on {f_rele_is_on} rele_mode {rele_mode}")
+            broker.publish(EVENT_TYPE_CAN_SOC_READ_OLED, soc_level)
+            broker.publish(EVENT_TYPE_CAN_SOC_READ_WEB, soc_level)
         await asyncio.sleep(CAN_SOC_CHECK_PERIOD_SEC)
 
 async def controller_processing():
