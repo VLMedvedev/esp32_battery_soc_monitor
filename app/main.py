@@ -78,7 +78,7 @@ async def controller_processing():
         oled =  OLED_Display()
         oled.draw_charge_level(soc_level, f_rele_is_on)
         broker.subscribe(TOPIC_COMMAND_VIEW_MODE, queue)
-        broker.subscribe(EVENT_TYPE_CAN_SOC_READ, queue)
+        broker.subscribe(EVENT_TYPE_CAN_SOC_READ_OLED, queue)
 
     broker.subscribe(TOPIC_COMMAND_WIFI_MODE, queue)
     broker.subscribe(TOPIC_COMMAND_RELE_MODE, queue)
