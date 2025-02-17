@@ -27,7 +27,8 @@ from mp_commander import (set_level_to_config_file,
                           set_rele_mode_to_config_file,
                           check_mode_and_calk_rele_state,
                           set_rele_on_off,
-                          set_wifi_mode)
+                          set_wifi_mode,
+                          mqtt_in_command)
 from machine import Pin
 from configs.hw_config import HW_LED_PIN, HW_RELE_PIN
 pin_rele = Pin(HW_RELE_PIN, Pin.OUT, value=0)
@@ -96,6 +97,7 @@ async def controller_processing():
     broker.subscribe(TOPIC_COMMAND_RELE_MODE, queue)
     broker.subscribe(TOPIC_COMMAND_LEVEL_DOWN, queue)
     broker.subscribe(TOPIC_COMMAND_LEVEL_UP, queue)
+    broker.subscribe(EVENT_TYPE_MQTT_IN_COMMAND, queue)
     async for topic, message in queue:
         logging.info(f"[controller_processing] topic {topic}, message {message}")
         if (topic == TOPIC_COMMAND_LEVEL_UP or topic == TOPIC_COMMAND_LEVEL_DOWN):
@@ -143,6 +145,9 @@ async def controller_processing():
                 oled.view_settings()
         if topic == EVENT_TYPE_CAN_SOC_READ_OLED:
             oled.draw_charge_level(message, f_rele_is_on)
+        if topic == EVENT_TYPE_MQTT_IN_COMMAND:
+            mqtt_in_command(message)
+
         await asyncio.sleep(0.1)
 
 async def start_screen_timer():

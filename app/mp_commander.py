@@ -3,6 +3,13 @@ from constants import (TOPIC_COMMAND_LEVEL_UP, TOPIC_COMMAND_LEVEL_DOWN,
 from configs.constants_saver import ConstansReaderWriter
 from phew import logging
 
+def mqtt_in_command(msg_tuple):
+    topic = msg_tuple[0]
+    command = msg_tuple[1]
+    print(topic, command)
+
+    return msg_tuple
+
 def set_rele_on_off(pin_rele, f_rele_is_on):
     logging.info(f"change state rele {f_rele_is_on}")
     if f_rele_is_on:

@@ -45,8 +45,9 @@ async def start_mqtt_get(broker):
     def sub_cb(topic, msg):
         topic, msg = topic.decode(), msg.decode()
         topic = topic.replace( f"{SUBSCRIBE_TOPIC[:-1]}" , "")
-        print(topic, msg)
-        broker.publish(topic, msg)
+        msg_tuple = (topic, msg)
+        print( msg_tuple)
+        broker.publish(EVENT_TYPE_MQTT_IN_COMMAND, msg_tuple)
     mqtt_cli.set_callback(sub_cb)
 
     mqtt_cli.connect()
