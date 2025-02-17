@@ -146,7 +146,10 @@ async def controller_processing():
         if topic == EVENT_TYPE_CAN_SOC_READ_OLED:
             oled.draw_charge_level(message, f_rele_is_on)
         if topic == EVENT_TYPE_MQTT_IN_COMMAND:
-            mqtt_in_command(message)
+            c_dict = mqtt_in_command(message)
+            off_level = c_dict.get("OFF_LEVEL", 10)
+            on_level = c_dict.get("ON_LEVEL", 98)
+            rele_mode = c_dict.get("MODE", RELE_BATTERY_LEVEL)
 
         await asyncio.sleep(0.1)
 

@@ -4,17 +4,20 @@ from configs.constants_saver import ConstansReaderWriter
 from phew import logging
 
 def mqtt_in_command(msg_tuple):
+    import json
     try:
         file_config_name = msg_tuple[0]
-        const_dict = msg_tuple[1]
-        print(file_config_name, const_dict)
-        cr = ConstansReaderWriter(file_config_name)
-        c_dict = cr.get_dict()
-        print(c_dict)
-        cr.set_constants_from_config_dict(const_dict)
-        cr.save_constants_to_file()
-        logging.info(f"[mqtt_in_command] save to file {file_config_name}  {const_dict}")
-        return const_dict
+        const_dict_str = msg_tuple[1]
+        print(f"file_config_name {file_config_name}, const_dict {const_dict_str}")
+        if file_config_name in ["app_config"]:
+            const_dict_str  = const_dict_str.replace("'", '"')
+            const_dict = json.loads(const_dict_str)
+            cr = ConstansReaderWriter(file_config_name)
+            cr.set_constants_from_config_dict(const_dict)
+            cr.save_constants_to_file()
+            logging.info(f"[mqtt_in_command] save to file {file_config_name}  {const_dict}")
+            return const_dict
+        return {}
     except Exception as e:
         logging.error(e)
         return {}
@@ -70,6 +73,8 @@ def set_level_to_config_file(topic_command, level_type, file_config_name):
                   'ON_LEVEL': max_level,
                   'MODE': 'RELE_BATTERY_LEVEL',
                   }
+    #{'OFF_LEVEL': 15,'ON_LEVEL': 85, 'MODE': 'RELE_BATTERY_LEVEL'}
+
     if level_type == "ON_LEVEL":
         if topic_command == TOPIC_COMMAND_LEVEL_UP:
             max_level += 1

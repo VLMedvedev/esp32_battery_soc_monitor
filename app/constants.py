@@ -26,7 +26,7 @@ EVENT_TYPE_CAN_SOC_READ_OLED = "can_soc_read_oled"
 EVENT_TYPE_CAN_SOC_READ_MQTT = "can_soc_read_mqtt"
 EVENT_TYPE_CONFIG_UPDATED_MQTT = "config_updated"
 EVENT_TYPE_RELE_ON_OFF_MQTT = "rele_on_off_mqtt"
-EVENT_TYPE_MQTT_IN_COMMAND = "rele_on_off_mqtt"
+EVENT_TYPE_MQTT_IN_COMMAND = "mqtt_in_command"
 
 TOPIC_COMMAND_RELE_MODE = "rele_mode"
 TOPIC_COMMAND_VIEW_MODE = "view_mode"
