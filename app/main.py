@@ -77,8 +77,8 @@ async def controller_processing():
         oled =  OLED_Display()
         oled.draw_charge_level(soc_level, f_rele_is_on)
         broker.subscribe(TOPIC_COMMAND_VIEW_MODE, queue)
-        broker.subscribe(EVENT_TYPE_CAN_SOC_READ, soc_level)
-        asyncio.create_task(start_screen_timer())
+        broker.subscribe(EVENT_TYPE_CAN_SOC_READ, queue)
+
     broker.subscribe(TOPIC_COMMAND_WIFI_MODE, queue)
     broker.subscribe(TOPIC_COMMAND_RELE_MODE, queue)
     broker.subscribe(TOPIC_COMMAND_LEVEL_DOWN, queue)
@@ -122,7 +122,7 @@ async def controller_processing():
             elif message == VIEW_MODE_SETTINGS:
                 oled.view_settings()
         if topic == EVENT_TYPE_CAN_SOC_READ:
-            oled.draw_charge_level(soc_level, f_rele_is_on)
+            oled.draw_charge_level(message, f_rele_is_on)
 
         await asyncio.sleep(0.1)
 
@@ -159,6 +159,9 @@ async def main():
     asyncio.create_task(controller_processing())
     button_controller(broker)
     time.sleep(2)
+
+    if AUTO_START_OLED:
+        asyncio.create_task(start_screen_timer())
 
     if AUTO_CONNECT_TO_WIFI_AP:
         if is_connected_to_wifi():
