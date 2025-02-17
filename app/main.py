@@ -46,7 +46,8 @@ async def can_processing():
                 soc_level = 123
 
             if soc_level != 123:
-                broker.publish(EVENT_TYPE_CAN_SOC_READ, soc_level)
+                broker.publish(EVENT_TYPE_CAN_SOC_READ_WEB, soc_level)
+                broker.publish(EVENT_TYPE_CAN_SOC_READ_OLED, soc_level)
                 f_change_rele_state, f_rele_is_on = check_mode_and_calk_rele_state(rele_mode,
                                                                                    off_level,
                                                                                    on_level,
