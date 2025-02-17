@@ -167,7 +167,7 @@ async def start_screen_timer():
         if screen_timer < 0:
             screen_timer = 0
 
-async def start_captive_portal():
+async def task_captive_portal():
     global ip_addres
     logging.info("[start_captive_portal]")
     ip_addres = start_captive_portal()
@@ -193,15 +193,17 @@ async def main():
             if AUTO_START_SETUP_WIFI:
                 setup_wifi_mode()
             if AUTO_START_CAPTIVE_PORTAL:
-                asyncio.create_task(start_captive_portal())
+                asyncio.create_task(task_captive_portal())
         else:
             set_rtc()
             import mp_git
             mp_git.main()
     else:
         if AUTO_START_CAPTIVE_PORTAL:
-            asyncio.create_task(start_captive_portal())
+            logging.info("create task captive_portal")
+            asyncio.create_task(task_captive_portal())
 
+    time.sleep(5)
     print(f"ip_addres: {ip_addres}")
 
     # Main loop
