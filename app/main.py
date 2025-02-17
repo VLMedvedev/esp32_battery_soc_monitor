@@ -158,7 +158,6 @@ async def main():
     off_level = c_dict.get("OFF_LEVEL", 10)
     on_level = c_dict.get("ON_LEVEL", 98)
     rele_mode = c_dict.get("MODE", RELE_BATTERY_LEVEL)
-
     # Start coroutine as a task and immediately return
     # Main loop
     if AUTO_START_CAN:

@@ -18,13 +18,15 @@ if AUTO_CONNECT_TO_WIFI_AP:
     if ip_addres is None:
         if AUTO_START_SETUP_WIFI:
             setup_wifi_mode()
+        if AUTO_START_CAPTIVE_PORTAL:
+            ip_addres = start_captive_portal()
     else:
         set_rtc()
         import mp_git
         mp_git.main()
 else:
     if AUTO_START_CAPTIVE_PORTAL:
-        start_captive_portal()
+        ip_addres = start_captive_portal()
 
 
 
