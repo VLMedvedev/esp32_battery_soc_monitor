@@ -19,6 +19,7 @@ on_level = 90
 rele_mode = RELE_BATTERY_LEVEL
 f_rele_is_on = False
 soc_level = 50
+old_soc_level = 50
 screen_timer = SCREEN_TIMER_SEC
 settings_mode = True
 
@@ -33,12 +34,13 @@ pin_rele = Pin(HW_RELE_PIN, Pin.OUT, value=0)
 pin_led = Pin(HW_LED_PIN, Pin.OUT, value=1)
 
 async def can_processing():
-    global soc_level, off_level, on_level, rele_mode, f_rele_is_on, settings_mode
+    global soc_level, old_soc_level, off_level, on_level, rele_mode, f_rele_is_on, settings_mode
     can_init()
     time.sleep(3)
     can_id_scan()
     while True:
         if not settings_mode:
+            old_soc_level = soc_level
             soc_level = await can_soc_read()
             try:
                 soc_level = int(soc_level)
@@ -124,8 +126,8 @@ async def controller_processing():
             elif message == VIEW_MODE_SETTINGS:
                 oled.view_settings()
         if topic == EVENT_TYPE_CAN_SOC_READ_OLED:
-            oled.draw_charge_level(message, f_rele_is_on)
-
+            if old_soc_level != soc_level:
+                oled.draw_charge_level(message, f_rele_is_on)
         await asyncio.sleep(0.1)
 
 async def start_screen_timer():
