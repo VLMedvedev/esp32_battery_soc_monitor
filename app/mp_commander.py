@@ -11,7 +11,7 @@ def set_rele_on_off(pin_rele, f_rele_is_on):
         pin_rele.off()
 
 def check_mode_and_calk_rele_state(rele_mode, off_level, on_level, f_rele_is_on, soc_level):
-    #print(rele_mode, off_level, on_level, f_rele_is_on, soc_level)
+    print(rele_mode, off_level, on_level, f_rele_is_on, soc_level)
     f_change_rele_state = False
     old_f_is_on = f_rele_is_on
     if soc_level == 123:
@@ -29,8 +29,8 @@ def check_mode_and_calk_rele_state(rele_mode, off_level, on_level, f_rele_is_on,
         f_rele_is_on = True
     if old_f_is_on != f_rele_is_on:
         f_change_rele_state = True
-        logging.info(f"change state rele {f_rele_is_on}")
-    #print(f_change_rele_state, f_rele_is_on)
+        logging.info(f"change state rele {f_rele_is_on} old {old_f_is_on}")
+    print(f_change_rele_state, f_rele_is_on)
     return f_change_rele_state, f_rele_is_on
 
 def set_rele_mode_to_config_file(rele_mode, file_config_name):

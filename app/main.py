@@ -48,7 +48,10 @@ async def can_processing():
                 soc_level = 123
 
             if soc_level != 123:
+                rele_mode = RELE_BATTERY_LEVEL
                 f_view_redraw = False
+                if old_soc_level != soc_level:
+                    f_view_redraw = True
                 f_change_rele_state, f_rele_is_on = check_mode_and_calk_rele_state(rele_mode,
                                                                                    off_level,
                                                                                    on_level,
@@ -57,11 +60,11 @@ async def can_processing():
                 if f_change_rele_state:
                     set_rele_on_off(pin_rele, f_rele_is_on)
                     f_view_redraw = True
-                if old_soc_level != soc_level:
-                    f_view_redraw = True
                 if f_view_redraw:
-                    broker.publish(EVENT_TYPE_CAN_SOC_READ_WEB, soc_level)
+                    logging.info(f"[can_processing] soc_level {soc_level} f_rele_is_on {f_rele_is_on}")
                     broker.publish(EVENT_TYPE_CAN_SOC_READ_OLED, soc_level)
+                    broker.publish(EVENT_TYPE_CAN_SOC_READ_WEB, soc_level)
+
             else:
                 rele_mode = RELE_ALWAYS_OFF
                 f_change_rele_state, f_rele_is_on = check_mode_and_calk_rele_state(rele_mode,
