@@ -4,11 +4,20 @@ from configs.constants_saver import ConstansReaderWriter
 from phew import logging
 
 def mqtt_in_command(msg_tuple):
-    topic = msg_tuple[0]
-    command = msg_tuple[1]
-    print(topic, command)
-
-    return msg_tuple
+    try:
+        file_config_name = msg_tuple[0]
+        const_dict = msg_tuple[1]
+        print(file_config_name, const_dict)
+        cr = ConstansReaderWriter(file_config_name)
+        c_dict = cr.get_dict()
+        print(c_dict)
+        cr.set_constants_from_config_dict(const_dict)
+        cr.save_constants_to_file()
+        logging.info(f"[mqtt_in_command] save to file {file_config_name}  {const_dict}")
+        return const_dict
+    except Exception as e:
+        logging.error(e)
+        return {}
 
 def set_rele_on_off(pin_rele, f_rele_is_on):
     logging.info(f"change state rele {f_rele_is_on}")
