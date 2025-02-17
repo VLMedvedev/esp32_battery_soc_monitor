@@ -21,6 +21,7 @@ soc_level = 50
 old_soc_level = 50
 screen_timer = SCREEN_TIMER_SEC
 settings_mode = True
+ip_addres = None
 
 from mp_commander import (set_level_to_config_file,
                           set_rele_mode_to_config_file,
@@ -166,9 +167,16 @@ async def start_screen_timer():
         if screen_timer < 0:
             screen_timer = 0
 
+async def start_captive_portal():
+    global ip_addres
+    logging.info("[start_captive_portal]")
+    ip_addres = start_captive_portal()
+
+
 # Coroutine: entry point for asyncio program
 async def main():
     global off_level, on_level, rele_mode, f_rele_is_on
+    global ip_addres
     file_config_name = "app_config"
     cr = ConstansReaderWriter(file_config_name)
     c_dict = cr.get_dict()
@@ -178,21 +186,21 @@ async def main():
     rele_mode = c_dict.get("MODE", RELE_BATTERY_LEVEL)
     # Start coroutine as a task and immediately return
 
-    ip_addres = None
+
     if AUTO_CONNECT_TO_WIFI_AP:
         ip_addres = connect_to_wifi_ap()
         if ip_addres is None:
             if AUTO_START_SETUP_WIFI:
                 setup_wifi_mode()
             if AUTO_START_CAPTIVE_PORTAL:
-                ip_addres = start_captive_portal()
+                asyncio.create_task(start_captive_portal())
         else:
             set_rtc()
             import mp_git
             mp_git.main()
     else:
         if AUTO_START_CAPTIVE_PORTAL:
-            ip_addres = start_captive_portal()
+            asyncio.create_task(start_captive_portal())
 
     print(f"ip_addres: {ip_addres}")
 
