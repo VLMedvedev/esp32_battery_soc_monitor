@@ -48,15 +48,16 @@ async def can_processing():
                 soc_level = 123
 
             if soc_level != 123:
-                broker.publish(EVENT_TYPE_CAN_SOC_READ_WEB, soc_level)
-                broker.publish(EVENT_TYPE_CAN_SOC_READ_OLED, soc_level)
-                f_change_rele_state, f_rele_is_on = check_mode_and_calk_rele_state(rele_mode,
-                                                                                   off_level,
-                                                                                   on_level,
-                                                                                   f_rele_is_on,
-                                                                                   soc_level)
-                if f_change_rele_state:
-                    set_rele_on_off(pin_rele, f_rele_is_on)
+                if old_soc_level != soc_level:
+                    broker.publish(EVENT_TYPE_CAN_SOC_READ_WEB, soc_level)
+                    broker.publish(EVENT_TYPE_CAN_SOC_READ_OLED, soc_level)
+                    f_change_rele_state, f_rele_is_on = check_mode_and_calk_rele_state(rele_mode,
+                                                                                       off_level,
+                                                                                       on_level,
+                                                                                       f_rele_is_on,
+                                                                                       soc_level)
+                    if f_change_rele_state:
+                        set_rele_on_off(pin_rele, f_rele_is_on)
             else:
                 rele_mode = RELE_ALWAYS_OFF
                 f_change_rele_state, f_rele_is_on = check_mode_and_calk_rele_state(rele_mode,
@@ -126,8 +127,7 @@ async def controller_processing():
             elif message == VIEW_MODE_SETTINGS:
                 oled.view_settings()
         if topic == EVENT_TYPE_CAN_SOC_READ_OLED:
-            if old_soc_level != soc_level:
-                oled.draw_charge_level(message, f_rele_is_on)
+            oled.draw_charge_level(message, f_rele_is_on)
         await asyncio.sleep(0.1)
 
 async def start_screen_timer():
