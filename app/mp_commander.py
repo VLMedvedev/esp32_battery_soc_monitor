@@ -42,7 +42,7 @@ def set_rele_mode_to_config_file(rele_mode, file_config_name):
     cr.set_constants_from_config_dict(const_dict)
     cr.save_constants_to_file()
     logging.info(f"save to file rele mode to {rele_mode}")
-    return rele_mode
+    return const_dict
 
 def set_level_to_config_file(topic_command, level_type, file_config_name):
     cr = ConstansReaderWriter(file_config_name)
@@ -77,7 +77,7 @@ def set_level_to_config_file(topic_command, level_type, file_config_name):
     cr.set_constants_from_config_dict(const_dict)
     cr.save_constants_to_file()
     logging.info(f"save to file app_config {const_dict}")
-    return min_level, max_level
+    return const_dict
 
 def set_wifi_mode(wifi_mode):
     logging.info(f"change wifi_mode {wifi_mode}")

@@ -10,10 +10,8 @@ from umqtt.simple import MQTTClient
 async def broker_get_pub(mqtt_cli, broker: Broker):
     print("[broker_get_pub]")
     queue = RingbufQueue(20)
-    broker.subscribe(EVENT_TYPE_CAN_SOC_READ, queue)
-    broker.subscribe(EVENT_TYPE_PRESS_BUTTON, queue)
-    broker.subscribe(EVENT_TYPE_LONG_PRESS_BUTTON, queue)
-    broker.subscribe(EVENT_TYPE_DOUBLE_PRESS_BUTTON, queue)
+    broker.subscribe(EVENT_TYPE_CONFIG_UPDATED_MQTT, queue)
+    broker.subscribe(EVENT_TYPE_CAN_SOC_READ_MQTT, queue)
     async for topic, message in queue:
         print(f"[broker_get_pub] topic {topic}, message {message}")
         top = PUBLISH_TOPIC + "/" + topic
