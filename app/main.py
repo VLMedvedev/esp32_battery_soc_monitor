@@ -79,26 +79,27 @@ async def controller_processing():
         oled.draw_charge_level(soc_level, f_rele_is_on)
         broker.subscribe(TOPIC_COMMAND_VIEW_MODE, queue)
         broker.subscribe(EVENT_TYPE_CAN_SOC_READ_OLED, queue)
-
     broker.subscribe(TOPIC_COMMAND_WIFI_MODE, queue)
     broker.subscribe(TOPIC_COMMAND_RELE_MODE, queue)
     broker.subscribe(TOPIC_COMMAND_LEVEL_DOWN, queue)
     broker.subscribe(TOPIC_COMMAND_LEVEL_UP, queue)
     async for topic, message in queue:
-        settings_mode = True
         logging.info(f"[controller_processing] topic {topic}, message {message}")
         if (topic == TOPIC_COMMAND_LEVEL_UP or topic == TOPIC_COMMAND_LEVEL_DOWN):
             file_config_name = "app_config"
             off_level, on_level = set_level_to_config_file(topic, message, file_config_name)
             screen_timer = SCREEN_TIMER_SEC
+            settings_mode = True
             logging.info(f"off_level {off_level}, on_level {on_level}")
         if topic == TOPIC_COMMAND_RELE_MODE:
             file_config_name = "app_config"
             rele_mode = set_rele_mode_to_config_file(message, file_config_name)
             screen_timer = SCREEN_TIMER_SEC
+            settings_mode = True
         if topic == TOPIC_COMMAND_WIFI_MODE:
             set_wifi_mode(message)
             screen_timer = SCREEN_TIMER_SEC
+            settings_mode = True
         if topic == TOPIC_COMMAND_VIEW_MODE:
             if message == VIEW_MODE_SETTING_DOWN_OFF_LEVEL:
                 oled.draw_setting_level(off_level, button_group="down")
