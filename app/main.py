@@ -2,12 +2,11 @@ import asyncio
 from phew import logging
 from primitives import Broker, RingbufQueue
 from configs.sys_config import *
-from wifi_ap.wifi_portal import is_connected_to_wifi
+from wifi_ap.wifi_portal import connect_to_wifi_ap, setup_wifi_mode, set_rtc, start_captive_portal, is_connected_to_wifi
 import time
 # Settings
 from constants import *
 from configs.can_bus_config import CAN_SOC_CHECK_PERIOD_SEC
-from configs.mqtt_config import PUBLISH_TOPIC
 from mp_can import can_init, can_id_scan, can_soc_read
 from mp_button import button_controller
 
@@ -178,6 +177,25 @@ async def main():
     on_level = c_dict.get("ON_LEVEL", 98)
     rele_mode = c_dict.get("MODE", RELE_BATTERY_LEVEL)
     # Start coroutine as a task and immediately return
+
+    ip_addres = None
+    if AUTO_CONNECT_TO_WIFI_AP:
+        ip_addres = connect_to_wifi_ap()
+        if ip_addres is None:
+            if AUTO_START_SETUP_WIFI:
+                setup_wifi_mode()
+            if AUTO_START_CAPTIVE_PORTAL:
+                ip_addres = start_captive_portal()
+        else:
+            set_rtc()
+            import mp_git
+            mp_git.main()
+    else:
+        if AUTO_START_CAPTIVE_PORTAL:
+            ip_addres = start_captive_portal()
+
+    print(f"ip_addres: {ip_addres}")
+
     # Main loop
     if AUTO_START_CAN:
         asyncio.create_task(can_processing())
@@ -189,17 +207,16 @@ async def main():
     if AUTO_START_OLED:
         asyncio.create_task(start_screen_timer())
 
-    if AUTO_CONNECT_TO_WIFI_AP:
-        if is_connected_to_wifi():
-            if AUTO_START_UMQTT:
-                from mp_mqtt import start_mqtt_get
-                asyncio.create_task(start_mqtt_get(broker))
-            if AUTO_START_WEBREPL:
-                import webrepl
-                asyncio.create_task(webrepl.start())
-            if AUTO_START_WEBAPP:
-                from web_app.web_app import application_mode
-                asyncio.create_task(application_mode(broker))
+    if ip_addres is not None:
+        if AUTO_START_UMQTT:
+            from mp_mqtt import start_mqtt_get
+            asyncio.create_task(start_mqtt_get(broker))
+        if AUTO_START_WEBREPL:
+            import webrepl
+            asyncio.create_task(webrepl.start())
+        if AUTO_START_WEBAPP:
+            from web_app.web_app import application_mode
+            asyncio.create_task(application_mode(broker))
 
 # Start event loop and run entry point coroutine
 asyncio.run(main())
