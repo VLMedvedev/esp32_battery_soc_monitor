@@ -122,7 +122,7 @@ async def controller_processing():
                 oled.view_info(WIFI_MODE_CLIENT)
             elif message == VIEW_MODE_SETTINGS:
                 oled.view_settings()
-        if topic == EVENT_TYPE_CAN_SOC_READ:
+        if topic == EVENT_TYPE_CAN_SOC_READ_OLED:
             oled.draw_charge_level(message, f_rele_is_on)
 
         await asyncio.sleep(0.1)
