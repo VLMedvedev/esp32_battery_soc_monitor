@@ -42,7 +42,6 @@ async def can_processing():
     while True:
         f_view_redraw = False
         if not settings_mode:
-            old_soc_level = soc_level
             soc_level = await can_soc_read()
             try:
                 soc_level = int(soc_level)
@@ -51,8 +50,6 @@ async def can_processing():
 
             if soc_level != 123:
                 rele_mode = RELE_BATTERY_LEVEL
-                if old_soc_level != soc_level:
-                    f_view_redraw = True
                 f_change_rele_state, f_rele_is_on = check_mode_and_calk_rele_state(rele_mode,
                                                                                    off_level,
                                                                                    on_level,
@@ -73,6 +70,11 @@ async def can_processing():
                     f_view_redraw = True
         else:
             soc_level = 123
+
+        if old_soc_level != soc_level:
+            f_view_redraw = True
+
+        old_soc_level = soc_level
 
         if f_view_redraw:
             logging.info(f"[can_processing] soc_level {soc_level} f_rele_is_on {f_rele_is_on} rele_mode {rele_mode}")
