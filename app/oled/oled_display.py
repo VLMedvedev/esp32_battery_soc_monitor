@@ -19,7 +19,7 @@ Args:
 """
 
 from oled.enhanced_display import Enhanced_Display
-from configs.hw_config import HW_OLED_SCL_PIN, HW_OLED_SDA_PIN
+from configs.hw_config import HW_OLED_SCL_PIN, HW_OLED_SDA_PIN, HW_OLED_FREQ
 from constants import WIFI_MODE_AP, WIFI_MODE_CLIENT, WIFI_MODE_OFF
 
 
@@ -31,7 +31,8 @@ class OLED_Display:
     def init_display(self):
         self.display = Enhanced_Display(bus=0,
                                         scl=HW_OLED_SCL_PIN,
-                                        sda=HW_OLED_SDA_PIN)
+                                        sda=HW_OLED_SDA_PIN,
+                                        freq=HW_OLED_FREQ,)
         # display.load_fonts(['digits-30', 'text-16'])
         self.display.load_fonts(['text-16'])
         self.display.clear()
@@ -62,7 +63,7 @@ class OLED_Display:
             self.display.clear()
             self.display.fill(0)
             self.display.invert(0)
-            self.display.select_font('text-16')
+            #self.display.select_font('text-16')
             self.display.text(str("Wi-Fi"), 2, 2, 1, 0)
             self.display.text(str("AP ON"), 2, 20, 1, 0)
             self.display.text(str(ip_addres), 2, 36, 1, 0)
@@ -82,7 +83,7 @@ class OLED_Display:
             self.display.clear()
             self.display.fill(0)
             self.display.invert(0)
-            self.display.select_font('text-16')
+            #self.display.select_font('text-16')
             self.display.text(str("Wi-Fi"), 2, 2, 1, 0)
             self.display.text(str("client"), 2, 20, 1, 0)
             self.display.text(str(ip_addres), 2, 36, 1, 0)
