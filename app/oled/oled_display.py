@@ -55,7 +55,7 @@ class OLED_Display:
         #self.display.text(str("AP ON"), 2, 20, 1, 0)
         self.display.show()
 
-    def view_info(self, wifi_mode):
+    def view_info(self, wifi_mode,ip_addres):
         # TODO view_info()
         if wifi_mode == WIFI_MODE_AP:
             print(f"wifi_mode {wifi_mode} AP ")
@@ -65,6 +65,7 @@ class OLED_Display:
             self.display.select_font('text-16')
             self.display.text(str("Wi-Fi"), 2, 2, 1, 0)
             self.display.text(str("AP ON"), 2, 20, 1, 0)
+            self.display.text(str(ip_addres), 2, 36, 1, 0)
             self.display.show()
         elif wifi_mode == WIFI_MODE_OFF :
             print(f"wifi_mode {wifi_mode} off")
@@ -74,6 +75,7 @@ class OLED_Display:
             self.display.select_font('text-16')
             self.display.text(str("Wi-Fi"), 2, 2, 1, 0)
             self.display.text(str("AP OFF"), 2, 20, 1, 0)
+           # self.display.text(str(""), 2, 36, 1, 0)
             self.display.show()
         elif wifi_mode == WIFI_MODE_CLIENT :
             print(f"wifi_mode {wifi_mode} client")
@@ -83,6 +85,7 @@ class OLED_Display:
             self.display.select_font('text-16')
             self.display.text(str("Wi-Fi"), 2, 2, 1, 0)
             self.display.text(str("client"), 2, 20, 1, 0)
+            self.display.text(str(ip_addres), 2, 36, 1, 0)
             self.display.show()
 
         return None

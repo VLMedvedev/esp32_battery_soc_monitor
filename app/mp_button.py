@@ -36,7 +36,7 @@ def button_controller(broker):
             if btn_number == HW_BT_RIGTH_DOWN or btn_number == HW_BT_LEFT_DOWN:
                 broker.publish(TOPIC_COMMAND_WIFI_MODE, WIFI_MODE_OFF)
                 broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_WIFI_OFF_INFO)
-            elif btn_number == HW_BT_LEFT_DOWN:
+            elif btn_number == HW_BT_LEFT_UP:
                 broker.publish(TOPIC_COMMAND_WIFI_MODE, WIFI_MODE_CLIENT)
                 broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_WIFI_CLI_INFO)
             elif btn_number == HW_BT_RIGTH_UP:

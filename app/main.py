@@ -138,11 +138,11 @@ async def controller_processing():
             elif message == VIEW_MODE_RELE_ON:
                 oled.draw_on()
             elif message == VIEW_MODE_WIFI_OFF_INFO:
-                oled.view_info(WIFI_MODE_OFF)
+                oled.view_info(WIFI_MODE_OFF, ip_addres)
             elif message == VIEW_MODE_WIFI_AP_INFO:
-                oled.view_info(WIFI_MODE_AP)
+                oled.view_info(WIFI_MODE_AP, ip_addres)
             elif message == VIEW_MODE_WIFI_CLI_INFO:
-                oled.view_info(WIFI_MODE_CLIENT)
+                oled.view_info(WIFI_MODE_CLIENT, ip_addres)
             elif message == VIEW_MODE_SETTINGS:
                 oled.view_settings()
         if topic == EVENT_TYPE_CAN_SOC_READ_OLED:
@@ -163,7 +163,12 @@ async def start_screen_timer():
        # logging.info(f"timer screen... {screen_timer}")
         if screen_timer == 1:
             logging.info("redraw screen...")
-            broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_RELE_SOC_AUTO)
+            if rele_mode == RELE_BATTERY_LEVEL:
+                broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_RELE_SOC_AUTO)
+            elif rele_mode == RELE_ALWAYS_ON:
+                broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_RELE_ON)
+            elif rele_mode == RELE_ALWAYS_OFF:
+                broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_RELE_OFF)
             settings_mode = False
         screen_timer -= 1
         if screen_timer < 0:
