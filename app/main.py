@@ -113,7 +113,7 @@ async def controller_processing():
             on_level = c_dict.get("ON_LEVEL", 98)
             f_change_rele_state = check_and_calck_rele_state()
             if f_change_rele_state:
-                rele_mode = RELE_BATTERY_LEVEL
+                #rele_mode = RELE_BATTERY_LEVEL
                 broker.publish(EVENT_TYPE_RELE_ON_OFF_MQTT, f_rele_is_on)
             screen_timer = SCREEN_TIMER_SEC
             settings_mode = True
