@@ -36,7 +36,6 @@ pin_led = Pin(HW_LED_PIN, Pin.OUT, value=1)
 
 def check_and_calck_rele_state():
     global soc_level, old_soc_level, off_level, on_level, rele_mode, f_rele_is_on, settings_mode
-    rele_mode = RELE_BATTERY_LEVEL
     f_change_rele_state, f_rele_is_on = check_mode_and_calk_rele_state(rele_mode,
                                                                        off_level,
                                                                        on_level,
