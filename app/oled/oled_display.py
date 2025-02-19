@@ -67,8 +67,8 @@ class OLED_Display:
             self.display.select_font(None)  # Select the built in 8 pixel font
             self.display.text(str("Wi-Fi"), 2, 2, 1, 0)
             self.display.text(str("AP ON"), 2, 12, 1, 0)
-            self.display.text(str(ip_addres[:8]), 2, 22, 1, 0)
-            self.display.text(str(ip_addres[8:]), 2, 34, 1, 0)
+            self.display.text(str(ip_addres[:7]), 2, 22, 1, 0)
+            self.display.text(str(ip_addres[7:]), 2, 34, 1, 0)
             self.display.show()
         elif wifi_mode == WIFI_MODE_OFF :
             print(f"wifi_mode {wifi_mode} off")
@@ -89,8 +89,8 @@ class OLED_Display:
             self.display.select_font(None)  # Select the built in 8 pixel font
             self.display.text(str("Wi-Fi"), 2, 2, 1, 0)
             self.display.text(str("client"), 2, 12, 1, 0)
-            self.display.text(str(ip_addres[:8]), 2, 22, 1, 0)
-            self.display.text(str(ip_addres[8:]), 2, 34, 1, 0)
+            self.display.text(str(ip_addres[:7]), 2, 22, 1, 0)
+            self.display.text(str(ip_addres[7:]), 2, 34, 1, 0)
             self.display.show()
 
         return None
