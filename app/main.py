@@ -124,6 +124,10 @@ async def controller_processing():
             c_dict = set_rele_mode_to_config_file(message, file_config_name)
             rele_mode = c_dict.get("MODE", RELE_BATTERY_LEVEL)
             broker.publish(EVENT_TYPE_CONFIG_UPDATED_MQTT, c_dict)
+            f_change_rele_state = check_and_calck_rele_state()
+            if f_change_rele_state:
+                # rele_mode = RELE_BATTERY_LEVEL
+                broker.publish(EVENT_TYPE_RELE_ON_OFF_MQTT, f_rele_is_on)
             screen_timer = SCREEN_TIMER_SEC
             settings_mode = True
         if topic == TOPIC_COMMAND_WIFI_MODE:
