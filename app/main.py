@@ -34,6 +34,20 @@ from configs.hw_config import HW_LED_PIN, HW_RELE_PIN
 pin_rele = Pin(HW_RELE_PIN, Pin.OUT, value=0)
 pin_led = Pin(HW_LED_PIN, Pin.OUT, value=1)
 
+def check_and_calck_rele_state():
+    global soc_level, old_soc_level, off_level, on_level, rele_mode, f_rele_is_on, settings_mode
+    rele_mode = RELE_BATTERY_LEVEL
+    f_change_rele_state, f_rele_is_on = check_mode_and_calk_rele_state(rele_mode,
+                                                                       off_level,
+                                                                       on_level,
+                                                                       f_rele_is_on,
+                                                                       soc_level)
+    if f_change_rele_state:
+        set_rele_on_off(pin_rele, f_rele_is_on)
+
+    return f_change_rele_state
+
+
 async def can_processing():
     global soc_level, old_soc_level, off_level, on_level, rele_mode, f_rele_is_on, settings_mode
     can_init()
@@ -50,23 +64,13 @@ async def can_processing():
 
             if soc_level != 123:
                 rele_mode = RELE_BATTERY_LEVEL
-                f_change_rele_state, f_rele_is_on = check_mode_and_calk_rele_state(rele_mode,
-                                                                                   off_level,
-                                                                                   on_level,
-                                                                                   f_rele_is_on,
-                                                                                   soc_level)
+                f_change_rele_state = check_and_calck_rele_state()
                 if f_change_rele_state:
-                    set_rele_on_off(pin_rele, f_rele_is_on)
                     f_view_redraw = True
             else:
                 rele_mode = RELE_ALWAYS_OFF
-                f_change_rele_state, f_rele_is_on = check_mode_and_calk_rele_state(rele_mode,
-                                                                                   off_level,
-                                                                                   on_level,
-                                                                                   f_rele_is_on,
-                                                                                   soc_level)
+                f_change_rele_state = check_and_calck_rele_state()
                 if f_change_rele_state:
-                    set_rele_on_off(pin_rele, f_rele_is_on)
                     f_view_redraw = True
         else:
             soc_level = 123
@@ -107,6 +111,10 @@ async def controller_processing():
             c_dict = set_level_to_config_file(topic, message, file_config_name)
             off_level = c_dict.get("OFF_LEVEL", 10)
             on_level = c_dict.get("ON_LEVEL", 98)
+            f_change_rele_state = check_and_calck_rele_state()
+            if f_change_rele_state:
+                rele_mode = RELE_BATTERY_LEVEL
+                broker.publish(EVENT_TYPE_RELE_ON_OFF_MQTT, f_rele_is_on)
             screen_timer = SCREEN_TIMER_SEC
             settings_mode = True
             logging.info(f"off_level {off_level}, on_level {on_level}")

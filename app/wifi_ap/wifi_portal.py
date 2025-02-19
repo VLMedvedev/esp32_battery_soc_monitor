@@ -65,6 +65,7 @@ def start_ap():
     ap = access_point(APP_NAME)
     ip = ap.ifconfig()[0]
     print(f"Starting ap... ip {ip}")
+    dns.run_catchall(ip)
     return ip
 
 def start_captive_portal():

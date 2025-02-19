@@ -376,6 +376,7 @@ def application_mode(broker):
 
     server.add_route("/", handler=app_index, methods=["GET"])
     server.add_route("/canonical.html", handler=app_index, methods=["GET"])
+    server.add_route("/hotspot-detect.html", handler=app_index, methods=["GET"])
     server.add_route("/toggle", handler=app_toggle_led, methods=["GET"])
     server.add_route("/about", handler=about, methods=["GET"])
     server.add_route("/log_viewer", handler=log_viewer, methods=["GET"])
