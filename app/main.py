@@ -55,25 +55,22 @@ async def can_processing():
     can_id_scan()
     while True:
         f_view_redraw = False
-        if not settings_mode:
-            soc_level = await can_soc_read()
-            try:
-                soc_level = int(soc_level)
-            except ValueError:
-                soc_level = 123
+        soc_level = 123
+        if rele_mode != RELE_BATTERY_LEVEL or settings_mode:
+            await asyncio.sleep(CAN_SOC_CHECK_PERIOD_SEC)
+            continue
 
-            if soc_level != 123:
-                rele_mode = RELE_BATTERY_LEVEL
-                f_change_rele_state = check_and_calck_rele_state()
-                if f_change_rele_state:
-                    f_view_redraw = True
-            else:
-                rele_mode = RELE_ALWAYS_OFF
-                f_change_rele_state = check_and_calck_rele_state()
-                if f_change_rele_state:
-                    f_view_redraw = True
-        else:
+        soc_level = await can_soc_read()
+        try:
+            soc_level = int(soc_level)
+        except ValueError:
             soc_level = 123
+
+        if soc_level != 123:
+            #rele_mode = RELE_BATTERY_LEVEL
+            f_change_rele_state = check_and_calck_rele_state()
+            if f_change_rele_state:
+                f_view_redraw = True
 
         if old_soc_level != soc_level:
             f_view_redraw = True
@@ -86,6 +83,7 @@ async def can_processing():
             broker.publish(EVENT_TYPE_CAN_SOC_READ_WEB, soc_level)
             broker.publish(EVENT_TYPE_CAN_SOC_READ_MQTT, soc_level)
             broker.publish(EVENT_TYPE_RELE_ON_OFF_MQTT, f_rele_is_on)
+
         await asyncio.sleep(CAN_SOC_CHECK_PERIOD_SEC)
 
 async def controller_processing():
@@ -111,10 +109,6 @@ async def controller_processing():
             c_dict = set_level_to_config_file(topic, message, file_config_name)
             off_level = c_dict.get("OFF_LEVEL", 10)
             on_level = c_dict.get("ON_LEVEL", 98)
-            f_change_rele_state = check_and_calck_rele_state()
-            if f_change_rele_state:
-                #rele_mode = RELE_BATTERY_LEVEL
-                broker.publish(EVENT_TYPE_RELE_ON_OFF_MQTT, f_rele_is_on)
             screen_timer = SCREEN_TIMER_SEC
             settings_mode = True
             logging.info(f"off_level {off_level}, on_level {on_level}")
@@ -124,10 +118,6 @@ async def controller_processing():
             c_dict = set_rele_mode_to_config_file(message, file_config_name)
             rele_mode = c_dict.get("MODE", RELE_BATTERY_LEVEL)
             broker.publish(EVENT_TYPE_CONFIG_UPDATED_MQTT, c_dict)
-            f_change_rele_state = check_and_calck_rele_state()
-            if f_change_rele_state:
-                # rele_mode = RELE_BATTERY_LEVEL
-                broker.publish(EVENT_TYPE_RELE_ON_OFF_MQTT, f_rele_is_on)
             screen_timer = SCREEN_TIMER_SEC
             settings_mode = True
         if topic == TOPIC_COMMAND_WIFI_MODE:
@@ -175,12 +165,16 @@ async def start_screen_timer():
        # logging.info(f"timer screen... {screen_timer}")
         if screen_timer == 1:
             logging.info("redraw screen...")
+            f_change_rele_state = check_and_calck_rele_state()
             if rele_mode == RELE_BATTERY_LEVEL:
                 broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_RELE_SOC_AUTO)
             elif rele_mode == RELE_ALWAYS_ON:
                 broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_RELE_ON)
             elif rele_mode == RELE_ALWAYS_OFF:
                 broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_RELE_OFF)
+            if f_change_rele_state:
+                # rele_mode = RELE_BATTERY_LEVEL
+                broker.publish(EVENT_TYPE_RELE_ON_OFF_MQTT, f_rele_is_on)
             settings_mode = False
         screen_timer -= 1
         if screen_timer < 0:
