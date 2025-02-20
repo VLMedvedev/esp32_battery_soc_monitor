@@ -1,24 +1,28 @@
 {{render_template('/web_app/header.html', title=title, style_css_str=style_css_str, config_page_links=config_page_links)}}
 <main class="main">
-<!--<form style="font-family:'Courier New'" action="/config_page" method="POST" autocomplete="off" autocapitalize="none">-->
-<form style="font-family:'Courier New'" action="/app_config_page" method="POST" autocomplete="off" autocapitalize="none">
-    <label>Selected MODE  : </label><br>
-     {{mode_str}}
-    <br>
-    <label  for="ON_LEVEL">&nbsp;ON_LEVEL......: </label>
-    <input type="number" id="ON_LEVEL" name="ON_LEVEL" value={{val_on}}><br>
-    <label for="OFF_LEVEL">&nbsp;OFF_LEVEL.....: </label>
-    <input type="number" id="OFF_LEVEL" name="OFF_LEVEL" value={{val_off}}><br>
+    <!--<form style="font-family:'Courier New'" action="/config_page" method="POST" autocomplete="off" autocapitalize="none">-->
+    <form style="font-family:'Courier New'" action="/app_config_page" method="POST" autocomplete="off"
+          autocapitalize="none">
+        <label>Selected MODE : </label><br>
+        {{mode_str}}
+        <br>
+        <label for="ON_LEVEL">&nbsp;ON_LEVEL......: </label>
+        <input type="number" id="ON_LEVEL" name="ON_LEVEL" value={{val_on}}><br>
+        <label for="OFF_LEVEL">&nbsp;OFF_LEVEL.....: </label>
+        <input type="number" id="OFF_LEVEL" name="OFF_LEVEL" value={{val_off}}><br>
 
-    <br><br>
+        <br><br>
 
-<!--    <button id="rebootBtn">Reboot</button>-->
-    <script src="data:text/javascript,document.getElementById('saveBtn').onclick = function() { window.location.href = '/app_config_page'; };" defer></script>
-<!--    <script src="data:text/javascript,document.getElementById('rebootBtn').onclick = function() { window.location.href = '/reboot'; };" defer></script>-->
+        <keybloc class="keys">
+            <button id="saveBtn">Save config</button>
+            <label> {{page_info}}</label><br>
+        </keybloc>
 
-</form>
-    <keybloc class="keys">
-     <button  id="saveBtn">Save config</button><label>  {{page_info}}</label><br>
-</keybloc>
+        <!--    <button id="rebootBtn">Reboot</button>-->
+        <!--    <script src="data:text/javascript,document.getElementById('saveBtn').onclick = function() { window.location.href = '/app_config_page'; };" defer></script>-->
+        <!--    <script src="data:text/javascript,document.getElementById('rebootBtn').onclick = function() { window.location.href = '/reboot'; };" defer></script>-->
+
+    </form>
+
 </main>
-{{render_template('/web_app/footer.html')}}
+        {{render_template('/web_app/footer.html')}}

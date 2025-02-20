@@ -249,7 +249,7 @@ def application_mode(broker):
         return config_page
 
     def config_page(request):
-        #print(request.method)
+        print(request.method)
         path = request.path
         path = path.replace("/", "")
         #print(path)
