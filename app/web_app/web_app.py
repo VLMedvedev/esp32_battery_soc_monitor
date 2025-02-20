@@ -246,17 +246,17 @@ def application_mode(broker):
             config_page += str_http
             config_page += "\n"
 
-        return config_page
+        return config_page, app_config_dict
 
     def config_page(request):
-        print(request.method)
+        #print(request.method)
         path = request.path
         path = path.replace("/", "")
         #print(path)
         module_config = path
         title = str(module_config).upper()
         if request.method == 'GET':
-            config_page = get_config_page(module_config)
+            config_page, app_config_dict = get_config_page(module_config)
             return render_template("/web_app/config_page.html",
                                    config_page=config_page,
                                    page_info="Please save params",
@@ -267,20 +267,21 @@ def application_mode(broker):
                                     )
 
         if request.method == 'POST':
-            config_page = get_config_page(module_config,
+            config_page, app_config_dict = get_config_page(module_config,
                                           update_config=request.form)
+            broker.publish(EVENT_TYPE_CONFIG_UPDATED_MQTT, app_config_dict)
             restart_app = AUTO_RESTART_AFTER_UPDATE
             if restart_app:
                 return app_reboot(request)
             else:
                 return render_template("/web_app/config_page.html",
-                                   config_page=config_page,
-                                   page_info="Params saved !!!",
-                                   title=f"{title} Config page",
-                                   style_css_str=CSS_STYLE,
-                                   replace_symbol=False,
-                                    config_page_links = CONFIG_PAGE_LINKS,
-                                    )
+                               config_page=config_page,
+                               page_info="Params saved !!!",
+                               title=f"{title} Config page",
+                               style_css_str=CSS_STYLE,
+                               replace_symbol=False,
+                                config_page_links = CONFIG_PAGE_LINKS,
+                                )
 
     def get_app_configs():
         import sys
@@ -312,7 +313,7 @@ def application_mode(broker):
 
 
     def app_config_page(request):
-        print(request)
+       # print(request)
         if request.method == 'GET':
             mode_str, val_on, val_off = get_app_configs()
             return render_template("/web_app/app_config_page.html",
@@ -342,6 +343,7 @@ def application_mode(broker):
             crw.set_constants_from_config_dict(update_config)
             utime.sleep(2)
             mode_str, val_on, val_off = get_app_configs()
+            broker.publish(EVENT_TYPE_CONFIG_UPDATED_MQTT, app_config_dict)
             restart_app = AUTO_RESTART_AFTER_UPDATE
             if restart_app:
                 return app_reboot(request)
