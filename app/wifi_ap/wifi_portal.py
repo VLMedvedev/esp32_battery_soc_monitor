@@ -71,7 +71,7 @@ def start_ap():
 def start_captive_portal():
     ip = start_ap()
     print(f"Starting captive portal... ip {ip}")
-    dns.run_catchall(ip)
+    #dns.run_catchall(ip)
     server.run()
     return ip
 

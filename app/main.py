@@ -2,7 +2,7 @@ import asyncio
 from phew import logging
 from primitives import Broker, RingbufQueue
 from configs.sys_config import *
-from wifi_ap.wifi_portal import connect_to_wifi_ap, setup_wifi_mode, set_rtc, start_captive_portal, start_ap
+from wifi_ap.wifi_portal import connect_to_wifi_ap, setup_wifi_mode, set_rtc, machine_reset, start_ap
 import time
 # Settings
 from constants import *
@@ -204,8 +204,15 @@ async def main():
         if ip_addres is None:
             if AUTO_START_SETUP_WIFI:
                 setup_wifi_mode()
-            if AUTO_START_CAPTIVE_PORTAL:
-                asyncio.create_task(task_captive_portal())
+            # if AUTO_START_CAPTIVE_PORTAL:
+            #     asyncio.create_task(task_captive_portal())
+            if AUTO_START_WIFI_AP:
+                logging.info("[AUTO_START_WIFI_AP]")
+                ip_addres = start_ap()
+            if AUTO_RESTART_IF_NO_WIFI:
+                logging.info("[AUTO_RESTART_IF_NO_WIFI]")
+                time.sleep(20)
+                machine_reset()
         else:
             set_rtc()
             import mp_git
