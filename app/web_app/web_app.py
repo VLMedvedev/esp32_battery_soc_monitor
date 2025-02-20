@@ -344,11 +344,11 @@ def application_mode(broker):
             utime.sleep(2)
             mode_str, val_on, val_off = get_app_configs()
             broker.publish(EVENT_TYPE_CONFIG_UPDATED_MQTT, app_config_dict)
-            restart_app = AUTO_RESTART_AFTER_UPDATE
-            if restart_app:
-                return app_reboot(request)
-            else:
-                return render_template("/web_app/app_config_page.html",
+            # restart_app = AUTO_RESTART_AFTER_UPDATE
+            # if restart_app:
+            #     return app_reboot(request)
+            # else:
+            return render_template("/web_app/app_config_page.html",
                                        page_info="Params saved !!!",
                                        val_on=val_on,
                                        val_off=val_off,
