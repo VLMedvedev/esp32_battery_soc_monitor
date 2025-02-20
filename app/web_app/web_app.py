@@ -312,7 +312,7 @@ def application_mode(broker):
 
 
     def app_config_page(request):
-
+        print(request)
         if request.method == 'GET':
             mode_str, val_on, val_off = get_app_configs()
             return render_template("/web_app/app_config_page.html",
