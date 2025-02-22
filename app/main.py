@@ -260,6 +260,7 @@ async def main():
         asyncio.create_task(start_screen_timer())
 
     if f_start_loop:
+        logging.info("[loop.run_forever()]")
         loop = asyncio.get_event_loop()
         loop.run_forever()
 
