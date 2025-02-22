@@ -60,7 +60,6 @@ def setup_wifi_mode():
     server.set_callback(ap_catch_all)
     start_captive_portal()
 
-
 def start_ap():
     ap = access_point(APP_NAME)
     ip = ap.ifconfig()[0]

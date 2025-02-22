@@ -49,6 +49,7 @@ def check_and_calck_rele_state():
 
 async def can_processing():
     global soc_level, old_soc_level, off_level, on_level, rele_mode, f_rele_is_on, settings_mode
+    logging.info("[AUTO_START_CAN]")
     can_init()
     time.sleep(3)
     can_id_scan()
@@ -198,7 +199,6 @@ async def main():
     rele_mode = c_dict.get("MODE", RELE_BATTERY_LEVEL)
     # Start coroutine as a task and immediately return
 
-
     if AUTO_CONNECT_TO_WIFI_AP:
         ip_addres = connect_to_wifi_ap()
         if ip_addres is None:
@@ -222,7 +222,8 @@ async def main():
             logging.info("[AUTO_START_WIFI_AP]")
             ip_addres = start_ap()
     time.sleep(2)
-    print(f"ip_addres: {ip_addres}")
+
+    logging.info(f"ip_addres: {ip_addres}")
 
     # Main loop
     if AUTO_START_CAN:
@@ -235,16 +236,29 @@ async def main():
     if AUTO_START_OLED:
         asyncio.create_task(start_screen_timer())
 
+    f_start_loop = True
     if ip_addres is not None:
+        logging.info("[RUNNING ON-LINE]")
+       # asyncio.create_task(can_processing())
         if AUTO_START_UMQTT:
+            logging.info("[AUTO_START_UMQTT]")
             from mp_mqtt import start_mqtt_get
             asyncio.create_task(start_mqtt_get(broker))
         if AUTO_START_WEBREPL:
+            logging.info("[AUTO_START_WEBREPL]")
             import webrepl
             asyncio.create_task(webrepl.start())
         if AUTO_START_WEBAPP:
+            logging.info("[AUTO_START_WEBAPP]")
+            f_start_loop = False
             from web_app.web_app import application_mode
             asyncio.create_task(application_mode(broker))
+    else:
+        logging.info("[RUNNING OFF-LINE]")
+
+    if f_start_loop:
+        loop = asyncio.get_event_loop()
+        loop.run_forever()
 
 # Start event loop and run entry point coroutine
 asyncio.run(main())
