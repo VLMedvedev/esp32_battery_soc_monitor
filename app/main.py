@@ -22,6 +22,7 @@ old_soc_level = 50
 screen_timer = SCREEN_TIMER_SEC
 settings_mode = True
 ip_addres = None
+f_auto_start_oled = AUTO_START_OLED
 
 from mp_commander import (set_level_to_config_file,
                           set_rele_mode_to_config_file,
@@ -90,7 +91,7 @@ async def controller_processing():
     global off_level, on_level, rele_mode, f_rele_is_on, screen_timer, settings_mode
     logging.info("[controller_processing]")
     queue = RingbufQueue(20)
-    if AUTO_START_OLED:
+    if f_auto_start_oled:
         from oled.oled_display import OLED_Display
         logging.info("[start_oled_display]")
         oled =  OLED_Display()
@@ -213,7 +214,7 @@ async def main():
                 logging.info("[AUTO_RESTART_IF_NO_WIFI]")
                 time.sleep(20)
                 machine_reset()
-            AUTO_START_OLED = True
+            f_auto_start_oled = True
         else:
             set_rtc()
             import mp_git
@@ -223,7 +224,7 @@ async def main():
             logging.info("[AUTO_START_WIFI_AP]")
             ip_addres = start_ap()
         else:
-            AUTO_START_OLED = True
+            f_auto_start_oled = True
     time.sleep(2)
 
     logging.info(f"ip_addres: {ip_addres}")
@@ -256,7 +257,7 @@ async def main():
     else:
         logging.info("[RUNNING OFF-LINE]")
 
-    if AUTO_START_OLED:
+    if f_auto_start_oled:
         asyncio.create_task(start_screen_timer())
 
     if f_start_loop:

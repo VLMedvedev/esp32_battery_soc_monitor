@@ -1,7 +1,7 @@
 APP_NAME = "BatteryMonitor"
 APP_DOMAIN = "power-storage.eu"
 
-AUTO_CONNECT_TO_WIFI_AP = True
+AUTO_CONNECT_TO_WIFI_AP = False
 AUTO_SETUP_TIME = True
 AUTO_START_WIFI_AP = False
 AUTO_START_CAN = True
