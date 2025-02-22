@@ -76,8 +76,8 @@ class OLED_Display:
                 self.display.clear()
                 self.display.fill(0)
                 self.display.invert(0)
-                #self.display.select_font('text-16')
-                self.display.select_font(None)  # Select the built in 8 pixel font
+                self.display.select_font('text-16')
+               # self.display.select_font(None)  # Select the built in 8 pixel font
                 self.display.text(str("Wi-Fi"), 2, 2, 1, 0)
                 self.display.text(str("AP ON"), 2, 12, 1, 0)
                 self.display.show()
@@ -96,9 +96,9 @@ class OLED_Display:
                 self.display.clear()
                 self.display.fill(0)
                 self.display.invert(0)
-               # self.display.select_font('text-16')
-                self.display.select_font(None)  # Select the built in 8 pixel font
+                self.display.select_font('text-16')
                 self.display.text(str("Wi-Fi"), 2, 2, 1, 0)
+                self.display.select_font(None)  # Select the built in 8 pixel font
                 self.display.text(str("client"), 2, 12, 1, 0)
                 self.display.show()
 
