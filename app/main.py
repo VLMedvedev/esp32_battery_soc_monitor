@@ -213,6 +213,7 @@ async def main():
                 logging.info("[AUTO_RESTART_IF_NO_WIFI]")
                 time.sleep(20)
                 machine_reset()
+            AUTO_START_OLED = True
         else:
             set_rtc()
             import mp_git
@@ -221,6 +222,8 @@ async def main():
         if AUTO_START_WIFI_AP:
             logging.info("[AUTO_START_WIFI_AP]")
             ip_addres = start_ap()
+        else:
+            AUTO_START_OLED = True
     time.sleep(2)
 
     logging.info(f"ip_addres: {ip_addres}")
