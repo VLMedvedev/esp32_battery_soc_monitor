@@ -236,9 +236,6 @@ async def main():
     button_controller(broker)
     time.sleep(2)
 
-    if AUTO_START_OLED:
-        asyncio.create_task(start_screen_timer())
-
     f_start_loop = True
     if ip_addres is not None:
         logging.info("[RUNNING ON-LINE]")
@@ -258,6 +255,9 @@ async def main():
             asyncio.create_task(application_mode(broker))
     else:
         logging.info("[RUNNING OFF-LINE]")
+
+    if AUTO_START_OLED:
+        asyncio.create_task(start_screen_timer())
 
     if f_start_loop:
         loop = asyncio.get_event_loop()
