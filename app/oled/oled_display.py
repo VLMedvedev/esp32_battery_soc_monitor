@@ -58,40 +58,50 @@ class OLED_Display:
 
     def view_info(self, wifi_mode,ip_addres):
         # TODO view_info()
-        if wifi_mode == WIFI_MODE_AP:
-            print(f"wifi_mode {wifi_mode} AP ")
+        if ip_addres is not None:
+            print(f"wifi_mode {wifi_mode} ")
             self.display.clear()
             self.display.fill(0)
             self.display.invert(0)
-            #self.display.select_font('text-16')
+            # self.display.select_font('text-16')
             self.display.select_font(None)  # Select the built in 8 pixel font
             self.display.text(str("Wi-Fi"), 2, 2, 1, 0)
-            self.display.text(str("AP ON"), 2, 12, 1, 0)
+            self.display.text(str(wifi_mode), 2, 12, 1, 0)
             self.display.text(str(ip_addres[:7]), 2, 22, 1, 0)
             self.display.text(str(ip_addres[7:]), 2, 34, 1, 0)
             self.display.show()
-        elif wifi_mode == WIFI_MODE_OFF :
-            print(f"wifi_mode {wifi_mode} off")
-            self.display.clear()
-            self.display.fill(0)
-            self.display.invert(0)
-            self.display.select_font('text-16')
-            self.display.text(str("Wi-Fi"), 2, 2, 1, 0)
-            self.display.text(str("AP OFF"), 2, 20, 1, 0)
-           # self.display.text(str(""), 2, 36, 1, 0)
-            self.display.show()
-        elif wifi_mode == WIFI_MODE_CLIENT :
-            print(f"wifi_mode {wifi_mode} client")
-            self.display.clear()
-            self.display.fill(0)
-            self.display.invert(0)
-           # self.display.select_font('text-16')
-            self.display.select_font(None)  # Select the built in 8 pixel font
-            self.display.text(str("Wi-Fi"), 2, 2, 1, 0)
-            self.display.text(str("client"), 2, 12, 1, 0)
-            self.display.text(str(ip_addres[:7]), 2, 22, 1, 0)
-            self.display.text(str(ip_addres[7:]), 2, 34, 1, 0)
-            self.display.show()
+        else:
+            if wifi_mode == WIFI_MODE_AP:
+                print(f"wifi_mode {wifi_mode} AP ")
+                self.display.clear()
+                self.display.fill(0)
+                self.display.invert(0)
+                #self.display.select_font('text-16')
+                self.display.select_font(None)  # Select the built in 8 pixel font
+                self.display.text(str("Wi-Fi"), 2, 2, 1, 0)
+                self.display.text(str("AP ON"), 2, 12, 1, 0)
+                self.display.show()
+            elif wifi_mode == WIFI_MODE_OFF :
+                print(f"wifi_mode {wifi_mode} off")
+                self.display.clear()
+                self.display.fill(0)
+                self.display.invert(0)
+                self.display.select_font('text-16')
+                self.display.text(str("Wi-Fi"), 2, 2, 1, 0)
+                self.display.text(str("AP OFF"), 2, 20, 1, 0)
+               # self.display.text(str(""), 2, 36, 1, 0)
+                self.display.show()
+            elif wifi_mode == WIFI_MODE_CLIENT :
+                print(f"wifi_mode {wifi_mode} client")
+                self.display.clear()
+                self.display.fill(0)
+                self.display.invert(0)
+               # self.display.select_font('text-16')
+                self.display.select_font(None)  # Select the built in 8 pixel font
+                self.display.text(str("Wi-Fi"), 2, 2, 1, 0)
+                self.display.text(str("client"), 2, 12, 1, 0)
+                self.display.show()
+
 
         return None
 

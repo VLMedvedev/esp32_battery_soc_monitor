@@ -23,6 +23,7 @@ screen_timer = SCREEN_TIMER_SEC
 settings_mode = True
 ip_addres = None
 f_auto_start_oled = AUTO_START_OLED
+wifi_mode = None
 
 from mp_commander import (set_level_to_config_file,
                           set_rele_mode_to_config_file,
@@ -47,6 +48,14 @@ def check_and_calck_rele_state():
 
     return f_change_rele_state
 
+def get_wifi_mode():
+    global wifi_mode
+    wifi_mode = WIFI_MODE_OFF
+    if AUTO_START_WIFI_AP:
+        wifi_mode = WIFI_MODE_AP
+    elif AUTO_CONNECT_TO_WIFI_AP:
+        wifi_mode = WIFI_MODE_AP
+    return wifi_mode
 
 async def can_processing():
     global soc_level, old_soc_level, off_level, on_level, rele_mode, f_rele_is_on, settings_mode
@@ -88,7 +97,7 @@ async def can_processing():
         await asyncio.sleep(CAN_SOC_CHECK_PERIOD_SEC)
 
 async def controller_processing():
-    global off_level, on_level, rele_mode, f_rele_is_on, screen_timer, settings_mode
+    global off_level, on_level, rele_mode, f_rele_is_on, screen_timer, settings_mode, f_auto_start_oled
     logging.info("[controller_processing]")
     queue = RingbufQueue(20)
     if f_auto_start_oled:
@@ -140,12 +149,14 @@ async def controller_processing():
                 oled.draw_off()
             elif message == VIEW_MODE_RELE_ON:
                 oled.draw_on()
-            elif message == VIEW_MODE_WIFI_OFF_INFO:
-                oled.view_info(WIFI_MODE_OFF, ip_addres)
-            elif message == VIEW_MODE_WIFI_AP_INFO:
-                oled.view_info(WIFI_MODE_AP, ip_addres)
-            elif message == VIEW_MODE_WIFI_CLI_INFO:
-                oled.view_info(WIFI_MODE_CLIENT, ip_addres)
+            elif message == VIEW_MODE_WIFI_INFO:
+                oled.view_info(wifi_mode, ip_addres)
+            elif message == VIEW_MODE_WIFI_OFF:
+                oled.view_info(WIFI_MODE_OFF, None)
+            elif message == VIEW_MODE_WIFI_AP_ON:
+                oled.view_info(WIFI_MODE_AP, None)
+            elif message == VIEW_MODE_WIFI_CLI:
+                oled.view_info(WIFI_MODE_CLIENT, None)
             elif message == VIEW_MODE_SETTINGS:
                 oled.view_settings()
         if topic == EVENT_TYPE_CAN_SOC_READ_OLED:
@@ -189,7 +200,7 @@ async def task_captive_portal():
 
 # Coroutine: entry point for asyncio program
 async def main():
-    global off_level, on_level, rele_mode, f_rele_is_on
+    global off_level, on_level, rele_mode, f_rele_is_on, f_auto_start_oled
     global ip_addres
     file_config_name = "app_config"
     cr = ConstansReaderWriter(file_config_name)
@@ -199,6 +210,8 @@ async def main():
     on_level = c_dict.get("ON_LEVEL", 98)
     rele_mode = c_dict.get("MODE", RELE_BATTERY_LEVEL)
     # Start coroutine as a task and immediately return
+
+    get_wifi_mode()
 
     if AUTO_CONNECT_TO_WIFI_AP:
         ip_addres = connect_to_wifi_ap()

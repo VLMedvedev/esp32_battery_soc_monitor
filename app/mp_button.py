@@ -33,15 +33,18 @@ def button_controller(broker):
                 broker.publish(TOPIC_COMMAND_LEVEL_DOWN, "ON_LEVEL")
                 broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_SETTING_UP_ON_LEVEL)
         elif event_type == EVENT_TYPE_DOUBLE_PRESS_BUTTON:
-            if btn_number == HW_BT_RIGTH_DOWN or btn_number == HW_BT_LEFT_DOWN:
+            if btn_number == HW_BT_RIGTH_DOWN:
+              #  broker.publish(TOPIC_COMMAND_WIFI_MODE, WIFI_MODE_OFF)
+                broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_WIFI_INFO)
+            elif btn_number == HW_BT_LEFT_DOWN:
                 broker.publish(TOPIC_COMMAND_WIFI_MODE, WIFI_MODE_OFF)
-                broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_WIFI_OFF_INFO)
+                broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_WIFI_OFF)
             elif btn_number == HW_BT_LEFT_UP:
                 broker.publish(TOPIC_COMMAND_WIFI_MODE, WIFI_MODE_CLIENT)
-                broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_WIFI_CLI_INFO)
+                broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_WIFI_CLI)
             elif btn_number == HW_BT_RIGTH_UP:
                 broker.publish(TOPIC_COMMAND_WIFI_MODE, WIFI_MODE_AP)
-                broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_WIFI_AP_INFO)
+                broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_WIFI_AP_ON)
         elif event_type == EVENT_TYPE_LONG_PRESS_BUTTON:
             if btn_number == HW_BT_LEFT_DOWN:
                 broker.publish(TOPIC_COMMAND_RELE_MODE, RELE_ALWAYS_OFF)
