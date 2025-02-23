@@ -111,7 +111,7 @@ def set_wifi_mode(wifi_mode):
     if wifi_mode == WIFI_MODE_AP:
         print(f"wifi_mode {wifi_mode} AP ")
         const_dict = {  'AUTO_CONNECT_TO_WIFI_AP': False,
-                        'AUTO_START_WIFI_AP', True,
+                        'AUTO_START_WIFI_AP': True,
                         'AUTO_START_UMQTT' : False,
                         'AUTO_START_WEBAPP' : True,
                         'AUTO_START_OLED' : True,
@@ -122,7 +122,7 @@ def set_wifi_mode(wifi_mode):
     elif wifi_mode == WIFI_MODE_OFF:
         print(f"wifi_mode {wifi_mode} off")
         const_dict = {  'AUTO_CONNECT_TO_WIFI_AP': False,
-                        'AUTO_START_WIFI_AP', False,
+                        'AUTO_START_WIFI_AP': False,
                         'AUTO_START_UMQTT' : False,
                         'AUTO_START_WEBAPP' : False,
                         'AUTO_START_OLED' : True,
@@ -134,7 +134,7 @@ def set_wifi_mode(wifi_mode):
     elif wifi_mode == WIFI_MODE_CLIENT:
         print(f"wifi_mode {wifi_mode} client")
         const_dict = {  'AUTO_CONNECT_TO_WIFI_AP': True,
-                        'AUTO_START_WIFI_AP', False,
+                        'AUTO_START_WIFI_AP': False,
                         'AUTO_START_UMQTT' : True,
                         'AUTO_START_WEBAPP' : True,
                         'AUTO_START_OLED' : True,
