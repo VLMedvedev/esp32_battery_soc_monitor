@@ -289,33 +289,37 @@ def application_mode(broker):
         obj = __import__(mod_name)
         del sys.modules[mod_name]
         from configs.app_config import ON_LEVEL, OFF_LEVEL, MODE
-        mode = MODE
-        val_on = ON_LEVEL
-        val_off = OFF_LEVEL
+        from constants import RELE_ALWAYS_OFF, RELE_ALWAYS_ON, RELE_BATTERY_LEVEL
+        from configs.constants_saver import ConstansReaderWriter
+        cr = ConstansReaderWriter("app_config")
+        c_dict = cr.get_dict()
+        print(c_dict)
+        val_off = c_dict.get("OFF_LEVEL", 10)
+        val_on = c_dict.get("ON_LEVEL", 98)
+        mode = c_dict.get("MODE", RELE_BATTERY_LEVEL)
 
         check_AUTO = ""
         check_ALLWAYS_ON = ""
         check_ALLWAYS_OFF = ""
-        if mode == "ALLWAYS_ON":
+        if mode == RELE_ALWAYS_ON:
             check_ALLWAYS_ON = "checked"
-        elif mode == "ALLWAYS_OFF":
+        if mode == RELE_ALWAYS_OFF:
             check_ALLWAYS_OFF = "checked"
-        elif mode == "AUTO":
+        if mode == RELE_BATTERY_LEVEL:
             check_AUTO = "checked"
 
         mode_str = f"""
-               <input type="radio" name="MODE" value="AUTO" id="AUTO" {check_AUTO}><label for="AUTO">&nbsp;AUTO</label><br>
-               <input type="radio" name="MODE" value="ALLWAYS_ON" id="ALLWAYS_ON" {check_ALLWAYS_ON}><label for="ALLWAYS_ON">&nbsp;ALLWAYS_ON</label><br>
-               <input type="radio" name="MODE" value="ALLWAYS_OFF" id="ALLWAYS_OFF" {check_ALLWAYS_OFF}><label for="ALLWAYS_OFF">&nbsp;ALLWAYS_OFF</label><br>    
+               <input type="radio" name="MODE" value="RELE_BATTERY_LEVEL" id="RELE_BATTERY_LEVEL" {check_AUTO}><label for="RELE_BATTERY_LEVEL">&nbsp;RELE_BATTERY_LEVEL</label><br>
+               <input type="radio" name="MODE" value="RELE_ALWAYS_ON" id="RELE_ALWAYS_ON" {check_ALLWAYS_ON}><label for="RELE_ALWAYS_ON">&nbsp;RELE_ALWAYS_ON</label><br>
+               <input type="radio" name="MODE" value="RELE_ALWAYS_OFF" id="RELE_ALWAYS_OFF" {check_ALLWAYS_OFF}><label for="RELE_ALWAYS_OFF">&nbsp;RELE_ALWAYS_OFF</label><br>    
            """
-
         return mode_str, val_on, val_off
-
 
     def app_config_page(request):
        # print(request)
         if request.method == 'GET':
             mode_str, val_on, val_off = get_app_configs()
+            print(mode_str, val_on, val_off)
             return render_template("/web_app/app_config_page.html",
                                    page_info="Please save params",
                                    title="APP Config page",
