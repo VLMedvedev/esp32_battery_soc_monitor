@@ -22,7 +22,7 @@ soc_level = 50
 old_soc_level = 50
 screen_timer = SCREEN_TIMER_SEC
 settings_mode = True
-ip_addres = None
+ip_address = None
 f_auto_start_oled = AUTO_START_OLED
 wifi_mode = None
 f_reset = False
@@ -111,7 +111,7 @@ async def can_processing():
 
 async def controller_processing():
     global off_level, on_level, rele_mode, f_rele_is_on, screen_timer, settings_mode, \
-        f_auto_start_oled, f_reset, ip_addres, wifi_mode
+        f_auto_start_oled, f_reset, ip_address, wifi_mode
     logging.info("[controller_processing]")
     queue = RingbufQueue(20)
     if f_auto_start_oled:
@@ -223,14 +223,14 @@ async def start_screen_timer():
             screen_timer = 0
 
 async def task_captive_portal():
-    global ip_addres
+    global ip_address
     logging.info("[start_captive_portal]")
     ip_addres = start_captive_portal()
 
 # Coroutine: entry point for asyncio program
 async def main():
     global off_level, on_level, rele_mode, f_rele_is_on, f_auto_start_oled
-    global ip_addres
+    global ip_address
     file_config_name = "app_config"
     cr = ConstansReaderWriter(file_config_name)
     c_dict = cr.get_dict()

@@ -11,14 +11,19 @@ from constants import *
 
 WIFI_MAX_ATTEMPTS = 3
 AP_TEMPLATE_PATH = "/wifi_ap"
+ip_address = None
+broker = None
 
 def machine_reset():
     utime.sleep(5)
     print("Resetting...")
     machine.reset()
 
-def setup_wifi_mode(ip_addres, broker):
+def setup_wifi_mode(ip_addr, brok):
     print("Entering setup mode...")
+    global ip_address, broker
+    ip_address = ip_addr
+    broker = brok
 
     def scan_wifi_ap():
         import network
@@ -64,7 +69,7 @@ def setup_wifi_mode(ip_addres, broker):
     server.add_route("/", handler = ap_index, methods = ["GET"])
     server.add_route("/configure", handler = ap_configure, methods = ["POST"])
     server.set_callback(ap_catch_all)
-    ip = start_captive_portal()
+    start_captive_portal()
     print(f"Captive portal started on ip {ip}")
 
 def start_ap():
@@ -75,10 +80,10 @@ def start_ap():
     return ip
 
 def start_captive_portal():
-    global ip_addres, broker
+    global ip_address, broker
     ip = start_ap()
     print(f"Starting captive portal... ip {ip}")
-    ip_addres = ip
+    ip_address = ip
     broker.publish(TOPIC_COMMAND_WIFI_MODE, None)
     broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_WIFI_INFO)
     server.run()
