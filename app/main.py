@@ -54,7 +54,8 @@ def get_wifi_mode():
     if AUTO_START_WIFI_AP:
         wifi_mode = WIFI_MODE_AP
     elif AUTO_CONNECT_TO_WIFI_AP:
-        wifi_mode = WIFI_MODE_AP
+        wifi_mode = WIFI_MODE_CLIENT
+    logging.info(f"[get_wifi_mode] {wifi_mode}")
     return wifi_mode
 
 async def can_processing():
