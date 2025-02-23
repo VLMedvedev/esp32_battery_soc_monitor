@@ -206,10 +206,16 @@ async def main():
     file_config_name = "app_config"
     cr = ConstansReaderWriter(file_config_name)
     c_dict = cr.get_dict()
-    logging.info(f"c_dict: {c_dict}")
+    logging.info(f"app_config: {c_dict}")
     off_level = c_dict.get("OFF_LEVEL", 10)
     on_level = c_dict.get("ON_LEVEL", 98)
     rele_mode = c_dict.get("MODE", RELE_BATTERY_LEVEL)
+
+    file_config_name = "sys_config"
+    cr = ConstansReaderWriter(file_config_name)
+    c_dict = cr.get_dict()
+    logging.info(f"sys_config: {c_dict}")
+
     # Start coroutine as a task and immediately return
 
     get_wifi_mode()
