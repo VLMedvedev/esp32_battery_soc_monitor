@@ -419,6 +419,7 @@ def application_mode(broker):
     server.add_route("/reset", handler=app_reset, methods=["GET"])
     server.add_route("/reboot", handler=app_reboot, methods=["GET"])
     server.add_route("/", handler=app_config_page, methods=["POST",'GET'])
+    server.add_route("/app_config_page", handler=app_config_page, methods=["POST",'GET'])
     #os.chdir("/configs")
 
     # Add other routes for your application...
