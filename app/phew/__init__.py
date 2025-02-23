@@ -99,5 +99,5 @@ def access_point(ssid, password = None, ip_conf=None):
     wlan.config(security=0) # disable password
   #WLAN.ifconfig([(ip, subnet, gateway, dns)])
   if ip_conf is not None:
-    wlan.ifconfig(ip_conf)
+    wlan.ifconfig(ip_conf[0], ip_conf[1], ip_conf[2], ip_conf[3])
   return wlan

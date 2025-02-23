@@ -68,8 +68,8 @@ def setup_wifi_mode(ip_address):
     #print(f"Captive portal started on ip {ip}")
 
 def start_ap():
-    ip_config = (AP_IP, '255.255.255.0', AP_IP, AP_IP)
-    ap = access_point(AP_NAME,ip_config)
+    ip_conf = tuple(AP_IP, '255.255.255.0', AP_IP, AP_IP)
+    ap = access_point(AP_NAME,ip_conf)
     ip = ap.ifconfig()[0]
     print(f"Starting ap... ip {ip}")
     dns.run_catchall(ip)
