@@ -191,7 +191,7 @@ async def start_screen_timer():
     logging.info("[start_screen_timer]")
     while True:
         await asyncio.sleep(1)
-        logging.info(f"timer screen... {screen_timer}")
+       # logging.info(f"timer screen... {screen_timer}")
         if screen_timer == 1:
             logging.info(f"redraw screen... reset {f_reset}")
             if f_reset:

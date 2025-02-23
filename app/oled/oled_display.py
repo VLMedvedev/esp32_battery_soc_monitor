@@ -101,9 +101,8 @@ class OLED_Display:
                 self.display.select_font(None)  # Select the built in 8 pixel font
                 self.display.text(str(""), 2, 12, 1, 0)
                 self.display.text(str("client"), 2, 12, 1, 0)
+                self.display.text(str("ON"), 2, 20, 1, 0)
                 self.display.show()
-
-
         return None
 
     def battery_charge_level_ico(self, level: int):
