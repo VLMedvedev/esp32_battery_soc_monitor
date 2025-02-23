@@ -78,7 +78,6 @@ def start_captive_portal():
     #global
     ip = start_ap()
     print(f"Starting captive portal... ip {ip}")
-    ip_address = ip
     server.run()
 
 def connect_to_wifi_ap():
