@@ -8,7 +8,7 @@ def machine_reset():
     import machine
     import time
     time.sleep(3)
-    print("Resetting...")
+    logging.info("Resetting...")
     machine.reset()
 
 def mqtt_in_command(msg_tuple):

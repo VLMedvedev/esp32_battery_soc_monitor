@@ -180,6 +180,9 @@ async def start_screen_timer():
         logging.info(f"timer screen... {screen_timer}")
         if screen_timer == 1:
             logging.info("redraw screen...")
+            if f_reset:
+                f_reset = False
+                machine_reset()
             f_change_rele_state = check_and_calck_rele_state()
             if rele_mode == RELE_BATTERY_LEVEL:
                 broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_RELE_SOC_AUTO)
@@ -191,9 +194,7 @@ async def start_screen_timer():
                 # rele_mode = RELE_BATTERY_LEVEL
                 broker.publish(EVENT_TYPE_RELE_ON_OFF_MQTT, f_rele_is_on)
             settings_mode = False
-            if f_reset:
-                f_reset = False
-                await machine_reset()
+
         screen_timer -= 1
         if screen_timer < 0:
             screen_timer = 0
