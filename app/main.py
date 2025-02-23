@@ -2,7 +2,7 @@ import asyncio
 from phew import logging
 from primitives import Broker, RingbufQueue
 from configs.sys_config import *
-from wifi_ap.wifi_portal import connect_to_wifi_ap, setup_wifi_mode, set_rtc, machine_reset, start_ap
+from wifi_ap.wifi_portal import connect_to_wifi_ap, setup_wifi_mode, set_rtc, start_ap
 import time
 # Settings
 from constants import *
@@ -24,13 +24,15 @@ settings_mode = True
 ip_addres = None
 f_auto_start_oled = AUTO_START_OLED
 wifi_mode = None
+f_reset = False
 
 from mp_commander import (set_level_to_config_file,
                           set_rele_mode_to_config_file,
                           check_mode_and_calk_rele_state,
                           set_rele_on_off,
                           set_wifi_mode,
-                          mqtt_in_command)
+                          mqtt_in_command,
+                          machine_reset)
 from machine import Pin
 from configs.hw_config import HW_LED_PIN, HW_RELE_PIN
 pin_rele = Pin(HW_RELE_PIN, Pin.OUT, value=0)
@@ -189,6 +191,9 @@ async def start_screen_timer():
                 # rele_mode = RELE_BATTERY_LEVEL
                 broker.publish(EVENT_TYPE_RELE_ON_OFF_MQTT, f_rele_is_on)
             settings_mode = False
+            if f_reset:
+                f_reset = False
+                await machine_reset()
         screen_timer -= 1
         if screen_timer < 0:
             screen_timer = 0
