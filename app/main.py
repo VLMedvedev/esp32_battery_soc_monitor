@@ -116,10 +116,10 @@ async def controller_processing():
     queue = RingbufQueue(20)
     if f_auto_start_oled:
         from oled.oled_display import OLED_Display
-        logging.info(f"[start_oled_display] wifi mode {wifi_mode} ip_address {ip_addres}")
+        logging.info(f"[start_oled_display] wifi mode {wifi_mode} ip_address {ip_address}")
         oled =  OLED_Display()
         #oled.draw_charge_level(soc_level, f_rele_is_on)
-        oled.view_info(wifi_mode, ip_addres)
+        oled.view_info(wifi_mode, ip_address)
         broker.subscribe(TOPIC_COMMAND_VIEW_MODE, queue)
         broker.subscribe(EVENT_TYPE_CAN_SOC_READ_OLED, queue)
     broker.subscribe(TOPIC_COMMAND_WIFI_MODE, queue)
@@ -169,7 +169,7 @@ async def controller_processing():
             elif message == VIEW_MODE_RELE_ON:
                 oled.draw_on()
             elif message == VIEW_MODE_WIFI_INFO:
-                oled.view_info(wifi_mode, ip_addres)
+                oled.view_info(wifi_mode, ip_address)
             elif message == VIEW_MODE_WIFI_OFF:
                 oled.view_info(WIFI_MODE_OFF, None)
             elif message == VIEW_MODE_WIFI_AP_ON:
@@ -203,17 +203,20 @@ async def start_screen_timer():
                 await asyncio.sleep(3)
                 #f_reset = False
                 machine.reset()
-            f_change_rele_state = check_and_calck_rele_state()
-            if rele_mode == RELE_BATTERY_LEVEL:
-                broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_RELE_SOC_AUTO)
-            elif rele_mode == RELE_ALWAYS_ON:
-                broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_RELE_ON)
-            elif rele_mode == RELE_ALWAYS_OFF:
-                broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_RELE_OFF)
-            if f_change_rele_state:
-                # rele_mode = RELE_BATTERY_LEVEL
-                broker.publish(EVENT_TYPE_RELE_ON_OFF_MQTT, f_rele_is_on)
-            settings_mode = False
+            if wifi_mode == WIFI_MODE_SETUP:
+                broker.publish(TOPIC_COMMAND_WIFI_MODE, None)
+                broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_WIFI_INFO)
+            else:
+                f_change_rele_state = check_and_calck_rele_state()
+                if rele_mode == RELE_BATTERY_LEVEL:
+                    broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_RELE_SOC_AUTO)
+                elif rele_mode == RELE_ALWAYS_ON:
+                    broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_RELE_ON)
+                elif rele_mode == RELE_ALWAYS_OFF:
+                    broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_RELE_OFF)
+                if f_change_rele_state:
+                    broker.publish(EVENT_TYPE_RELE_ON_OFF_MQTT, f_rele_is_on)
+                settings_mode = False
         elif screen_timer == 3:
             if f_reset:
                 broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_RESET)
@@ -222,15 +225,9 @@ async def start_screen_timer():
         if screen_timer < 0:
             screen_timer = 0
 
-async def task_captive_portal():
-    global ip_address
-    logging.info("[start_captive_portal]")
-    ip_addres = start_captive_portal()
-
 # Coroutine: entry point for asyncio program
 async def main():
-    global off_level, on_level, rele_mode, f_rele_is_on, f_auto_start_oled
-    global ip_address
+    global off_level, on_level, rele_mode, f_rele_is_on, f_auto_start_oled, ip_address, broker, wifi_mode
     file_config_name = "app_config"
     cr = ConstansReaderWriter(file_config_name)
     c_dict = cr.get_dict()
@@ -247,21 +244,19 @@ async def main():
     get_wifi_mode()
 
     if AUTO_CONNECT_TO_WIFI_AP:
-        ip_addres, ssid = connect_to_wifi_ap()
+        ip_address, ssid = connect_to_wifi_ap()
         if ssid is None:
             if AUTO_START_SETUP_WIFI:
                 f_auto_start_oled = True
+                wifi_mode = WIFI_MODE_SETUP
                 asyncio.create_task(controller_processing())
-                #broker.publish(TOPIC_COMMAND_WIFI_MODE, None)
-                #broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_WIFI_INFO)
                 #button_controller(broker)
-                #asyncio.create_task(start_screen_timer())
-                setup_wifi_mode(ip_addres, broker)
-
-        if ip_addres is None:
+                asyncio.create_task(start_screen_timer())
+                setup_wifi_mode(ip_address)
+        if ip_address is None:
             if AUTO_START_WIFI_AP:
                 logging.info("[AUTO_START_WIFI_AP]")
-                ip_addres = start_ap()
+                ip_address = start_ap()
             if AUTO_RESTART_IF_NO_WIFI:
                 logging.info("[AUTO_RESTART_IF_NO_WIFI]")
                 time.sleep(20)
@@ -274,12 +269,12 @@ async def main():
     else:
         if AUTO_START_WIFI_AP:
             logging.info("[AUTO_START_WIFI_AP]")
-            ip_addres = start_ap()
+            ip_address = start_ap()
         else:
             f_auto_start_oled = True
     time.sleep(2)
 
-    logging.info(f"ip_addres: {ip_addres}")
+    logging.info(f"ip_addres: {ip_address}")
 
     # Main loop
     if AUTO_START_CAN:
@@ -292,7 +287,7 @@ async def main():
     time.sleep(2)
 
     f_start_loop = True
-    if ip_addres is not None:
+    if ip_address is not None:
         logging.info("[RUNNING ON-LINE]")
        # asyncio.create_task(can_processing())
         if AUTO_START_UMQTT:

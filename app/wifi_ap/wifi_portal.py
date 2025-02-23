@@ -7,23 +7,18 @@ import machine
 from configs.constants_saver import ConstansReaderWriter
 from configs.sys_config import *
 from configs.wifi_ap_config import PASSWORD
-from constants import *
+#from constants import *
 
 WIFI_MAX_ATTEMPTS = 3
 AP_TEMPLATE_PATH = "/wifi_ap"
-ip_address = None
-broker = None
 
 def machine_reset():
     utime.sleep(5)
     print("Resetting...")
     machine.reset()
 
-def setup_wifi_mode(ip_addr, brok):
+def setup_wifi_mode(ip_address):
     print("Entering setup mode...")
-    global ip_address, broker
-    ip_address = ip_addr
-    broker = brok
 
     def scan_wifi_ap():
         import network
@@ -69,8 +64,8 @@ def setup_wifi_mode(ip_addr, brok):
     server.add_route("/", handler = ap_index, methods = ["GET"])
     server.add_route("/configure", handler = ap_configure, methods = ["POST"])
     server.set_callback(ap_catch_all)
-    start_captive_portal()
-    print(f"Captive portal started on ip {ip}")
+    start_captive_portal(ip_address)
+    #print(f"Captive portal started on ip {ip}")
 
 def start_ap():
     ap = access_point(APP_NAME)
@@ -79,15 +74,12 @@ def start_ap():
     dns.run_catchall(ip)
     return ip
 
-def start_captive_portal():
-    global ip_address, broker
+def start_captive_portal(ip_address):
+    #global
     ip = start_ap()
     print(f"Starting captive portal... ip {ip}")
     ip_address = ip
-    broker.publish(TOPIC_COMMAND_WIFI_MODE, None)
-    broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_WIFI_INFO)
     server.run()
-    return ip
 
 def connect_to_wifi_ap():
     # Figure out which mode to start up in...
