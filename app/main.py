@@ -116,7 +116,7 @@ async def controller_processing():
     queue = RingbufQueue(20)
     if f_auto_start_oled:
         from oled.oled_display import OLED_Display
-        logging.info("[start_oled_display]")
+        logging.info(f"[start_oled_display] wifi mode {wifi_mode} ip_address {ip_addres}")
         oled =  OLED_Display()
         #oled.draw_charge_level(soc_level, f_rele_is_on)
         oled.view_info(wifi_mode, ip_addres)
@@ -252,8 +252,8 @@ async def main():
             if AUTO_START_SETUP_WIFI:
                 f_auto_start_oled = True
                 asyncio.create_task(controller_processing())
-                # broker.publish(TOPIC_COMMAND_WIFI_MODE, None)
-                # broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_WIFI_INFO)
+                #broker.publish(TOPIC_COMMAND_WIFI_MODE, None)
+                #broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_WIFI_INFO)
                 #button_controller(broker)
                 #asyncio.create_task(start_screen_timer())
                 setup_wifi_mode()
