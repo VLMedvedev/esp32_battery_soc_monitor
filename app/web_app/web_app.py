@@ -405,7 +405,7 @@ def application_mode(broker):
             server.add_route(f"/{module_name}", handler=config_page, methods=["POST",'GET'])
     os.chdir("/")
 
-    server.add_route("/", handler=app_index, methods=["GET"])
+   # server.add_route("/", handler=app_index, methods=["GET"])
     server.add_route("/canonical.html", handler=app_index, methods=["GET"])
     server.add_route("/hotspot-detect.html", handler=app_index, methods=["GET"])
     server.add_route("/toggle", handler=app_toggle_led, methods=["GET"])
@@ -418,7 +418,7 @@ def application_mode(broker):
     server.add_route("/soc", handler=app_get_soc, methods=["GET"])
     server.add_route("/reset", handler=app_reset, methods=["GET"])
     server.add_route("/reboot", handler=app_reboot, methods=["GET"])
-    server.add_route("/app_config_page", handler=app_config_page, methods=["POST",'GET'])
+    server.add_route("/", handler=app_config_page, methods=["POST",'GET'])
     #os.chdir("/configs")
 
     # Add other routes for your application...
