@@ -281,6 +281,8 @@ async def main():
     # Main loop
     asyncio.create_task(controller_processing())
     button_controller(broker)
+    #if f_auto_start_oled:
+    asyncio.create_task(start_screen_timer())
     time.sleep(2)
 
     f_start_loop = True
@@ -302,9 +304,6 @@ async def main():
             asyncio.create_task(application_mode(broker))
     else:
         logging.info("[RUNNING OFF-LINE]")
-
-    if f_auto_start_oled:
-        asyncio.create_task(start_screen_timer())
 
     if f_start_loop:
         logging.info("[loop.run_forever()]")
