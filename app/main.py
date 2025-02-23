@@ -248,8 +248,8 @@ async def main():
                 wifi_mode = AP_NAME
                 ip_address = AP_IP
                 asyncio.create_task(controller_processing())
-                #button_controller(broker)
-                #asyncio.create_task(start_screen_timer())
+                button_controller(broker)
+                asyncio.create_task(start_screen_timer())
                 setup_wifi_mode()
         if ip_address is None:
             if AUTO_START_WIFI_AP:
