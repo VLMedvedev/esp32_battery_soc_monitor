@@ -11,6 +11,7 @@ from mp_can import can_init, can_id_scan, can_soc_read
 from mp_button import button_controller
 
 broker = Broker()
+logging.broker = broker
 
 from configs.constants_saver import ConstansReaderWriter
 off_level = 10

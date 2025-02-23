@@ -13,6 +13,7 @@ async def broker_get_pub(mqtt_cli, broker: Broker):
     broker.subscribe(EVENT_TYPE_CONFIG_UPDATED_MQTT, queue)
     broker.subscribe(EVENT_TYPE_CAN_SOC_READ_MQTT, queue)
     broker.subscribe(EVENT_TYPE_RELE_ON_OFF_MQTT, queue)
+    broker.subscribe(EVENT_TYPE_MQTT_LOG, queue)
     async for topic, message in queue:
         print(f"[broker_get_pub] topic {topic}, message {message}")
         top = PUBLISH_TOPIC + "/" + topic
