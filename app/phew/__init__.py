@@ -91,8 +91,8 @@ def access_point(ssid, ip_ap, password = None):
   print(f"ssid {ssid} ip {ip_ap}")
   # start up network in access point mode  
   wlan = network.WLAN(network.AP_IF)
-  if ip_ap is not None:
-    #print(f"ip_ap {ip_ap}")
+  if len(ip_ap) > 0:
+    print(f"ip_ap {ip_ap}")
     wlan.ifconfig([ip_ap, "255.255.255.0", ip_ap, ip_ap])
   wlan.active(True)
   wlan.config(essid=ssid)

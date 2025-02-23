@@ -203,17 +203,17 @@ async def start_screen_timer():
                 await asyncio.sleep(3)
                 #f_reset = False
                 machine.reset()
-            if wifi_mode != AP_NAME:
-                f_change_rele_state = check_and_calck_rele_state()
-                if rele_mode == RELE_BATTERY_LEVEL:
-                    broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_RELE_SOC_AUTO)
-                elif rele_mode == RELE_ALWAYS_ON:
-                    broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_RELE_ON)
-                elif rele_mode == RELE_ALWAYS_OFF:
-                    broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_RELE_OFF)
-                if f_change_rele_state:
-                    broker.publish(EVENT_TYPE_RELE_ON_OFF_MQTT, f_rele_is_on)
-                settings_mode = False
+            #if wifi_mode != AP_NAME:
+            f_change_rele_state = check_and_calck_rele_state()
+            if rele_mode == RELE_BATTERY_LEVEL:
+                broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_RELE_SOC_AUTO)
+            elif rele_mode == RELE_ALWAYS_ON:
+                broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_RELE_ON)
+            elif rele_mode == RELE_ALWAYS_OFF:
+                broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_RELE_OFF)
+            if f_change_rele_state:
+                broker.publish(EVENT_TYPE_RELE_ON_OFF_MQTT, f_rele_is_on)
+            settings_mode = False
         elif screen_timer == 3:
             if f_reset:
                 broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_RESET)
