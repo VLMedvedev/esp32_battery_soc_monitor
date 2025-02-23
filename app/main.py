@@ -250,8 +250,9 @@ async def main():
             if AUTO_START_SETUP_WIFI:
                 f_auto_start_oled = True
                 asyncio.create_task(controller_processing())
+                broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_WIFI_INFO)
                 #button_controller(broker)
-                asyncio.create_task(start_screen_timer())
+                #asyncio.create_task(start_screen_timer())
                 setup_wifi_mode()
         if ip_addres is None:
             if AUTO_START_WIFI_AP:
