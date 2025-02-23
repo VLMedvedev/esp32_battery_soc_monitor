@@ -102,7 +102,6 @@ def set_level_to_config_file(topic_command, level_type, file_config_name):
     return const_dict
 
 def set_wifi_mode(wifi_mode):
-    f_reset = False
     const_dict = {}
     logging.info(f"change wifi_mode {wifi_mode}")
     if wifi_mode == WIFI_MODE_AP:
@@ -139,7 +138,7 @@ def set_wifi_mode(wifi_mode):
                         'AUTO_RESTART_IF_NO_WIFI' : True,
                         }
     else:
-        return f_reset
+        return const_dict
 
     logging.info(f"save to file const_dict {const_dict}")
     file_config_name="sys_config"
@@ -149,6 +148,4 @@ def set_wifi_mode(wifi_mode):
     cr.set_constants_from_config_dict(const_dict)
     cr.save_constants_to_file()
     logging.info(f"save to file {file_config_name}")
-  #  machine_reset()
-    f_reset = True
-    return f_reset
+    return const_dict

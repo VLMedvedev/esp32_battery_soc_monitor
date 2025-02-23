@@ -210,6 +210,15 @@ class OLED_Display:
         self.display.show()
         return self.display
 
+    def draw_reset(self):
+        self.display.clear()
+        self.display.fill(0)
+        self.display.invert(0)
+        # self.display.select_font('text-16')
+        self.display.select_font(None)  # Select the built in 8 pixel font
+        self.display.text(str("reset...."), 2, 2, 1, 0)
+        self.display.show()
+
 
 if __name__ == "__main__":
     pass

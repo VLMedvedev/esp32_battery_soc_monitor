@@ -144,7 +144,10 @@ async def controller_processing():
         if topic == TOPIC_COMMAND_WIFI_MODE:
             screen_timer = SCREEN_TIMER_SEC
             settings_mode = True
-            f_reset = set_wifi_mode(message)
+            c_dict = set_wifi_mode(message)
+            if len(c_dict) > 0:
+                f_reset = True
+                broker.publish(EVENT_TYPE_CONFIG_UPDATED_MQTT, c_dict)
         if topic == TOPIC_COMMAND_VIEW_MODE:
             if message == VIEW_MODE_SETTING_DOWN_OFF_LEVEL:
                 oled.draw_setting_level(off_level, button_group="down")
@@ -170,6 +173,8 @@ async def controller_processing():
                 oled.view_info(WIFI_MODE_CLIENT, None)
             elif message == VIEW_MODE_SETTINGS:
                 oled.view_settings()
+            elif message == VIEW_MODE_RESET:
+                oled.draw_reset()
         if topic == EVENT_TYPE_CAN_SOC_READ_OLED:
             oled.draw_charge_level(message, f_rele_is_on)
         if topic == EVENT_TYPE_MQTT_IN_COMMAND:
@@ -213,7 +218,6 @@ async def task_captive_portal():
     global ip_addres
     logging.info("[start_captive_portal]")
     ip_addres = start_captive_portal()
-
 
 # Coroutine: entry point for asyncio program
 async def main():
