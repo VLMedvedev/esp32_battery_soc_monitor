@@ -241,15 +241,17 @@ async def main():
     cr = ConstansReaderWriter(file_config_name)
     c_dict = cr.get_dict()
     logging.info(f"sys_config: {c_dict}")
-
     # Start coroutine as a task and immediately return
-
     get_wifi_mode()
 
     if AUTO_CONNECT_TO_WIFI_AP:
         ip_addres, ssid = connect_to_wifi_ap()
         if ssid is None:
             if AUTO_START_SETUP_WIFI:
+                f_auto_start_oled = True
+                asyncio.create_task(controller_processing())
+                #button_controller(broker)
+                asyncio.create_task(start_screen_timer())
                 setup_wifi_mode()
         if ip_addres is None:
             if AUTO_START_WIFI_AP:
