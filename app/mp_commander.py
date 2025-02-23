@@ -126,6 +126,15 @@ def set_wifi_mode(wifi_mode):
                         'AUTO_START_SETUP_WIFI' : False,
                         'AUTO_RESTART_IF_NO_WIFI' : False,
                         }
+
+        cr1 = ConstansReaderWriter("wifi_ap_config")
+        c_dict1 = cr1.get_dict()
+        print(c_dict1)
+        const_dict = {'SSID': ""}
+        cr1.set_constants_from_config_dict(const_dict)
+        cr1.save_constants_to_file()
+        logging.info(f"save to file  wifi_ap_config")
+
     elif wifi_mode == WIFI_MODE_CLIENT:
         print(f"wifi_mode {wifi_mode} client")
         const_dict = {  'AUTO_CONNECT_TO_WIFI_AP': True,

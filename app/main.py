@@ -247,12 +247,11 @@ async def main():
     get_wifi_mode()
 
     if AUTO_CONNECT_TO_WIFI_AP:
-        ip_addres = connect_to_wifi_ap()
-        if ip_addres is None:
+        ip_addres, ssid = connect_to_wifi_ap()
+        if ssid is None:
             if AUTO_START_SETUP_WIFI:
                 setup_wifi_mode()
-            # if AUTO_START_CAPTIVE_PORTAL:
-            #     asyncio.create_task(task_captive_portal())
+        if ip_addres is None:
             if AUTO_START_WIFI_AP:
                 logging.info("[AUTO_START_WIFI_AP]")
                 ip_addres = start_ap()
