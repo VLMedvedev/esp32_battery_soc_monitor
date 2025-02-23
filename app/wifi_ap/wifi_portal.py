@@ -5,7 +5,7 @@ import _thread
 import utime
 import machine
 from configs.constants_saver import ConstansReaderWriter
-from configs.sys_config import AP_IP, AP_NAME, AUTO_SETUP_TIME
+from configs.sys_config import *
 from configs.wifi_ap_config import PASSWORD
 
 WIFI_MAX_ATTEMPTS = 3
