@@ -40,8 +40,10 @@ pin_rele = Pin(HW_RELE_PIN, Pin.OUT, value=0)
 pin_led = Pin(HW_LED_PIN, Pin.OUT, value=1)
 
 def machine_reset():
+    global f_reset
     asyncio.sleep(3)
-    logging.info("Resetting...")
+    logging.info("[machine_reset] Resetting...")
+    f_reset = False
     machine.reset()
 
 def check_and_calck_rele_state():
@@ -187,8 +189,10 @@ async def start_screen_timer():
         if screen_timer == 1:
             logging.info("redraw screen...")
             if f_reset:
-                f_reset = False
-                machine_reset()
+                logging.info("[start_screen_timer] Resetting...")
+                await asyncio.sleep(3)
+                #f_reset = False
+                machine.reset()
             f_change_rele_state = check_and_calck_rele_state()
             if rele_mode == RELE_BATTERY_LEVEL:
                 broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_RELE_SOC_AUTO)
