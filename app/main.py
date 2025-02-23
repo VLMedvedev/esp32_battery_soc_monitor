@@ -203,10 +203,7 @@ async def start_screen_timer():
                 await asyncio.sleep(3)
                 #f_reset = False
                 machine.reset()
-            if wifi_mode == WIFI_MODE_SETUP:
-                broker.publish(TOPIC_COMMAND_WIFI_MODE, None)
-                broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_WIFI_INFO)
-            else:
+            if wifi_mode != AP_NAME:
                 f_change_rele_state = check_and_calck_rele_state()
                 if rele_mode == RELE_BATTERY_LEVEL:
                     broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_RELE_SOC_AUTO)
@@ -248,7 +245,8 @@ async def main():
         if ssid is None:
             if AUTO_START_SETUP_WIFI:
                 f_auto_start_oled = True
-                wifi_mode = WIFI_MODE_SETUP
+                wifi_mode = AP_NAME
+                ip_address = AP_IP
                 asyncio.create_task(controller_processing())
                 #button_controller(broker)
                 asyncio.create_task(start_screen_timer())

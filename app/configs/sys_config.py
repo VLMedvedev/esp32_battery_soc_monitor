@@ -1,5 +1,7 @@
 APP_NAME = "BatteryMonitor"
 APP_DOMAIN = "power-storage.eu"
+AP_NAME = "BattMon"
+AP_IP = '192.168.13.1'
 
 AUTO_CONNECT_TO_WIFI_AP = True
 AUTO_SETUP_TIME = True
