@@ -6,7 +6,7 @@ import utime
 import machine
 from configs.constants_saver import ConstansReaderWriter
 from configs.sys_config import *
-from configs.wifi_ap_config import PASSWORD, SSID
+from configs.wifi_ap_config import PASSWORD
 
 WIFI_MAX_ATTEMPTS = 3
 AP_TEMPLATE_PATH = "/wifi_ap"
@@ -38,9 +38,10 @@ def setup_wifi_mode():
     def ap_index(request):
         if request.headers.get("host").lower() != APP_DOMAIN.lower():
             return render_template(f"{AP_TEMPLATE_PATH}/redirect.html", domain = APP_DOMAIN.lower())
-
+        ap_str = scan_wifi_ap()
+        logging.info(f"AP: {ap_str} passwd {PASSWORD}")
         return render_template(f"{AP_TEMPLATE_PATH}/index.html",
-                               ap_str = scan_wifi_ap(),
+                               ap_str = ap_str,
                                passwd = PASSWORD,
                                replace_symbol=False)
 
