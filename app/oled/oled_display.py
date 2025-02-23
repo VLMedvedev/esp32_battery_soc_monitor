@@ -88,7 +88,7 @@ class OLED_Display:
                 self.display.invert(0)
                 self.display.select_font('text-16')
                 self.display.text(str("Wi-Fi"), 2, 2, 1, 0)
-                self.display.text(str("AP OFF"), 2, 20, 1, 0)
+                self.display.text(str("OFF"), 2, 20, 1, 0)
                # self.display.text(str(""), 2, 36, 1, 0)
                 self.display.show()
             elif wifi_mode == WIFI_MODE_CLIENT :
