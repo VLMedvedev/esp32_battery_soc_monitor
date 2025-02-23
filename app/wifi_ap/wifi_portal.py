@@ -16,7 +16,7 @@ def machine_reset():
     print("Resetting...")
     machine.reset()
 
-def setup_wifi_mode(ip_address):
+def setup_wifi_mode():
     print("Entering setup mode...")
 
     def scan_wifi_ap():
@@ -63,7 +63,7 @@ def setup_wifi_mode(ip_address):
     server.add_route("/", handler = ap_index, methods = ["GET"])
     server.add_route("/configure", handler = ap_configure, methods = ["POST"])
     server.set_callback(ap_catch_all)
-    start_captive_portal(ip_address)
+    start_captive_portal()
     #print(f"Captive portal started on ip {ip}")
 
 def start_ap():
@@ -74,7 +74,7 @@ def start_ap():
     dns.run_catchall(ip)
     return ip
 
-def start_captive_portal(ip_address):
+def start_captive_portal():
     #global
     ip = start_ap()
     print(f"Starting captive portal... ip {ip}")
