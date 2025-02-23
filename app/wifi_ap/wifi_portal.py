@@ -16,7 +16,7 @@ def machine_reset():
     print("Resetting...")
     machine.reset()
 
-def setup_wifi_mode():
+def setup_wifi_mode(broker):
     print("Entering setup mode...")
 
     def scan_wifi_ap():
@@ -63,7 +63,8 @@ def setup_wifi_mode():
     server.add_route("/", handler = ap_index, methods = ["GET"])
     server.add_route("/configure", handler = ap_configure, methods = ["POST"])
     server.set_callback(ap_catch_all)
-    start_captive_portal()
+    ip = start_captive_portal()
+    print(f"Captive portal started on ip {ip}")
 
 def start_ap():
     ap = access_point(APP_NAME)

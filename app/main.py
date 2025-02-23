@@ -256,7 +256,8 @@ async def main():
                 #broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_WIFI_INFO)
                 #button_controller(broker)
                 #asyncio.create_task(start_screen_timer())
-                setup_wifi_mode()
+                setup_wifi_mode(broker)
+
         if ip_addres is None:
             if AUTO_START_WIFI_AP:
                 logging.info("[AUTO_START_WIFI_AP]")
