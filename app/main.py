@@ -75,7 +75,7 @@ async def can_processing():
     time.sleep(3)
     can_id_scan()
     while True:
-        logging.info(f"[AUTO_CONNECT_CAN] {settings_mode} rele mode {rele_mode}")
+        logging.info(f"[AUTO_CONNECT_CAN] settings_mode {settings_mode} rele mode {rele_mode}")
         f_view_redraw = False
         soc_level = 123
         if rele_mode != RELE_BATTERY_LEVEL or settings_mode:
