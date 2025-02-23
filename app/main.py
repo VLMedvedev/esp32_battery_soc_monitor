@@ -108,7 +108,7 @@ async def can_processing():
         await asyncio.sleep(CAN_SOC_CHECK_PERIOD_SEC)
 
 async def controller_processing():
-    global off_level, on_level, rele_mode, f_rele_is_on, screen_timer, settings_mode, f_auto_start_oled
+    global off_level, on_level, rele_mode, f_rele_is_on, screen_timer, settings_mode, f_auto_start_oled, f_reset
     logging.info("[controller_processing]")
     queue = RingbufQueue(20)
     if f_auto_start_oled:
@@ -144,7 +144,7 @@ async def controller_processing():
         if topic == TOPIC_COMMAND_WIFI_MODE:
             screen_timer = SCREEN_TIMER_SEC
             settings_mode = True
-            set_wifi_mode(message)
+            f_reset = set_wifi_mode(message)
         if topic == TOPIC_COMMAND_VIEW_MODE:
             if message == VIEW_MODE_SETTING_DOWN_OFF_LEVEL:
                 oled.draw_setting_level(off_level, button_group="down")
@@ -187,7 +187,7 @@ async def start_screen_timer():
         await asyncio.sleep(1)
         logging.info(f"timer screen... {screen_timer}")
         if screen_timer == 1:
-            logging.info("redraw screen...")
+            logging.info(f"redraw screen... reset {f_reset}")
             if f_reset:
                 logging.info("[start_screen_timer] Resetting...")
                 await asyncio.sleep(3)
