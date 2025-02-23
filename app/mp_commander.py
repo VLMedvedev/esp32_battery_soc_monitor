@@ -1,5 +1,6 @@
 from constants import (TOPIC_COMMAND_LEVEL_UP, TOPIC_COMMAND_LEVEL_DOWN,
-                       RELE_BATTERY_LEVEL, RELE_ALWAYS_ON, RELE_ALWAYS_OFF)
+                       RELE_BATTERY_LEVEL, RELE_ALWAYS_ON, RELE_ALWAYS_OFF,
+                       WIFI_MODE_OFF, WIFI_MODE_AP,WIFI_MODE_CLIENT)
 from configs.constants_saver import ConstansReaderWriter
 from phew import logging
 
@@ -101,5 +102,50 @@ def set_level_to_config_file(topic_command, level_type, file_config_name):
     return const_dict
 
 def set_wifi_mode(wifi_mode):
-    logging.info(f"change wifi_mode {wifi_mode}")
-    return wifi_mode
+    file_config_name="sys_config"
+    cr = ConstansReaderWriter(file_config_name)
+    c_dict = cr.get_dict()
+    print(c_dict)
+    const_dict = {}
+        logging.info(f"change wifi_mode {wifi_mode}")
+    if wifi_mode == WIFI_MODE_AP:
+        print(f"wifi_mode {wifi_mode} AP ")
+        const_dict = {  'AUTO_CONNECT_TO_WIFI_AP': False,
+                        'AUTO_START_WIFI_AP', True,
+                        'AUTO_START_UMQTT' : False,
+                        'AUTO_START_WEBAPP' : True,
+                        'AUTO_START_OLED' : True,
+                        'AUTO_RESTART_AFTER_UPDATE' : True,
+                        'AUTO_START_SETUP_WIFI' : False,
+                        'AUTO_RESTART_IF_NO_WIFI' : False,
+                        }
+    elif wifi_mode == WIFI_MODE_OFF:
+        print(f"wifi_mode {wifi_mode} off")
+        const_dict = {  'AUTO_CONNECT_TO_WIFI_AP': False,
+                        'AUTO_START_WIFI_AP', False,
+                        'AUTO_START_UMQTT' : False,
+                        'AUTO_START_WEBAPP' : False,
+                        'AUTO_START_OLED' : True,
+                        'AUTO_RESTART_AFTER_UPDATE' : True,
+                        'AUTO_START_SETUP_WIFI' : False,
+                        'AUTO_RESTART_IF_NO_WIFI' : False,
+                        }
+
+    elif wifi_mode == WIFI_MODE_CLIENT:
+        print(f"wifi_mode {wifi_mode} client")
+        const_dict = {  'AUTO_CONNECT_TO_WIFI_AP': True,
+                        'AUTO_START_WIFI_AP', False,
+                        'AUTO_START_UMQTT' : True,
+                        'AUTO_START_WEBAPP' : True,
+                        'AUTO_START_OLED' : True,
+                        'AUTO_RESTART_AFTER_UPDATE' : True,
+                        'AUTO_START_SETUP_WIFI' : True,
+                        'AUTO_RESTART_IF_NO_WIFI' : True,
+                        }
+    else:
+        return const_dict
+
+    cr.set_constants_from_config_dict(const_dict)
+    cr.save_constants_to_file()
+    logging.info(f"save to file {file_config_name}")
+    return const_dict
