@@ -7,6 +7,7 @@ import machine
 from configs.constants_saver import ConstansReaderWriter
 from configs.sys_config import *
 from configs.wifi_ap_config import PASSWORD
+from constants import *
 
 WIFI_MAX_ATTEMPTS = 3
 AP_TEMPLATE_PATH = "/wifi_ap"
@@ -16,7 +17,7 @@ def machine_reset():
     print("Resetting...")
     machine.reset()
 
-def setup_wifi_mode(broker):
+def setup_wifi_mode(ip_addres, broker):
     print("Entering setup mode...")
 
     def scan_wifi_ap():
@@ -74,9 +75,12 @@ def start_ap():
     return ip
 
 def start_captive_portal():
+    global ip_addres, broker
     ip = start_ap()
     print(f"Starting captive portal... ip {ip}")
-    #dns.run_catchall(ip)
+    ip_addres = ip
+    broker.publish(TOPIC_COMMAND_WIFI_MODE, None)
+    broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_WIFI_INFO)
     server.run()
     return ip
 
