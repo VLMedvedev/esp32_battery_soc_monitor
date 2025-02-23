@@ -270,6 +270,7 @@ def application_mode(broker):
             config_page, app_config_dict = get_config_page(module_config,
                                           update_config=request.form)
             broker.publish(EVENT_TYPE_CONFIG_UPDATED_MQTT, app_config_dict)
+            broker.publish(EVENT_TYPE_CONFIG_UPDATED_WEB, app_config_dict)
             restart_app = AUTO_RESTART_AFTER_UPDATE
             if restart_app:
                 return app_reboot(request)
@@ -319,7 +320,7 @@ def application_mode(broker):
        # print(request)
         if request.method == 'GET':
             mode_str, val_on, val_off = get_app_configs()
-            print(mode_str, val_on, val_off)
+           # print(mode_str, val_on, val_off)
             return render_template("/web_app/app_config_page.html",
                                    page_info="Please save params",
                                    title="APP Config page",
@@ -348,6 +349,7 @@ def application_mode(broker):
             utime.sleep(2)
             mode_str, val_on, val_off = get_app_configs()
             broker.publish(EVENT_TYPE_CONFIG_UPDATED_MQTT, app_config_dict)
+            broker.publish(EVENT_TYPE_CONFIG_UPDATED_WEB, app_config_dict)
             # restart_app = AUTO_RESTART_AFTER_UPDATE
             # if restart_app:
             #     return app_reboot(request)

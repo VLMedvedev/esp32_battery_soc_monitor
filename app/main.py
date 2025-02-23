@@ -127,6 +127,7 @@ async def controller_processing():
     broker.subscribe(TOPIC_COMMAND_LEVEL_DOWN, queue)
     broker.subscribe(TOPIC_COMMAND_LEVEL_UP, queue)
     broker.subscribe(EVENT_TYPE_MQTT_IN_COMMAND, queue)
+    broker.subscribe(EVENT_TYPE_CONFIG_UPDATED_WEB, queue)
     async for topic, message in queue:
         logging.info(f"[controller_processing] topic {topic}, message {message}")
         if (topic == TOPIC_COMMAND_LEVEL_UP or topic == TOPIC_COMMAND_LEVEL_DOWN):
@@ -145,6 +146,15 @@ async def controller_processing():
             broker.publish(EVENT_TYPE_CONFIG_UPDATED_MQTT, c_dict)
             screen_timer = SCREEN_TIMER_SEC
             settings_mode = True
+        if (topic == EVENT_TYPE_CONFIG_UPDATED_WEB):
+            file_config_name = "app_config"
+            c_dict = set_level_to_config_file(topic, message, file_config_name)
+            off_level = c_dict.get("OFF_LEVEL", 10)
+            on_level = c_dict.get("ON_LEVEL", 98)
+            rele_mode = c_dict.get("MODE", RELE_BATTERY_LEVEL)
+            screen_timer = SCREEN_TIMER_SEC
+            #settings_mode = True
+            logging.info(f"updated off_level {off_level}, on_level {on_level}, rele_mode {rele_mode}")
         if topic == TOPIC_COMMAND_WIFI_MODE:
             screen_timer = SCREEN_TIMER_SEC
             if message is not None:
