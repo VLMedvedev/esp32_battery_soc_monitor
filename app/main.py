@@ -210,6 +210,10 @@ async def start_screen_timer():
                 # rele_mode = RELE_BATTERY_LEVEL
                 broker.publish(EVENT_TYPE_RELE_ON_OFF_MQTT, f_rele_is_on)
             settings_mode = False
+        elif screen_timer == 3:
+            if f_reset:
+                broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_RESET)
+
 
         screen_timer -= 1
         if screen_timer < 0:
