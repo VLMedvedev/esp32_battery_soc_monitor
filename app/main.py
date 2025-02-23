@@ -147,8 +147,7 @@ async def controller_processing():
             screen_timer = SCREEN_TIMER_SEC
             settings_mode = True
         if (topic == EVENT_TYPE_CONFIG_UPDATED_WEB):
-            file_config_name = "app_config"
-            c_dict = set_level_to_config_file(topic, message, file_config_name)
+            c_dict =  message
             off_level = c_dict.get("OFF_LEVEL", 10)
             on_level = c_dict.get("ON_LEVEL", 98)
             rele_mode = c_dict.get("MODE", RELE_BATTERY_LEVEL)

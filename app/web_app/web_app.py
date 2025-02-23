@@ -40,10 +40,19 @@ def application_mode(broker):
 
     def app_index(request):
         #return render_template("/web_app/home.html")
+        cr = ConstansReaderWriter("app_config")
+        c_dict = cr.get_dict()
+        print(c_dict)
+        val_off = c_dict.get("OFF_LEVEL", 10)
+        val_on = c_dict.get("ON_LEVEL", 98)
+        mode = c_dict.get("MODE", RELE_BATTERY_LEVEL)
+        app_params_str = str(c_dict)
+
         return render_template("/web_app/index2.html",
                                title=APP_NAME,
                                style_css_str=CSS_STYLE,
                                config_page_links=CONFIG_PAGE_LINKS,
+                               app_params_str=app_params_str,
                                replace_symbol=False,
                                )
 
