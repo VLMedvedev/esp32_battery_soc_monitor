@@ -107,7 +107,7 @@ def set_wifi_mode(wifi_mode):
     c_dict = cr.get_dict()
     print(c_dict)
     const_dict = {}
-        logging.info(f"change wifi_mode {wifi_mode}")
+    logging.info(f"change wifi_mode {wifi_mode}")
     if wifi_mode == WIFI_MODE_AP:
         print(f"wifi_mode {wifi_mode} AP ")
         const_dict = {  'AUTO_CONNECT_TO_WIFI_AP': False,
