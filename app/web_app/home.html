@@ -19,12 +19,13 @@
                  getSoc();"
             defer></script>
 <!--    <script src="data:text/javascript,async function getTemp() { const elem = document.getElementById('tempValue'); elem.innerHTML = 'Updating...'; const t = await fetch('/soc'); const tVal = await t.text(); elem.innerHTML = tVal; setTimeout(getTemp, 10000)}; getTemp();" defer></script>-->
-<!--    <button id="resetBtn">Reset Wifi</button>-->
-<!--    <button id="rebootBtn">Reboot</button>-->
     <script src="data:text/javascript,document.getElementById('toggleBtn').onclick = async function() { await fetch('/toggle'); };" defer></script>
-<!--    <script src="data:text/javascript,document.getElementById('resetBtn').onclick = function() { window.location.href = '/reset'; };" defer></script>-->
-<!--    <script src="data:text/javascript,document.getElementById('rebootBtn').onclick = function() { window.location.href = '/reboot'; };" defer></script>-->
+    <script src="data:text/javascript,document.getElementById('toggle_Btn').onclick = function() { window.location.href = '/toggle'; };" defer></script>
+    <script src="data:text/javascript,document.getElementById('rele_on_Btn').onclick = function() { window.location.href = '/rele_on'; };" defer></script>
+    <script src="data:text/javascript,document.getElementById('rele_off_Btn').onclick = function() { window.location.href = '/rele_off'; };" defer></script>
 <keybloc class="keys">
-     <button id="toggleBtn">Toggle LED</button>
+     <button id="toggle_Btn">Toggle LED</button>
+     <button id="rele_on_Btn">ON Rele</button>
+     <button id="rele_off_Btn">OFF Rele</button>
 </keybloc>
 </main>

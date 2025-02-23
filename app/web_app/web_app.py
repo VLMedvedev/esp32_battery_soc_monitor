@@ -62,7 +62,21 @@ def application_mode(broker):
             onboard_led.on()
         else:
             onboard_led.off()
-        return "OK"
+        return app_index(request)
+
+    def app_rele_on(request):
+        from mp_commander import set_rele_mode_to_config_file
+        app_config_dict = set_rele_mode_to_config_file(RELE_ALWAYS_ON, "app_config" )
+        broker.publish(EVENT_TYPE_CONFIG_UPDATED_MQTT, app_config_dict)
+        broker.publish(EVENT_TYPE_CONFIG_UPDATED_WEB, app_config_dict)
+        return app_index(request)
+
+    def app_rele_off(request):
+        from mp_commander import set_rele_mode_to_config_file
+        app_config_dict = set_rele_mode_to_config_file(RELE_ALWAYS_OFF, "app_config" )
+        broker.publish(EVENT_TYPE_CONFIG_UPDATED_MQTT, app_config_dict)
+        broker.publish(EVENT_TYPE_CONFIG_UPDATED_WEB, app_config_dict)
+        return app_index(request)
 
     #async def app_get_soc(request):
     def app_get_soc(request):
@@ -395,6 +409,8 @@ def application_mode(broker):
     server.add_route("/canonical.html", handler=app_index, methods=["GET"])
     server.add_route("/hotspot-detect.html", handler=app_index, methods=["GET"])
     server.add_route("/toggle", handler=app_toggle_led, methods=["GET"])
+    server.add_route("/rele_on", handler=app_rele_on, methods=["GET"])
+    server.add_route("/rele_off", handler=app_rele_off, methods=["GET"])
     server.add_route("/about", handler=about, methods=["GET"])
     server.add_route("/log_viewer", handler=log_viewer, methods=["GET"])
     server.add_route("/delete_log", handler=delete_log, methods=["GET"])
