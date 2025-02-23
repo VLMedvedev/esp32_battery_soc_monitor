@@ -5,9 +5,8 @@ import _thread
 import utime
 import machine
 from configs.constants_saver import ConstansReaderWriter
-from configs.sys_config import *
+from configs.sys_config import AP_IP, AP_NAME
 from configs.wifi_ap_config import PASSWORD
-#from constants import *
 
 WIFI_MAX_ATTEMPTS = 3
 AP_TEMPLATE_PATH = "/wifi_ap"
@@ -68,9 +67,10 @@ def setup_wifi_mode(ip_address):
     #print(f"Captive portal started on ip {ip}")
 
 def start_ap():
+    print(f"Starting {AP_NAME}...ip {AP_IP}")
     ap = access_point(AP_NAME,AP_IP)
     ip = ap.ifconfig()[0]
-    print(f"Starting ap... ip {ip}")
+    print(f"Started ap... ip {ip}")
     dns.run_catchall(ip)
     return ip
 
