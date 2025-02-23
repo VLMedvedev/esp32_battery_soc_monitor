@@ -4,6 +4,13 @@ from constants import (TOPIC_COMMAND_LEVEL_UP, TOPIC_COMMAND_LEVEL_DOWN,
 from configs.constants_saver import ConstansReaderWriter
 from phew import logging
 
+def machine_reset():
+    import machine
+    import time
+    time.sleep(3)
+    print("Resetting...")
+    machine.reset()
+
 def mqtt_in_command(msg_tuple):
     import json
     try:
@@ -126,7 +133,6 @@ def set_wifi_mode(wifi_mode):
                         'AUTO_START_SETUP_WIFI' : False,
                         'AUTO_RESTART_IF_NO_WIFI' : False,
                         }
-
     elif wifi_mode == WIFI_MODE_CLIENT:
         print(f"wifi_mode {wifi_mode} client")
         const_dict = {  'AUTO_CONNECT_TO_WIFI_AP': True,
@@ -142,7 +148,6 @@ def set_wifi_mode(wifi_mode):
         return const_dict
 
     logging.info(f"save to file const_dict {const_dict}")
-
     file_config_name="sys_config"
     cr = ConstansReaderWriter(file_config_name)
     c_dict = cr.get_dict()
@@ -150,4 +155,5 @@ def set_wifi_mode(wifi_mode):
     cr.set_constants_from_config_dict(const_dict)
     cr.save_constants_to_file()
     logging.info(f"save to file {file_config_name}")
+    machine_reset()
     return const_dict
