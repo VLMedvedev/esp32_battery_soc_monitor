@@ -1,5 +1,5 @@
 GITHUB_OWNER = 'VLMedvedev'
-GITHUB_REPOSITORY = 'mp_ota_from_git'
+GITHUB_REPOSITORY = 'esp32_battery_soc_monitor'
 GITHUB_BRANCH = 'main'
 GITHUB_APP_FOLDER = 'app'
 GITHUB_TOKEN = ""
