@@ -6,6 +6,7 @@ import utime
 import machine
 from configs.constants_saver import ConstansReaderWriter
 from configs.sys_config import *
+from configs.wifi_ap_config import PASSWORD, SSID
 
 WIFI_MAX_ATTEMPTS = 3
 AP_TEMPLATE_PATH = "/wifi_ap"
@@ -38,7 +39,10 @@ def setup_wifi_mode():
         if request.headers.get("host").lower() != APP_DOMAIN.lower():
             return render_template(f"{AP_TEMPLATE_PATH}/redirect.html", domain = APP_DOMAIN.lower())
 
-        return render_template(f"{AP_TEMPLATE_PATH}/index.html", ap_str = scan_wifi_ap(), replace_symbol=False)
+        return render_template(f"{AP_TEMPLATE_PATH}/index.html",
+                               ap_str = scan_wifi_ap(),
+                               passwd = PASSWORD,
+                               replace_symbol=False)
 
     def ap_configure(request):
         print("Saving wifi credentials...")
