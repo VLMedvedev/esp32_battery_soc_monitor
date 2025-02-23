@@ -99,9 +99,8 @@ class OLED_Display:
                 self.display.select_font('text-16')
                 self.display.text(str("Wi-Fi"), 2, 2, 1, 0)
                 self.display.select_font(None)  # Select the built in 8 pixel font
-                self.display.text(str(""), 2, 12, 1, 0)
-                self.display.text(str("client"), 2, 12, 1, 0)
-                self.display.text(str("ON"), 2, 20, 1, 0)
+                self.display.text(str("client"), 2, 14, 1, 0)
+                self.display.text(str("ON"), 2, 24, 1, 0)
                 self.display.show()
         return None
 

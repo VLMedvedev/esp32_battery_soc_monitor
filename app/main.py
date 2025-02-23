@@ -70,11 +70,12 @@ def get_wifi_mode():
 
 async def can_processing():
     global soc_level, old_soc_level, off_level, on_level, rele_mode, f_rele_is_on, settings_mode
-    logging.info("[AUTO_START_CAN]")
+    logging.info("[AUTO_START_CAN] starting...")
     can_init()
     time.sleep(3)
     can_id_scan()
     while True:
+        logging.info(f"[AUTO_CONNECT_CAN] {settings_mode} rele mode {rele_mode}")
         f_view_redraw = False
         soc_level = 123
         if rele_mode != RELE_BATTERY_LEVEL or settings_mode:
@@ -213,7 +214,6 @@ async def start_screen_timer():
         elif screen_timer == 3:
             if f_reset:
                 broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_RESET)
-
 
         screen_timer -= 1
         if screen_timer < 0:
