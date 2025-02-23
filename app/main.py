@@ -134,9 +134,9 @@ async def controller_processing():
             screen_timer = SCREEN_TIMER_SEC
             settings_mode = True
         if topic == TOPIC_COMMAND_WIFI_MODE:
-            set_wifi_mode(message)
             screen_timer = SCREEN_TIMER_SEC
             settings_mode = True
+            set_wifi_mode(message)
         if topic == TOPIC_COMMAND_VIEW_MODE:
             if message == VIEW_MODE_SETTING_DOWN_OFF_LEVEL:
                 oled.draw_setting_level(off_level, button_group="down")
@@ -173,11 +173,11 @@ async def controller_processing():
         await asyncio.sleep(0.1)
 
 async def start_screen_timer():
-    global screen_timer, settings_mode
+    global screen_timer, settings_mode, f_reset
     logging.info("[start_screen_timer]")
     while True:
         await asyncio.sleep(1)
-       # logging.info(f"timer screen... {screen_timer}")
+        logging.info(f"timer screen... {screen_timer}")
         if screen_timer == 1:
             logging.info("redraw screen...")
             f_change_rele_state = check_and_calck_rele_state()
