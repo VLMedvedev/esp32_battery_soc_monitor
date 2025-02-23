@@ -4,13 +4,6 @@ from constants import (TOPIC_COMMAND_LEVEL_UP, TOPIC_COMMAND_LEVEL_DOWN,
 from configs.constants_saver import ConstansReaderWriter
 from phew import logging
 
-def machine_reset():
-    import machine
-    import time
-    time.sleep(3)
-    logging.info("Resetting...")
-    machine.reset()
-
 def mqtt_in_command(msg_tuple):
     import json
     try:

@@ -32,11 +32,17 @@ from mp_commander import (set_level_to_config_file,
                           set_rele_on_off,
                           set_wifi_mode,
                           mqtt_in_command,
-                          machine_reset)
+                          )
 from machine import Pin
+import machine
 from configs.hw_config import HW_LED_PIN, HW_RELE_PIN
 pin_rele = Pin(HW_RELE_PIN, Pin.OUT, value=0)
 pin_led = Pin(HW_LED_PIN, Pin.OUT, value=1)
+
+def machine_reset():
+    asyncio.sleep(3)
+    logging.info("Resetting...")
+    machine.reset()
 
 def check_and_calck_rele_state():
     global soc_level, old_soc_level, off_level, on_level, rele_mode, f_rele_is_on, settings_mode
