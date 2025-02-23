@@ -143,11 +143,12 @@ async def controller_processing():
             settings_mode = True
         if topic == TOPIC_COMMAND_WIFI_MODE:
             screen_timer = SCREEN_TIMER_SEC
-            settings_mode = True
-            c_dict = set_wifi_mode(message)
-            if len(c_dict) > 0:
-                f_reset = True
-                broker.publish(EVENT_TYPE_CONFIG_UPDATED_MQTT, c_dict)
+            if message is not None:
+                settings_mode = True
+                c_dict = set_wifi_mode(message)
+                if len(c_dict) > 0:
+                    f_reset = True
+                    broker.publish(EVENT_TYPE_CONFIG_UPDATED_MQTT, c_dict)
         if topic == TOPIC_COMMAND_VIEW_MODE:
             if message == VIEW_MODE_SETTING_DOWN_OFF_LEVEL:
                 oled.draw_setting_level(off_level, button_group="down")

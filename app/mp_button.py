@@ -34,7 +34,7 @@ def button_controller(broker):
                 broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_SETTING_UP_ON_LEVEL)
         elif event_type == EVENT_TYPE_DOUBLE_PRESS_BUTTON:
             if btn_number == HW_BT_RIGTH_DOWN:
-              #  broker.publish(TOPIC_COMMAND_WIFI_MODE, WIFI_MODE_OFF)
+                broker.publish(TOPIC_COMMAND_WIFI_MODE, None)
                 broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_WIFI_INFO)
             elif btn_number == HW_BT_LEFT_DOWN:
                 broker.publish(TOPIC_COMMAND_WIFI_MODE, WIFI_MODE_OFF)
