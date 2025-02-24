@@ -309,7 +309,8 @@ async def main():
         logging.info("[RUNNING ON-LINE]")
         if AUTO_START_UMQTT and AUTO_CONNECT_TO_WIFI_AP:
             logging.info("[AUTO_START_UMQTT]")
-            logging.broker = broker
+            if SEND_LOG_BY_UMQTT:
+                logging.broker = broker
             from mp_mqtt import start_mqtt_get
             asyncio.create_task(start_mqtt_get(broker))
         if AUTO_START_WEBREPL:
