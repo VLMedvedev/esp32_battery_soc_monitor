@@ -307,7 +307,7 @@ async def main():
     # Main loop
     if ip_address is not None:
         logging.info("[RUNNING ON-LINE]")
-        if AUTO_START_UMQTT and not AUTO_CONNECT_TO_WIFI_AP:
+        if AUTO_START_UMQTT and AUTO_CONNECT_TO_WIFI_AP:
             logging.info("[AUTO_START_UMQTT]")
             logging.broker = broker
             from mp_mqtt import start_mqtt_get
