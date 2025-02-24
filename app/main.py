@@ -253,7 +253,9 @@ async def main():
     if len(ssid) < 2:
         ssid = None
         wifi_mode = AP_NAME
+        f_auto_start_oled = True
     else:
+        f_auto_start_oled = AUTO_START_OLED
         asyncio.create_task(can_processing())
     # Main loop
     asyncio.create_task(controller_processing())
