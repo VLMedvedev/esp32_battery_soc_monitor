@@ -116,6 +116,8 @@ async def controller_processing():
     queue = RingbufQueue(20)
     if f_auto_start_oled:
         from oled.oled_display import OLED_Display
+        if wifi_mode == AP_NAME:
+            ip_address = AP_IP
         logging.info(f"[start_oled_display] wifi mode {wifi_mode} ip_address {ip_address}")
         oled =  OLED_Display()
         #oled.draw_charge_level(soc_level, f_rele_is_on)
