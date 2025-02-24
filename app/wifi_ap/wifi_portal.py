@@ -2,7 +2,7 @@ from phew import logging, access_point, connect_to_wifi, is_connected_to_wifi, d
 from phew.template import render_template
 #import os
 import _thread
-import utime
+import time
 import machine
 from configs.constants_saver import ConstansReaderWriter
 from configs.sys_config import *
@@ -12,7 +12,7 @@ WIFI_MAX_ATTEMPTS = 3
 AP_TEMPLATE_PATH = "/wifi_ap"
 
 def machine_reset():
-    utime.sleep(5)
+    time.sleep(5)
     print("Resetting...")
     machine.reset()
 
@@ -50,11 +50,8 @@ def setup_wifi_mode():
         #os.chdir("/configs")
         crw = ConstansReaderWriter("wifi_ap_config")
         crw.set_constants_from_config_dict(request.form)
-        if request.method == 'POST':
-            update_config = request.form
-            crw.set_constants_from_config_dict(update_config)
-            # Reboot from new thread after we have responded to the user.
-            _thread.start_new_thread(machine_reset, ())
+        # Reboot from new thread after we have responded to the user.
+        _thread.start_new_thread(machine_reset, ())
         return render_template(f"{AP_TEMPLATE_PATH}/configured.html", ssid = request.form["ssid"])
         
     def ap_catch_all(request):
