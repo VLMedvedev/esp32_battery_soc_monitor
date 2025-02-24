@@ -9,12 +9,12 @@
         <p>You are connected to the Battery monitor setup page.</p>
         <p>Let&apos;s configure the wifi connection:</p>
         <form action="/configure" method="POST" autocomplete="off" autocapitalize="none">
-            <label for="ssid">SSID:</label><br>
+            <label for="SSID">SSID:</label><br>
 
             {{ap_str}}
 
-            <label for="password">Password:</label><br>
-            <input type="text" id="password" name="password" value={{passwd}}><br><br>
+            <label for="PASSWORD">Password:</label><br>
+            <input type="text" id="PASSWORD" name="PASSWORD" value={{passwd}}><br><br>
             <button>Save</button>
         </form>
     </body>

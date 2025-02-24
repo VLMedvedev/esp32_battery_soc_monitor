@@ -104,8 +104,8 @@ def application_mode(broker):
         # the access point and request new configuration.
         crw = ConstansReaderWriter("wifi_ap_config")
         update_config_dict= {
-            "ssid": "",
-            "password": "",
+            "SSID": "",
+            "PASSWORD": "",
         }
         crw.set_constants_from_config_dict(update_config_dict)
         # Reboot from new thread after we have responded to the user.
