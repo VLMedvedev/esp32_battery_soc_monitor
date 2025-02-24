@@ -88,18 +88,13 @@ def connect_to_wifi(ssid, password, timeout_seconds=30):
 # helper method to put the pico into access point mode
 def access_point(ssid, ip_ap, password = None):
   import network
-  print(f"ssid {ssid} ip {ip_ap}")
   # start up network in access point mode  
   wlan = network.WLAN(network.AP_IF)
-  if len(ip_ap) > 0:
-    print(f"ip_ap {ip_ap}")
-    wlan.ifconfig([ip_ap, "255.255.255.0", ip_ap, ip_ap])
+  wlan.ifconfig([ip_ap, "255.255.255.0", ip_ap, ip_ap])
   wlan.active(True)
   wlan.config(essid=ssid)
   if password:
     wlan.config(password=password)
   else:    
     wlan.config(security=0) # disable password
-  #WLAN.ifconfig([(ip, subnet, gateway, dns)])
-
   return wlan

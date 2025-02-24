@@ -110,8 +110,7 @@ async def can_processing():
         await asyncio.sleep(CAN_SOC_CHECK_PERIOD_SEC)
 
 async def controller_processing():
-    global off_level, on_level, rele_mode, f_rele_is_on, screen_timer, settings_mode, \
-        f_auto_start_oled, f_reset, ip_address, wifi_mode
+    global off_level, on_level, rele_mode, f_rele_is_on, screen_timer, settings_mode, f_auto_start_oled, f_reset, ip_address, wifi_mode
     logging.info("[controller_processing]")
     queue = RingbufQueue(20)
     if f_auto_start_oled:
@@ -248,44 +247,14 @@ async def main():
     logging.info(f"sys_config: {c_dict}")
     # Start coroutine as a task and immediately return
     get_wifi_mode()
+    ip_address = AP_IP
+    ssid = SSID
+    if len(ssid) < 2:
+        ssid = None
+        wifi_mode = AP_NAME
 
-    if AUTO_CONNECT_TO_WIFI_AP:
-        ip_address, ssid = connect_to_wifi_ap()
-        if ssid is None:
-            if AUTO_START_SETUP_WIFI:
-                f_auto_start_oled = True
-                wifi_mode = AP_NAME
-                ip_address = AP_IP
-                asyncio.create_task(controller_processing())
-                button_controller(broker)
-                asyncio.create_task(start_screen_timer())
-                setup_wifi_mode()
-        if ip_address is None:
-            if AUTO_START_WIFI_AP:
-                logging.info("[AUTO_START_WIFI_AP]")
-                ip_address = start_ap()
-            if AUTO_RESTART_IF_NO_WIFI:
-                logging.info("[AUTO_RESTART_IF_NO_WIFI]")
-                time.sleep(20)
-                machine_reset()
-            f_auto_start_oled = True
-        else:
-            set_rtc()
-            import mp_git
-            mp_git.main()
-    else:
-        if AUTO_START_WIFI_AP:
-            logging.info("[AUTO_START_WIFI_AP]")
-            ip_address = start_ap()
-        else:
-            f_auto_start_oled = True
-    time.sleep(2)
-
-    logging.info(f"ip_addres: {ip_address}")
-
-    # Main loop
-    if AUTO_START_CAN:
-        asyncio.create_task(can_processing())
+    # if AUTO_START_CAN:
+    asyncio.create_task(can_processing())
     # Main loop
     asyncio.create_task(controller_processing())
     button_controller(broker)
@@ -294,6 +263,45 @@ async def main():
     time.sleep(2)
 
     f_start_loop = True
+    f_auto_start_webapp = AUTO_START_WEBAPP
+    if AUTO_CONNECT_TO_WIFI_AP:
+        ip_address = connect_to_wifi_ap()
+        if ip_address is None:
+            f_auto_start_oled = True
+            if ssid is None:
+                if AUTO_START_WIFI_AP:
+                    logging.info("[AUTO_START_WIFI_AP]")
+                    f_auto_start_webapp = True
+                    start_ap()
+                else:
+                    logging.info("[AUTO_START_SETUP_WIFI]")
+                    f_auto_start_oled = True
+                    f_start_loop = False
+                    setup_wifi_mode()
+            else:
+                if AUTO_START_WIFI_AP:
+                    logging.info("[AUTO_START_WIFI_AP]")
+                    f_auto_start_webapp = True
+                    start_ap()
+                else:
+                    logging.info("[AUTO_RESTART_IF_NO_WIFI]")
+                    time.sleep(20)
+                    machine_reset()
+        else:
+            set_rtc()
+            import mp_git
+            mp_git.main()
+    else:
+        if AUTO_START_WIFI_AP:
+            logging.info("[AUTO_START_WIFI_AP]")
+            f_auto_start_webapp = True
+            start_ap()
+        else:
+            f_auto_start_oled = True
+    time.sleep(2)
+
+    logging.info(f"ip_addres: {ip_address}")
+    # Main loop
     if ip_address is not None:
         logging.info("[RUNNING ON-LINE]")
        # asyncio.create_task(can_processing())
@@ -305,7 +313,7 @@ async def main():
             logging.info("[AUTO_START_WEBREPL]")
             import webrepl
             asyncio.create_task(webrepl.start())
-        if AUTO_START_WEBAPP:
+        if f_auto_start_webapp:
             logging.info("[AUTO_START_WEBAPP]")
             f_start_loop = False
             from web_app.web_app import application_mode
