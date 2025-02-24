@@ -15,7 +15,6 @@ def mqtt_in_command(msg_tuple):
             const_dict = json.loads(const_dict_str)
             cr = ConstansReaderWriter(file_config_name)
             cr.set_constants_from_config_dict(const_dict)
-            cr.save_constants_to_file()
             logging.info(f"[mqtt_in_command] save to file {file_config_name}  {const_dict}")
             return const_dict
         return {}
@@ -60,7 +59,6 @@ def set_rele_mode_to_config_file(rele_mode, file_config_name):
     print(c_dict)
     const_dict = {'MODE': rele_mode }
     cr.set_constants_from_config_dict(const_dict)
-    cr.save_constants_to_file()
     logging.info(f"save to file rele mode to {rele_mode}")
     return const_dict
 
@@ -97,7 +95,6 @@ def set_level_to_config_file(topic_command, level_type, file_config_name):
                 min_level = 0
         const_dict = {level_type: min_level}
     cr.set_constants_from_config_dict(const_dict)
-    cr.save_constants_to_file()
     logging.info(f"save to file app_config {const_dict}")
     return const_dict
 
@@ -132,7 +129,6 @@ def set_wifi_mode(wifi_mode):
         print(c_dict1)
         const_dict = {'SSID': ""}
         cr1.set_constants_from_config_dict(const_dict)
-        cr1.save_constants_to_file()
         logging.info(f"save to file  wifi_ap_config")
 
     elif wifi_mode == WIFI_MODE_CLIENT:
@@ -155,6 +151,5 @@ def set_wifi_mode(wifi_mode):
     c_dict = cr.get_dict()
     print(c_dict)
     cr.set_constants_from_config_dict(const_dict)
-    cr.save_constants_to_file()
     logging.info(f"save to file {file_config_name}")
     return const_dict
