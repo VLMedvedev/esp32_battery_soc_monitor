@@ -253,9 +253,8 @@ async def main():
     if len(ssid) < 2:
         ssid = None
         wifi_mode = AP_NAME
-
-    # if AUTO_START_CAN:
-    asyncio.create_task(can_processing())
+    else:
+        asyncio.create_task(can_processing())
     # Main loop
     asyncio.create_task(controller_processing())
     button_controller(broker)
