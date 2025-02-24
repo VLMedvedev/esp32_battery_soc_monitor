@@ -308,8 +308,7 @@ async def main():
     # Main loop
     if ip_address is not None:
         logging.info("[RUNNING ON-LINE]")
-       # asyncio.create_task(can_processing())
-        if AUTO_START_UMQTT:
+        if AUTO_START_UMQTT and not AUTO_CONNECT_TO_WIFI_AP:
             logging.info("[AUTO_START_UMQTT]")
             from mp_mqtt import start_mqtt_get
             asyncio.create_task(start_mqtt_get(broker))
