@@ -225,9 +225,7 @@ status_message_map = {
 # handle an incoming request to the web server
 async def _handle_request(reader, writer):
   response = None
-
   request_start_time = time.ticks_ms()
-
   request_line = await reader.readline()
   try:
     method, uri, protocol = request_line.decode().split()
@@ -352,7 +350,8 @@ def serve_file(file):
 
 
 def run(host = "0.0.0.0", port = 80):
-  logging.info("> starting web server on port {}".format(port))
+  #logging.info("> starting web server on port {}".format(port))
+  logging.info(f"> starting web server on port {port} host {host}")
   loop.create_task(asyncio.start_server(_handle_request, host, port))
   loop.run_forever()
 
