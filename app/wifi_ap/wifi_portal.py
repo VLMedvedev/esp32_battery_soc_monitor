@@ -48,12 +48,12 @@ def setup_wifi_mode():
     def ap_configure(request):
         print("Saving wifi credentials...")
         #os.chdir("/configs")
-       # crw = ConstansReaderWriter("wifi_ap_config")
+        crw = ConstansReaderWriter("wifi_ap_config")
         update_config = request.form
         print(update_config)
-        #crw.set_constants_from_config_dict(update_config)
+        crw.set_constants_from_config_dict(update_config)
         # Reboot from new thread after we have responded to the user.
-        #_thread.start_new_thread(machine_reset, ())
+        _thread.start_new_thread(machine_reset, ())
         return render_template(f"{AP_TEMPLATE_PATH}/configured.html", ssid = request.form["SSID"])
         
     def ap_catch_all(request):
