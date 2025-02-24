@@ -12,7 +12,6 @@ from mp_can import can_init, can_id_scan, can_soc_read
 from mp_button import button_controller
 
 broker = Broker()
-#logging.broker = broker
 
 from configs.constants_saver import ConstansReaderWriter
 off_level = 10
@@ -310,6 +309,7 @@ async def main():
         logging.info("[RUNNING ON-LINE]")
         if AUTO_START_UMQTT and not AUTO_CONNECT_TO_WIFI_AP:
             logging.info("[AUTO_START_UMQTT]")
+            logging.broker = broker
             from mp_mqtt import start_mqtt_get
             asyncio.create_task(start_mqtt_get(broker))
         if AUTO_START_WEBREPL:

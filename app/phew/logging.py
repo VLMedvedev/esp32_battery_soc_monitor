@@ -2,9 +2,9 @@ import machine, os, gc
 
 log_file = "log.txt"
 
-#from constants import EVENT_TYPE_MQTT_LOG
+from constants import EVENT_TYPE_MQTT_LOG
 #from primitives import Broker
-# broker: Broker = None
+broker = None
 
 LOG_INFO = 0b00001
 LOG_WARNING = 0b00010
@@ -88,9 +88,8 @@ def log(level, text):
   datetime = datetime_string()
   log_entry = "{0} [{1:8} /{2:>4}kB] {3}".format(datetime, level, round(gc.mem_free() / 1024), text)
   print(log_entry)
-  # if broker is not None:
-  #   if isinstance(broker, Broker):
-  #     broker.publish(EVENT_TYPE_MQTT_LOG, log_entry)
+  if broker is not None:
+    broker.publish(EVENT_TYPE_MQTT_LOG, log_entry)
 
   with open(log_file, "a") as logfile:
     logfile.write(log_entry + '\n')
