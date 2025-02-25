@@ -250,12 +250,12 @@ async def main():
     # Start coroutine as a task and immediately return
     get_wifi_mode()
     ip_address = AP_IP
-    ssid = SSID
-    if len(ssid) < 2:
+    if len(SSID) < 2:
         ssid = None
         wifi_mode = AP_NAME
         f_auto_start_oled = True
     else:
+        ssid = SSID
         f_auto_start_oled = AUTO_START_OLED
         asyncio.create_task(can_processing())
     # Main loop
@@ -307,7 +307,7 @@ async def main():
     # Main loop
     if ip_address is not None:
         logging.info("[RUNNING ON-LINE]")
-        if AUTO_START_UMQTT and AUTO_CONNECT_TO_WIFI_AP:
+        if AUTO_START_UMQTT and AUTO_CONNECT_TO_WIFI_AP and ssid is not None:
             logging.info("[AUTO_START_UMQTT]")
             if SEND_LOG_BY_UMQTT:
                 logging.broker = broker
