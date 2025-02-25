@@ -110,7 +110,7 @@ def set_wifi_mode(wifi_mode):
                         'AUTO_START_OLED' : True,
                         'AUTO_RESTART_AFTER_UPDATE' : True,
                         'AUTO_START_SETUP_WIFI' : False,
-                        'AUTO_RESTART_IF_NO_WIFI' : False,
+                        'SEND_LOG_BY_UMQTT': False,
                         }
     elif wifi_mode == WIFI_MODE_OFF:
         print(f"wifi_mode {wifi_mode} off")
@@ -121,7 +121,7 @@ def set_wifi_mode(wifi_mode):
                         'AUTO_START_OLED' : True,
                         'AUTO_RESTART_AFTER_UPDATE' : True,
                         'AUTO_START_SETUP_WIFI' : False,
-                        'AUTO_RESTART_IF_NO_WIFI' : False,
+                        'SEND_LOG_BY_UMQTT': False,
                         }
 
         cr1 = ConstansReaderWriter("wifi_ap_config")
@@ -140,7 +140,7 @@ def set_wifi_mode(wifi_mode):
                         'AUTO_START_OLED' : True,
                         'AUTO_RESTART_AFTER_UPDATE' : True,
                         'AUTO_START_SETUP_WIFI' : True,
-                        'AUTO_RESTART_IF_NO_WIFI' : True,
+                        'SEND_LOG_BY_UMQTT' : False,
                         }
     else:
         return const_dict
