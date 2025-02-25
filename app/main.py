@@ -316,9 +316,9 @@ async def main():
                     asyncio.create_task(start_mqtt_get(broker))
         if AUTO_START_WEBREPL:
             logging.info("[AUTO_START_WEBREPL]")
-            # import webrepl
+            import webrepl
             # #asyncio.create_task(webrepl.start())
-            f_start_loop = True
+            f_start_loop = False
             webrepl.start()
         if f_auto_start_webapp:
             logging.info("[AUTO_START_WEBAPP]")
@@ -332,6 +332,8 @@ async def main():
         logging.info("[loop.run_forever()]")
         loop = asyncio.get_event_loop()
         loop.run_forever()
+    else:
+        logging.info("[loop.run_until_complete()????]")
 
 # Start event loop and run entry point coroutine
 asyncio.run(main())
