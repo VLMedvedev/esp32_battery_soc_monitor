@@ -406,8 +406,8 @@ def application_mode(broker):
     os.chdir("/")
 
    # server.add_route("/", handler=app_index, methods=["GET"])
-    server.add_route("/canonical.html", handler=app_index, methods=["GET"])
-    server.add_route("/hotspot-detect.html", handler=app_index, methods=["GET"])
+    server.add_route("/canonical.html", handler=app_config_page, methods=["GET"])
+    server.add_route("/hotspot-detect.html", handler=app_config_page, methods=["GET"])
     server.add_route("/toggle", handler=app_toggle_led, methods=["GET"])
     server.add_route("/rele_on", handler=app_rele_on, methods=["GET"])
     server.add_route("/rele_off", handler=app_rele_off, methods=["GET"])
