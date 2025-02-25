@@ -316,7 +316,9 @@ async def main():
         if AUTO_START_WEBREPL:
             logging.info("[AUTO_START_WEBREPL]")
             import webrepl
-            asyncio.create_task(webrepl.start())
+            #asyncio.create_task(webrepl.start())
+            f_start_loop = False
+            webrepl.start()
         if f_auto_start_webapp:
             logging.info("[AUTO_START_WEBAPP]")
             f_start_loop = False
