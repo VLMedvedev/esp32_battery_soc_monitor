@@ -118,7 +118,7 @@ def set_rtc():
         logging.info(f"set time to: {rtc.datetime()}")
         return True
     except Exception as error:
-        logging.error(f"{error}")
+        logging.error(f"set_rtc {error}")
     return False
 
 

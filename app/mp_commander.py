@@ -19,7 +19,7 @@ def mqtt_in_command(msg_tuple):
             return const_dict
         return {}
     except Exception as e:
-        logging.error(e)
+        logging.error(f"[mqtt_in_command] err  {e}")
         return {}
 
 def set_rele_on_off(pin_rele, f_rele_is_on):

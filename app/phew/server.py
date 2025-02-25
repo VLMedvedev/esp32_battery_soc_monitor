@@ -230,7 +230,7 @@ async def _handle_request(reader, writer):
   try:
     method, uri, protocol = request_line.decode().split()
   except Exception as e:
-    logging.error(e)
+    logging.error(f"[server  _handle_request] err  {e}")
     return
 
   request = Request(method, uri, protocol)
