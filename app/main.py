@@ -91,11 +91,11 @@ async def can_processing():
             f_change_rele_state = check_and_calck_rele_state()
             if f_change_rele_state:
                 f_view_redraw = True
-        logging.info(f"[AUTO_CONNECT_CAN] old_soc_level {old_soc_level} soc_level {soc_level}")
+        #logging.info(f"[AUTO_CONNECT_CAN] old_soc_level {old_soc_level} soc_level {soc_level}")
         if old_soc_level != soc_level:
             f_view_redraw = True
         old_soc_level = soc_level
-        logging.info(f"[AUTO_CONNECT_CAN] settings_mode {settings_mode} rele mode {rele_mode} f_view_redraw {f_view_redraw}")
+        #logging.info(f"[AUTO_CONNECT_CAN] settings_mode {settings_mode} rele mode {rele_mode} f_view_redraw {f_view_redraw}")
         if f_view_redraw:
             logging.info(f"[can_processing] soc_level {soc_level} f_rele_is_on {f_rele_is_on} rele_mode {rele_mode}")
             broker.publish(EVENT_TYPE_CAN_SOC_READ_OLED, soc_level)
