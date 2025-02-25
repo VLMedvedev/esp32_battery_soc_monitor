@@ -56,7 +56,6 @@ def check_and_calck_rele_state():
                                                                        soc_level)
     if f_change_rele_state:
         set_rele_on_off(pin_rele, f_rele_is_on)
-
     return f_change_rele_state
 
 def get_wifi_mode():
@@ -76,30 +75,27 @@ async def can_processing():
     time.sleep(3)
     can_id_scan()
     while True:
-       # logging.info(f"[AUTO_CONNECT_CAN] settings_mode {settings_mode} rele mode {rele_mode}")
+        #logging.info(f"[AUTO_CONNECT_CAN] settings_mode {settings_mode} rele mode {rele_mode}")
         f_view_redraw = False
         soc_level = 123
         if rele_mode != RELE_BATTERY_LEVEL or settings_mode:
             await asyncio.sleep(CAN_SOC_CHECK_PERIOD_SEC)
             continue
-
         soc_level = await can_soc_read()
         try:
             soc_level = int(soc_level)
         except ValueError:
             soc_level = 123
-
         if soc_level != 123:
             #rele_mode = RELE_BATTERY_LEVEL
             f_change_rele_state = check_and_calck_rele_state()
             if f_change_rele_state:
                 f_view_redraw = True
-
+        logging.info(f"[AUTO_CONNECT_CAN] old_soc_level {old_soc_level} soc_level {soc_level}")
         if old_soc_level != soc_level:
             f_view_redraw = True
-
         old_soc_level = soc_level
-
+        logging.info(f"[AUTO_CONNECT_CAN] settings_mode {settings_mode} rele mode {rele_mode} f_view_redraw {f_view_redraw}")
         if f_view_redraw:
             logging.info(f"[can_processing] soc_level {soc_level} f_rele_is_on {f_rele_is_on} rele_mode {rele_mode}")
             broker.publish(EVENT_TYPE_CAN_SOC_READ_OLED, soc_level)
@@ -201,7 +197,7 @@ async def controller_processing():
         await asyncio.sleep(0.1)
 
 async def start_screen_timer():
-    global screen_timer, settings_mode, f_reset
+    global screen_timer, settings_mode, f_reset, old_soc_level
     logging.info("[start_screen_timer]")
     while True:
         await asyncio.sleep(1)
@@ -214,7 +210,10 @@ async def start_screen_timer():
                 #f_reset = False
                 machine.reset()
             if wifi_mode != AP_NAME:
+                settings_mode = False
+                old_soc_level = 123
                 f_change_rele_state = check_and_calck_rele_state()
+                logging.info(f"[start_screen_timer] wifi_mode {wifi_mode} {rele_mode} f_change_rele_state {f_change_rele_state} settings_mode {settings_mode}")
                 if rele_mode == RELE_BATTERY_LEVEL:
                     broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_RELE_SOC_AUTO)
                 elif rele_mode == RELE_ALWAYS_ON:
@@ -223,8 +222,8 @@ async def start_screen_timer():
                     broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_RELE_OFF)
                 if f_change_rele_state:
                     broker.publish(EVENT_TYPE_RELE_ON_OFF_MQTT, f_rele_is_on)
-                settings_mode = False
         elif screen_timer == 3:
+            old_soc_level = 123
             if f_reset:
                 broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_RESET)
 
