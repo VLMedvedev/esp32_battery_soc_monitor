@@ -31,7 +31,7 @@ EVENT_TYPE_CONFIG_UPDATED_MQTT = "config_updated_mqtt"
 EVENT_TYPE_CONFIG_UPDATED_WEB = "config_updated_web"
 EVENT_TYPE_RELE_ON_OFF_MQTT = "rele_on_off_mqtt"
 EVENT_TYPE_MQTT_IN_COMMAND = "mqtt_in_command"
-EVENT_TYPE_MQTT_LOG = "event_type_mqtt_log"
+EVENT_TYPE_MQTT_LOG = "mqtt_log"
 
 TOPIC_COMMAND_RELE_MODE = "rele_mode"
 TOPIC_COMMAND_VIEW_MODE = "view_mode"
