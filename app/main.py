@@ -322,7 +322,9 @@ async def main():
             webrepl.start()
             if AUTO_START_WEBREPL_REMOTE:
                 import mp_webrepl_remote
-                mp_webrepl_remote.main()
+                #mp_webrepl_remote.main()
+                f_start_loop = True
+                asyncio.create_task(mp_webrepl_remote.tunnelToServer())
         else:
             if f_auto_start_webapp:
                 logging.info("[AUTO_START_WEBAPP]")
