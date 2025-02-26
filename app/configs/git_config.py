@@ -1,6 +1,6 @@
 GITHUB_OWNER = 'VLMedvedev'
 GITHUB_REPOSITORY = 'esp32_battery_soc_monitor'
-GITHUB_BRANCH = 'stable'
+GITHUB_BRANCH = 'main'
 GITHUB_APP_FOLDER = 'app'
 GITHUB_TOKEN = ""
 EXCLUDE_CONFIG_FILES = True

@@ -320,11 +320,15 @@ async def main():
             # #asyncio.create_task(webrepl.start())
             f_start_loop = False
             webrepl.start()
-        if f_auto_start_webapp:
-            logging.info("[AUTO_START_WEBAPP]")
-            f_start_loop = False
-            from web_app.web_app import application_mode
-            asyncio.create_task(application_mode(broker))
+            if AUTO_START_WEBREPL_REMOTE:
+                import mp_webrepl_remote
+                mp_webrepl_remote.main()
+        else:
+            if f_auto_start_webapp:
+                logging.info("[AUTO_START_WEBAPP]")
+                f_start_loop = False
+                from web_app.web_app import application_mode
+                asyncio.create_task(application_mode(broker))
     else:
         logging.info("[RUNNING OFF-LINE]")
 
