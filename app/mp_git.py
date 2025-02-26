@@ -126,8 +126,9 @@ def build_internal_tree(rebuild=False):
     if rebuild:
         logging.info("rebuild internal sha1 file")
         for item in os.listdir():
-            if item.endswith("_config.py"):
-                continue
+            if EXCLUDE_CONFIG_FILES:
+                if item.endswith("_config.py"):
+                    continue
             if item in EXCLUDE_LIST:
                 continue
             add_to_tree(item, internal_tree)
