@@ -200,7 +200,7 @@ async def controller_processing():
         await asyncio.sleep(0.1)
 
 async def start_screen_timer():
-    global screen_timer, settings_mode, f_reset, old_soc_level
+    global screen_timer, settings_mode, f_reset, old_soc_level, msg_id_list
     logging.info("[start_screen_timer]")
     while True:
         await asyncio.sleep(1)
