@@ -320,9 +320,6 @@ def main():
 if __name__ == '__main__':
     main()
 
-   #file_n = "text-16.pf"
-   #file_n = "main.py"
-   #pull(file_n)
 
 
 
