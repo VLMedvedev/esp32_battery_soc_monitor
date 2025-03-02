@@ -13,6 +13,7 @@ def can_id_scan():
         logging.info(f"msg_id_list {msg_id_list}")
         counter += 1
         time.sleep(CAN_SOC_CHECK_PERIOD_SEC)
+    return msg_id_list
 
 async def can_soc_read():
     #print("start read can")
