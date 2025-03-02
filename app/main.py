@@ -248,6 +248,10 @@ def clear_reboot_counter():
 
 # Coroutine: entry point for asyncio program
 async def main():
+    if AUTO_START_WEBREPL:
+        logging.info("[AUTO_START_WEBREPL] ")
+        return None
+
     global off_level, on_level, rele_mode, f_rele_is_on, f_auto_start_oled, ip_address, broker, wifi_mode
     file_config_name = "app_config"
     cr = ConstansReaderWriter(file_config_name)
