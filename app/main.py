@@ -73,7 +73,8 @@ async def can_processing():
     logging.info("[AUTO_START_CAN] starting...")
     can_init()
     time.sleep(3)
-    can_id_scan()
+    msg_id_list = can_id_scan()
+    broker.publish(EVENT_TYPE_CAN_SOC_READ_MQTT, f"msg_id_list {msg_id_list}")
     while True:
         #logging.info(f"[AUTO_CONNECT_CAN] settings_mode {settings_mode} rele mode {rele_mode}")
         f_view_redraw = False
