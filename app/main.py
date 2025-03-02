@@ -270,12 +270,13 @@ async def main():
     logging.info(f"sys_config: {c_dict}")
     # Start coroutine as a task and immediately return
     get_wifi_mode()
-    ip_address = AP_IP
     if len(SSID) < 2:
         ssid = None
+        ip_address = AP_IP
         wifi_mode = AP_NAME
         f_auto_start_oled = True
     else:
+        ip_address = get_ip_address()
         ssid = SSID
         f_auto_start_oled = AUTO_START_OLED
         asyncio.create_task(can_processing())
@@ -289,33 +290,30 @@ async def main():
     f_start_loop = True
     f_auto_start_webapp = AUTO_START_WEBAPP
     if AUTO_CONNECT_TO_WIFI_AP:
-      #  ip_address = connect_to_wifi_ap()
-        ip_address = get_ip_address()
-        if ip_address is None:
+        if ssid is None:
             f_auto_start_oled = True
-            if ssid is None:
-                if AUTO_START_WIFI_AP:
-                    logging.info("[AUTO_START_WIFI_AP]")
-                    f_auto_start_webapp = True
-                    start_ap()
-                else:
-                    logging.info("[AUTO_START_SETUP_WIFI]")
-                    f_auto_start_oled = True
-                    f_start_loop = False
-                    setup_wifi_mode()
+            if AUTO_START_WIFI_AP:
+                logging.info("[AUTO_START_WIFI_AP]")
+                f_auto_start_webapp = True
+                start_ap()
             else:
-                if AUTO_START_WIFI_AP:
-                    logging.info("[AUTO_START_WIFI_AP]")
-                    f_auto_start_webapp = True
-                    start_ap()
-                else:
-                    logging.info("[AUTO_RESTART_IF_NO_WIFI]")
-                    time.sleep(20)
-                    machine_reset()
+                logging.info("[AUTO_START_SETUP_WIFI]")
+                f_auto_start_oled = True
+                f_start_loop = False
+                setup_wifi_mode()
         else:
-            set_rtc()
-            import mp_git
-            mp_git.main()
+            if AUTO_START_WIFI_AP:
+                logging.info("[AUTO_START_WIFI_AP]")
+                f_auto_start_webapp = True
+                start_ap()
+            else:
+                logging.info("[AUTO_RESTART_IF_NO_WIFI]")
+                time.sleep(20)
+                machine_reset()
+            if ip_address is not None:
+                set_rtc()
+                import mp_git
+                mp_git.main()
     else:
         if AUTO_START_WIFI_AP:
             logging.info("[AUTO_START_WIFI_AP]")
