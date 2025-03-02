@@ -302,7 +302,7 @@ async def main():
                 f_start_loop = False
                 setup_wifi_mode()
         else:
-            if ip_address is not None:
+            if ip_address is None:
                 if AUTO_START_WIFI_AP:
                     logging.info("[AUTO_START_WIFI_AP]")
                     f_auto_start_webapp = True
