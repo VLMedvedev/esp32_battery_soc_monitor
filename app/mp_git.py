@@ -284,6 +284,22 @@ def machine_reset():
     print("Resetting...")
     machine.reset()
 
+def read_reboot_counter():
+    reboot_counter = 0
+    with open("reboot_counter.txt", "r") as reboot_counter_file:
+        reboot_counter = reboot_counter_file.read(1)
+        logging.info(f"reboot counter is {reboot_counter}")
+        try:
+            reboot_counter = int(reboot_counter)
+        except:
+            reboot_counter = 0
+        return reboot_counter
+
+def add_reboot_counter(reboot_counter):
+    reboot_counter += 1
+    with open("reboot_counter.txt", "w") as reboot_counter_file:
+        reboot_counter_file.write(str(reboot_counter))
+
 def main():
     app_update = False
     if AUTO_UPDATE_FROM_GIT:
@@ -294,8 +310,11 @@ def main():
     if app_update:
         set_rebuild_file_flag()
         if AUTO_RESTART_AFTER_UPDATE:
-            print("Updated to the latest version! Rebooting...")
-            _thread.start_new_thread(machine_reset, ())
+            reboot_counter = read_reboot_counter()
+            if reboot_counter <= 3:
+                add_reboot_counter(reboot_counter)
+                print("Updated to the latest version! Rebooting...")
+                _thread.start_new_thread(machine_reset, ())
             #machine_reset()
 
 if __name__ == '__main__':

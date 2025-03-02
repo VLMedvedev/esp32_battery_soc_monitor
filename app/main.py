@@ -239,6 +239,11 @@ async def start_screen_timer():
         if screen_timer < 0:
             screen_timer = 0
 
+def clear_reboot_counter():
+    reboot_counter = 0
+    with open("reboot_counter.txt", "w") as reboot_counter_file:
+        reboot_counter_file.write(str(reboot_counter))
+
 # Coroutine: entry point for asyncio program
 async def main():
     global off_level, on_level, rele_mode, f_rele_is_on, f_auto_start_oled, ip_address, broker, wifi_mode
@@ -330,6 +335,8 @@ async def main():
                 asyncio.create_task(application_mode(broker))
     else:
         logging.info("[RUNNING OFF-LINE]")
+
+    clear_reboot_counter()
 
     if f_start_loop:
         logging.info("[loop.run_forever()]")
