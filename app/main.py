@@ -1,5 +1,5 @@
 import asyncio
-from phew import logging
+from phew import logging, get_ip_address
 from primitives import Broker, RingbufQueue
 from configs.sys_config import *
 from wifi_ap.wifi_portal import connect_to_wifi_ap, setup_wifi_mode, set_rtc, start_ap
@@ -267,7 +267,8 @@ async def main():
     f_start_loop = True
     f_auto_start_webapp = AUTO_START_WEBAPP
     if AUTO_CONNECT_TO_WIFI_AP:
-        ip_address = connect_to_wifi_ap()
+      #  ip_address = connect_to_wifi_ap()
+        ip_address = get_ip_address()
         if ip_address is None:
             f_auto_start_oled = True
             if ssid is None:
@@ -307,12 +308,6 @@ async def main():
     if ip_address is not None:
         logging.info("[RUNNING ON-LINE]")
         if ssid is not None:
-            if AUTO_START_WEBREPL:
-                logging.info("[AUTO_START_WEBREPL]")
-                import webrepl
-                # #asyncio.create_task(webrepl.start())
-                f_start_loop = False
-                webrepl.start()
             # if AUTO_START_WEBREPL_REMOTE:
             #     import mp_webrepl_remote
             #     #mp_webrepl_remote.main()
