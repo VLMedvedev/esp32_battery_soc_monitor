@@ -243,6 +243,7 @@ def clear_reboot_counter():
     reboot_counter = 0
     with open("reboot_counter.txt", "w") as reboot_counter_file:
         reboot_counter_file.write(str(reboot_counter))
+        logging.info("[clear_reboot_counter]")
 
 # Coroutine: entry point for asyncio program
 async def main():
