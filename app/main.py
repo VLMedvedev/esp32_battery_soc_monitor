@@ -179,6 +179,7 @@ async def controller_processing():
                 global msg_id_list
                 msg_id_list = can_id_scan()
                 oled.view_info(wifi_mode, ip_address)
+
             elif message == VIEW_MODE_WIFI_OFF:
                 oled.view_info(WIFI_MODE_OFF, None)
             elif message == VIEW_MODE_WIFI_AP_ON:
