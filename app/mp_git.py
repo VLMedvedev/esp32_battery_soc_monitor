@@ -87,14 +87,17 @@ def pull_git_tree(git_folder, recursive=False):
 def get_app_tree(tree=None):
     if tree is None:
         tree = pull_git_tree(GITHUB_BRANCH, recursive=False)
-    for elem in tree['tree']:
-        print(elem['path'])
-        if elem['type'] != 'tree':
-            continue
-        if elem['path'] == GITHUB_APP_FOLDER:
-            app_trees_url_sha = elem['sha']
-            app_tree = pull_git_tree(app_trees_url_sha, recursive=True)
-            return app_tree
+    try:
+        for elem in tree['tree']:
+            print(elem['path'])
+            if elem['type'] != 'tree':
+                continue
+            if elem['path'] == GITHUB_APP_FOLDER:
+                app_trees_url_sha = elem['sha']
+                app_tree = pull_git_tree(app_trees_url_sha, recursive=True)
+                return app_tree
+    except Exception as e:
+        print(e)
     return None
 
 def is_directory(file_name):
