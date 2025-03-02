@@ -26,6 +26,7 @@ ip_address = None
 f_auto_start_oled = AUTO_START_OLED
 wifi_mode = None
 f_reset = False
+msg_id_list = None
 
 from mp_commander import (set_level_to_config_file,
                           set_rele_mode_to_config_file,
@@ -69,12 +70,11 @@ def get_wifi_mode():
     return wifi_mode
 
 async def can_processing():
-    global soc_level, old_soc_level, off_level, on_level, rele_mode, f_rele_is_on, settings_mode
+    global soc_level, old_soc_level, off_level, on_level, rele_mode, f_rele_is_on, settings_mode, msg_id_list
     logging.info("[AUTO_START_CAN] starting...")
     can_init()
     time.sleep(3)
     msg_id_list = can_id_scan()
-    broker.publish(EVENT_TYPE_CAN_SOC_READ_MQTT, f"msg_id_list {msg_id_list}")
     while True:
         #logging.info(f"[AUTO_CONNECT_CAN] settings_mode {settings_mode} rele mode {rele_mode}")
         f_view_redraw = False
@@ -198,13 +198,16 @@ async def controller_processing():
         await asyncio.sleep(0.1)
 
 async def start_screen_timer():
-    global screen_timer, settings_mode, f_reset, old_soc_level
+    global screen_timer, settings_mode, f_reset, old_soc_level, msg_id_list
     logging.info("[start_screen_timer]")
     while True:
         await asyncio.sleep(1)
        # logging.info(f"timer screen... {screen_timer}")
         if screen_timer == 1:
             logging.info(f"redraw screen... reset {f_reset}")
+            if msg_id_list is not None:
+                broker.publish(EVENT_TYPE_CAN_SOC_READ_MQTT, f"msg_id_list {msg_id_list}")
+                msg_id_list = None
             if f_reset:
                 logging.info("[start_screen_timer] Resetting...")
                 await asyncio.sleep(3)
@@ -309,11 +312,6 @@ async def main():
     if ip_address is not None:
         logging.info("[RUNNING ON-LINE]")
         if ssid is not None:
-            # if AUTO_START_WEBREPL_REMOTE:
-            #     import mp_webrepl_remote
-            #     #mp_webrepl_remote.main()
-            #     f_start_loop = True
-            #     asyncio.create_task(mp_webrepl_remote.tunnelToServer())
             if AUTO_CONNECT_TO_WIFI_AP:
                 if AUTO_START_UMQTT:
                     logging.info("[AUTO_START_UMQTT]")
