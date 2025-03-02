@@ -79,7 +79,9 @@ def pull_git_tree(git_folder, recursive=False):
         if 'tree' in git_tree:
             return git_tree
     else:
-      #  print(f'\nGit branch and folder {git_folder} not found.\n')
+        logging.error(f'\nGit url {giturl} \n')
+        logging.error(f'\nGit payload {payload} \n')
+        logging.error(f'\nGit return_code {return_code} \n')
         logging.error(f'\nGit branch and folder {git_folder} not found.\n')
         #raise Exception(f'Default branch {GITHUB_BRANCH} not found.')
         return None
