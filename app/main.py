@@ -250,6 +250,9 @@ def clear_reboot_counter():
 async def main():
     if AUTO_START_WEBREPL:
         logging.info("[AUTO_START_WEBREPL] ")
+        logging.info("[loop.run_forever()]")
+        loop = asyncio.get_event_loop()
+        loop.run_forever()
         return None
 
     global off_level, on_level, rele_mode, f_rele_is_on, f_auto_start_oled, ip_address, broker, wifi_mode
