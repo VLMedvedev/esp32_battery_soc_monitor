@@ -94,6 +94,8 @@ def connect_to_wifi_ap():
         ssid = SSID
         password = PASSWORD
         print(f"connect to ssid {ssid} and passwd {password}")
+        if len(ssid) < 2:
+            return None
         while wifi_current_attempt < WIFI_MAX_ATTEMPTS:
             #print(wifi_current_attempt, WIFI_MAX_ATTEMPTS)
             ip_address = connect_to_wifi(ssid, password)
