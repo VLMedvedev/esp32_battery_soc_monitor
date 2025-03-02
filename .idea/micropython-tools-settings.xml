@@ -4,7 +4,7 @@
     <option name="activeStubsPackage" value="micropython-v1_24_1-esp32-esp32_generic-stubs" />
     <option name="filterManufacturers" value="false" />
     <option name="pluginEnabled" value="true" />
-    <option name="portName" value="/dev/ttyACM1" />
+    <option name="portName" value="/dev/ttyACM0" />
     <option name="settingsVersion" value="1" />
   </component>
 </project>
