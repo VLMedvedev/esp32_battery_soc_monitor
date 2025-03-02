@@ -176,7 +176,10 @@ async def controller_processing():
             elif message == VIEW_MODE_RELE_ON:
                 oled.draw_on()
             elif message == VIEW_MODE_WIFI_INFO:
+                global msg_id_list
+                msg_id_list = can_id_scan()
                 oled.view_info(wifi_mode, ip_address)
+
             elif message == VIEW_MODE_WIFI_OFF:
                 oled.view_info(WIFI_MODE_OFF, None)
             elif message == VIEW_MODE_WIFI_AP_ON:
@@ -206,6 +209,7 @@ async def start_screen_timer():
         if screen_timer == 1:
             logging.info(f"redraw screen... reset {f_reset}")
             if msg_id_list is not None:
+                logging.info(f"publish msg_id_list {msg_id_list}")
                 broker.publish(EVENT_TYPE_CAN_SOC_READ_MQTT, f"msg_id_list {msg_id_list}")
                 msg_id_list = None
             if f_reset:
