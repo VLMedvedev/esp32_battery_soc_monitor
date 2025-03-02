@@ -1,6 +1,5 @@
 import asyncio
 
-from lib.threadsafe import message
 from phew import logging
 from primitives import Broker, RingbufQueue
 from configs.sys_config import *
