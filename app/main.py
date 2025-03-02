@@ -302,15 +302,16 @@ async def main():
                 f_start_loop = False
                 setup_wifi_mode()
         else:
-            if AUTO_START_WIFI_AP:
-                logging.info("[AUTO_START_WIFI_AP]")
-                f_auto_start_webapp = True
-                start_ap()
-            else:
-                logging.info("[AUTO_RESTART_IF_NO_WIFI]")
-                time.sleep(20)
-                machine_reset()
             if ip_address is not None:
+                if AUTO_START_WIFI_AP:
+                    logging.info("[AUTO_START_WIFI_AP]")
+                    f_auto_start_webapp = True
+                    start_ap()
+                else:
+                    logging.info("[AUTO_RESTART_IF_NO_WIFI]")
+                    time.sleep(20)
+                    machine_reset()
+            else:
                 set_rtc()
                 import mp_git
                 mp_git.main()
