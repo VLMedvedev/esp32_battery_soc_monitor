@@ -145,7 +145,7 @@ static mp_obj_t can_scan_msg_id(void) {
     twai_status_info_t twaistatus;
     twai_get_status_info(&twaistatus);
     char separator = ',';
-    size_t size_str = 128;
+    size_t size_str = 512;
     char out_string[size_str];
     size_t index = 0;
     //sizeof(response)
@@ -154,13 +154,18 @@ static mp_obj_t can_scan_msg_id(void) {
             // One or more messages received. Handle all.
         twai_message_t message;
         while (twai_receive(&message, 0) == ESP_OK) {
-            int mes_id = message.identifier;
-            index += snprintf(out_string + index, size_str - index, "%d%c", mes_id, separator);
+            index += snprintf(out_string + index, size_str - index, "%lx", message.identifier);
+            if (!(message.rtr)) {
+                for (int i = 0; i < message.data_length_code; i++) {
+                    index += snprintf(out_string + index, size_str - index, ",%02x", message.data[i]);
+            }
+            index += snprintf(out_string + index, size_str - index, "%s/n", separator);
         }
     }
 
     return mp_obj_new_str(out_string, index);
 }
+
 //mp_obj_t mp_obj_new_str_from_cstr(const char *str); // // accepts null-terminated string, will check utf-8 (raises UnicodeError)
 //mp_obj_t mp_obj_new_str(const char *data, size_t len); // will check utf-8 (raises UnicodeError)
 //mp_obj_t mp_obj_new_bytes_from_vstr(vstr_t *vstr);
@@ -180,6 +185,9 @@ static mp_obj_t can_read_msg_id(mp_obj_t identifier_obj, mp_obj_t data_byte_numb
     twai_read_alerts(&alerts_triggered, pdMS_TO_TICKS(POLLING_RATE_MS));
     twai_status_info_t twaistatus;
     twai_get_status_info(&twaistatus);
+    size_t size_str = 128;
+    char out_string[size_str];
+    size_t index = 0;
     // Check if message is received
   //  int error_number = get_error_msg(alerts_triggered);
   //  if ( error_number != 0) return mp_obj_new_int(error_number);
@@ -188,10 +196,12 @@ static mp_obj_t can_read_msg_id(mp_obj_t identifier_obj, mp_obj_t data_byte_numb
         twai_message_t message;
         while (twai_receive(&message, 0) == ESP_OK) {
            if (message.identifier == identifier) {
-               if (!(message.rtr)) {
-                  int byte_0 = message.data[data_byte_number];
-                  return mp_obj_new_int(byte_0);
-               }
+                index += snprintf(out_string + index, size_str - index, "%lx", message.identifier);
+                if (!(message.rtr)) {
+                    for (int i = 0; i < message.data_length_code; i++) {
+                        index += snprintf(out_string + index, size_str - index, ",%02x", message.data[i]);
+                }
+                //index += snprintf(out_string + index, size_str - index, "%s/n", separator);
            }
         }
     }
