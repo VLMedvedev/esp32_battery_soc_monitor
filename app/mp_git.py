@@ -174,11 +174,11 @@ def update(rebuild=False):
    # print(git_app_tree)
     logging.debug(git_app_tree)
     if git_app_tree is None:
-        return None
+        return False
     git_app_tree_list = git_app_tree.get('tree',[])
     logging.info(git_app_tree_list)
     if git_app_tree_list is None:
-        return None
+        return False
     internal_tree = build_internal_tree(rebuild=rebuild)
     logging.debug(internal_tree)
     for git_file_dict in git_app_tree_list:
@@ -301,12 +301,10 @@ def add_reboot_counter(reboot_counter):
         reboot_counter_file.write(str(reboot_counter))
 
 def main():
-    app_update = False
-    if AUTO_UPDATE_FROM_GIT:
-        rebuild = False
-        if REBUILD_SHA1_INTERNAL_FILE or get_rebuild_flag():
-            rebuild = True
-        app_update = update(rebuild)
+    rebuild = False
+    if REBUILD_SHA1_INTERNAL_FILE or get_rebuild_flag():
+        rebuild = True
+    app_update = update(rebuild)
     if app_update:
         set_rebuild_file_flag()
         if AUTO_RESTART_AFTER_UPDATE:

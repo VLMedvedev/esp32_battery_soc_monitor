@@ -70,11 +70,10 @@ def get_wifi_mode():
     return wifi_mode
 
 async def can_processing():
-    global soc_level, old_soc_level, off_level, on_level, rele_mode, f_rele_is_on, settings_mode, msg_id_list
+    global soc_level, old_soc_level, off_level, on_level, rele_mode, f_rele_is_on, settings_mode
     logging.info("[AUTO_START_CAN] starting...")
     can_init()
     time.sleep(3)
-    msg_id_list = can_id_scan()
     while True:
         #logging.info(f"[AUTO_CONNECT_CAN] settings_mode {settings_mode} rele mode {rele_mode}")
         f_view_redraw = False
@@ -144,7 +143,7 @@ async def controller_processing():
             broker.publish(EVENT_TYPE_CONFIG_UPDATED_MQTT, c_dict)
             screen_timer = SCREEN_TIMER_SEC
             settings_mode = True
-        if (topic == EVENT_TYPE_CONFIG_UPDATED_WEB):
+        if topic == EVENT_TYPE_CONFIG_UPDATED_WEB:
             c_dict =  message
             off_level = c_dict.get("OFF_LEVEL", 10)
             on_level = c_dict.get("ON_LEVEL", 98)
@@ -246,6 +245,14 @@ def clear_reboot_counter():
         reboot_counter_file.write(str(reboot_counter))
         logging.info("[clear_reboot_counter]")
 
+def get_status_wifi():
+    import network
+    wlan = network.WLAN(network.STA_IF)
+    ret = wlan.isconnected()
+    status = wlan.status()
+    print(f"isconnected {ret} status {status}")
+    return ret, status
+
 # Coroutine: entry point for asyncio program
 async def main():
     if AUTO_START_WEBREPL:
@@ -270,77 +277,76 @@ async def main():
     logging.info(f"sys_config: {c_dict}")
     # Start coroutine as a task and immediately return
     get_wifi_mode()
+    is_connected = False
+    status = 201
     if len(SSID) < 2:
         ssid = None
         ip_address = AP_IP
         wifi_mode = AP_NAME
         f_auto_start_oled = True
     else:
-        ip_address = get_ip_address()
-        ssid = SSID
+        is_connected, status = get_status_wifi()
+        if is_connected:
+            ip_address = get_ip_address()
+        else:
+            ip_address = None
+        if status != 201:
+            ssid = SSID
+        else:
+            ssid = None
         f_auto_start_oled = AUTO_START_OLED
-        asyncio.create_task(can_processing())
+
     # Main loop
     asyncio.create_task(controller_processing())
     button_controller(broker)
     #if f_auto_start_oled:
     asyncio.create_task(start_screen_timer())
     time.sleep(2)
-
+    logging.info(f"ip_address: {ip_address} ssid: {ssid}")
+    logging.info(f"status: {status} is_connected: {is_connected}")
     f_start_loop = True
     f_auto_start_webapp = AUTO_START_WEBAPP
-    if AUTO_CONNECT_TO_WIFI_AP:
+    f_auto_start_oled = True
+    if AUTO_START_WIFI_AP:
+        logging.info("[AUTO_START_WIFI_AP]")
+        f_auto_start_webapp = True
+        f_start_loop = True
+        start_ap()
+    elif AUTO_CONNECT_TO_WIFI_AP:
         if ssid is None:
+            logging.info("[AUTO_START_SETUP_WIFI]")
             f_auto_start_oled = True
-            if AUTO_START_WIFI_AP:
-                logging.info("[AUTO_START_WIFI_AP]")
-                f_auto_start_webapp = True
-                start_ap()
-            else:
-                logging.info("[AUTO_START_SETUP_WIFI]")
-                f_auto_start_oled = True
-                f_start_loop = False
-                setup_wifi_mode()
+            f_start_loop = False
+            setup_wifi_mode()
         else:
-            if ip_address is None:
-                if AUTO_START_WIFI_AP:
-                    logging.info("[AUTO_START_WIFI_AP]")
-                    f_auto_start_webapp = True
-                    start_ap()
-                else:
-                    logging.info("[AUTO_RESTART_IF_NO_WIFI]")
-                    time.sleep(20)
-                    machine_reset()
-            else:
-                set_rtc()
-                import mp_git
-                mp_git.main()
-    else:
-        if AUTO_START_WIFI_AP:
-            logging.info("[AUTO_START_WIFI_AP]")
-            f_auto_start_webapp = True
-            start_ap()
-        else:
-            f_auto_start_oled = True
+            if not is_connected:
+                logging.info("[AUTO_RESTART_IF_NO_WIFI]")
+                time.sleep(20)
+                machine_reset()
     time.sleep(2)
+
+    asyncio.create_task(can_processing())
 
     logging.info(f"ip_addres: {ip_address}")
     # Main loop
-    if ip_address is not None:
+    if is_connected:
         logging.info("[RUNNING ON-LINE]")
-        if ssid is not None:
-            if AUTO_CONNECT_TO_WIFI_AP:
-                if AUTO_START_UMQTT:
-                    logging.info("[AUTO_START_UMQTT]")
-                    if SEND_LOG_BY_UMQTT:
-                        logging.broker = broker
-                    from mp_mqtt import start_mqtt_get
-                    asyncio.create_task(start_mqtt_get(broker))
-            if f_auto_start_webapp:
-                logging.info("[AUTO_START_WEBAPP]")
-                f_start_loop = False
-                from web_app.web_app import application_mode
-                asyncio.create_task(application_mode(broker))
+        set_rtc()
+        if AUTO_UPDATE_FROM_GIT:
+            import mp_git
+            mp_git.main()
+        if AUTO_CONNECT_TO_WIFI_AP:
+            if AUTO_START_UMQTT:
+                logging.info("[AUTO_START_UMQTT]")
+                if SEND_LOG_BY_UMQTT:
+                    logging.broker = broker
+                from mp_mqtt import start_mqtt_get
+                asyncio.create_task(start_mqtt_get(broker))
+        if f_auto_start_webapp:
+            logging.info("[AUTO_START_WEBAPP]")
+            f_start_loop = False
+            from web_app.web_app import application_mode
+            asyncio.create_task(application_mode(broker))
     else:
         logging.info("[RUNNING OFF-LINE]")
 
