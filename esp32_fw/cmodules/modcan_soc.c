@@ -144,7 +144,7 @@ static mp_obj_t can_scan_msg_id(void) {
     twai_read_alerts(&alerts_triggered, pdMS_TO_TICKS(POLLING_SCAN_RATE_MS));
     twai_status_info_t twaistatus;
     twai_get_status_info(&twaistatus);
-    char separator = ',';
+    char separator = ',/n';
     size_t size_str = 512;
     char out_string[size_str];
     size_t index = 0;
@@ -159,7 +159,7 @@ static mp_obj_t can_scan_msg_id(void) {
                 for (int i = 0; i < message.data_length_code; i++) {
                     index += snprintf(out_string + index, size_str - index, ",%02x", message.data[i]);
             }
-            index += snprintf(out_string + index, size_str - index, "%s/n", separator);
+            index += snprintf(out_string + index, size_str - index, "%s", separator);
         }
     }
 
@@ -179,7 +179,6 @@ static MP_DEFINE_CONST_FUN_OBJ_0(can_scan_msg_id_obj, can_scan_msg_id);
 // This is the function which will be called from Python as esp32_soc.read_soc_level() return soc from can PYLONTECH.
 static mp_obj_t can_read_msg_id(mp_obj_t identifier_obj) {
     int identifier = mp_obj_get_int(identifier_obj);
-    int data_byte_number = mp_obj_get_int(data_byte_number_obj);
     // Check if alert happened
     uint32_t alerts_triggered;
     twai_read_alerts(&alerts_triggered, pdMS_TO_TICKS(POLLING_RATE_MS));
@@ -196,10 +195,10 @@ static mp_obj_t can_read_msg_id(mp_obj_t identifier_obj) {
         twai_message_t message;
         while (twai_receive(&message, 0) == ESP_OK) {
            if (message.identifier == identifier) {
-                index += snprintf(out_string + index, size_str - index, "%lx", message.identifier);
+                index += snprintf(out_string + index, size_str - index, "%d", message.identifier);
                 if (!(message.rtr)) {
                     for (int i = 0; i < message.data_length_code; i++) {
-                        index += snprintf(out_string + index, size_str - index, ",%02x", message.data[i]);
+                        index += snprintf(out_string + index, size_str - index, ",%d", message.data[i]);
                 }
                 //index += snprintf(out_string + index, size_str - index, "%s/n", separator);
            }
