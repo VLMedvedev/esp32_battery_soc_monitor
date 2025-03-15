@@ -6,7 +6,7 @@ import time
 import machine
 from configs.constants_saver import ConstansReaderWriter
 from configs.sys_config import *
-from configs.wifi_ap_config import PASSWORD
+from configs.wifi_config import PASSWORD
 
 WIFI_MAX_ATTEMPTS = 3
 AP_TEMPLATE_PATH = "/wifi_ap"
@@ -91,7 +91,7 @@ def connect_to_wifi_ap():
         mod_name = "configs.wifi_ap_config"
         obj = __import__(mod_name)
         del sys.modules[mod_name]
-        from configs.wifi_ap_config import SSID, PASSWORD
+        from configs.wifi_config import SSID, PASSWORD
         ssid = SSID
         password = PASSWORD
         print(f"connect to ssid {ssid} and passwd {password}")

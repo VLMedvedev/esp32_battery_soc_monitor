@@ -7,7 +7,7 @@ import time
 # Settings
 from constants import *
 from configs.can_bus_config import CAN_SOC_CHECK_PERIOD_SEC
-from configs.wifi_ap_config import SSID
+from configs.wifi_config import SSID
 from mp_can import can_init, can_id_scan, can_soc_read
 from mp_button import button_controller
 

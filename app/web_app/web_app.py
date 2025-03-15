@@ -4,7 +4,7 @@ from phew import logging, server
 from phew.template import render_template
 from configs.sys_config import *
 from configs.hw_config import HW_LED_PIN
-from configs.wifi_ap_config import SSID
+from configs.wifi_config import SSID
 import machine
 import utime
 import os
