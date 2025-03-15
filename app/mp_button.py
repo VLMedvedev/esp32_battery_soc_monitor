@@ -54,7 +54,7 @@ def button_controller(broker):
                 broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_RELE_ON)
             elif btn_number == HW_BT_LEFT_UP:
                 broker.publish(TOPIC_COMMAND_SCAN_CAN, None)
-                broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_WIFI_INFO)
+               # broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_WIFI_INFO)
         else:
             broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_SETTINGS)
 

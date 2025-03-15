@@ -169,6 +169,7 @@ async def controller_processing():
             logging.info(f"Begin scan CAN")
             msg_id_list = can_id_scan()
             logging.info(f"Scan CAN msg_id_list {msg_id_list} ")
+            broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_WIFI_INFO)
         if topic == TOPIC_COMMAND_VIEW_MODE:
             if message == VIEW_MODE_SETTING_DOWN_OFF_LEVEL:
                 oled.draw_setting_level(off_level, button_group="down")
