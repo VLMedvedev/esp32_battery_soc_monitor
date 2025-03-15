@@ -112,7 +112,7 @@ async def can_processing():
         await asyncio.sleep(CAN_SOC_CHECK_PERIOD_SEC)
 
 async def controller_processing():
-    global  off_level, on_level, rele_mode, f_rele_is_on, screen_timer, settings_mode, f_auto_start_oled, f_reset, ip_address, wifi_mode, button_controller: BUTTON_CONTROLLER
+    global  off_level, on_level, rele_mode, f_rele_is_on, screen_timer, settings_mode, f_auto_start_oled, f_reset, ip_address, wifi_mode, button_controller
     logging.info("[controller_processing]")
     queue = RingbufQueue(20)
     if f_auto_start_oled:
