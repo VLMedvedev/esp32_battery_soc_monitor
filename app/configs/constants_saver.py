@@ -121,7 +121,8 @@ class ConstansReaderWriter():
                 f.write(str_wr)
            #     print(str_wr)
             f.flush()
-      #  print(f"Constants saved to file {self.file_config_name}")
+
+        print(f"Constants saved to file {self.file_config_name}")
 
 
 if __name__ == "__main__":

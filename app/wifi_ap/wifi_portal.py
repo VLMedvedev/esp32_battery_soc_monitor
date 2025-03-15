@@ -49,7 +49,7 @@ def setup_wifi_mode():
     def ap_configure(request):
         print("Saving wifi credentials...")
         #os.chdir("/configs")
-        crw = ConstansReaderWriter("wifi_ap_config")
+        crw = ConstansReaderWriter("wifi_config")
         update_config = request.form
         print(update_config)
         crw.set_constants_from_config_dict(update_config)
@@ -90,7 +90,7 @@ def connect_to_wifi_ap():
     try:
         print("Testing saved wifi credentials...")
         import sys
-        mod_name = "configs.wifi_ap_config"
+        mod_name = "configs.wifi_config"
         obj = __import__(mod_name)
         del sys.modules[mod_name]
         from configs.wifi_config import SSID, PASSWORD
