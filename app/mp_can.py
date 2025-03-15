@@ -7,7 +7,7 @@ from configs.can_bus_config import *
 def can_id_scan():
     print("start scan can id")
     counter = 0
-    while counter < 16:
+    while counter < 5:
         msg_id_list = esp32_soc.scan_can_id()
        # print(f"msg_id_list  {msg_id_list}")
         logging.info(f"msg_id_list {msg_id_list}")

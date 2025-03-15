@@ -159,6 +159,10 @@ async def controller_processing():
                 if len(c_dict) > 0:
                     f_reset = True
                     broker.publish(EVENT_TYPE_CONFIG_UPDATED_MQTT, c_dict)
+        if topic == TOPIC_COMMAND_SCAN_CAN:
+            global msg_id_list
+            screen_timer = SCREEN_TIMER_SEC
+            msg_id_list = can_id_scan()
         if topic == TOPIC_COMMAND_VIEW_MODE:
             if message == VIEW_MODE_SETTING_DOWN_OFF_LEVEL:
                 oled.draw_setting_level(off_level, button_group="down")
@@ -175,10 +179,7 @@ async def controller_processing():
             elif message == VIEW_MODE_RELE_ON:
                 oled.draw_on()
             elif message == VIEW_MODE_WIFI_INFO:
-                global msg_id_list
-                msg_id_list = can_id_scan()
                 oled.view_info(wifi_mode, ip_address)
-
             elif message == VIEW_MODE_WIFI_OFF:
                 oled.view_info(WIFI_MODE_OFF, None)
             elif message == VIEW_MODE_WIFI_AP_ON:
@@ -325,7 +326,7 @@ async def main():
                 machine_reset()
     time.sleep(2)
 
-    asyncio.create_task(can_processing())
+   # asyncio.create_task(can_processing())
 
     logging.info(f"ip_addres: {ip_address}")
     # Main loop

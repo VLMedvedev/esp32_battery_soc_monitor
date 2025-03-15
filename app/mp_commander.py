@@ -127,7 +127,7 @@ def set_wifi_mode(wifi_mode):
         cr1 = ConstansReaderWriter("wifi_ap_config")
         c_dict1 = cr1.get_dict()
         print(c_dict1)
-        const_dict = {'SSID': ""}
+        const_dict = {'SSID': "0"}
         cr1.set_constants_from_config_dict(const_dict)
         logging.info(f"save to file  wifi_ap_config")
 
