@@ -211,6 +211,10 @@ async def controller_processing():
                 off_level = c_dict.get("OFF_LEVEL", 10)
                 on_level = c_dict.get("ON_LEVEL", 98)
                 rele_mode = c_dict.get("MODE", RELE_BATTERY_LEVEL)
+                screen_timer = SCREEN_TIMER_SEC
+                # settings_mode = True
+                logging.info(f"updated off_level {off_level}, on_level {on_level}, rele_mode {rele_mode}")
+
             elif command_type == TOPIC_COMMAND_PRESS_BUTTON:
                # c_dict = {"BUTTON_NUMBER":12, "TYPE_PRESS": "long_press_button"} #press_button
                 event_type = c_dict.get("TYPE_PRESS", None)
