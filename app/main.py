@@ -168,7 +168,7 @@ async def controller_processing():
             global msg_id_list
             screen_timer = SCREEN_TIMER_SEC
             logging.info(f"Begin scan CAN")
-            msg_id_list = await can_id_scan()
+            msg_id_list = can_id_scan()
             logging.info(f"Scan CAN msg_id_list {msg_id_list} ")
             broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_WIFI_INFO)
         if topic == TOPIC_COMMAND_VIEW_MODE:
