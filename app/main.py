@@ -212,6 +212,7 @@ async def controller_processing():
                 on_level = c_dict.get("ON_LEVEL", 98)
                 rele_mode = c_dict.get("MODE", RELE_BATTERY_LEVEL)
             elif command_type == TOPIC_COMMAND_PRESS_BUTTON:
+               # c_dict = {"BUTTON_NUMBER":12, "TYPE_PRESS": "long_press_button"} #press_button
                 event_type = c_dict.get("TYPE_PRESS", None)
                 btn_number = c_dict.get("BUTTON_NUMBER", None)
                 if btn_number is not None and event_type is not None:
