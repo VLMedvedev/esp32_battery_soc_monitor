@@ -17,7 +17,7 @@ if AUTO_CONNECT_TO_WIFI_AP:
             f_start_loop = False
             webrepl.start()
 
-#gc.set_threshold(50000)
+gc.set_threshold(50000)
 gc.collect()
 gc.enable()
 
