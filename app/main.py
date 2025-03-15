@@ -334,7 +334,7 @@ async def main():
                 machine_reset()
     time.sleep(2)
 
-   # asyncio.create_task(can_processing())
+    asyncio.create_task(can_processing())
 
     logging.info(f"ip_addres: {ip_address}")
     # Main loop
