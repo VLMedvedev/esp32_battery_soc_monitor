@@ -9,7 +9,7 @@ from constants import *
 from configs.can_bus_config import CAN_SOC_CHECK_PERIOD_SEC
 from configs.wifi_config import SSID
 from mp_can import can_init, can_id_scan, can_soc_read
-from mp_button import button_controller
+from mp_button import BUTTON_CONTROLLER
 import gc
 gc.threshold(50000)
 # gc.collect()
@@ -31,6 +31,8 @@ f_auto_start_oled = AUTO_START_OLED
 wifi_mode = None
 f_reset = False
 msg_id_list = None
+
+button_controller = None
 
 from mp_commander import (set_level_to_config_file,
                           set_rele_mode_to_config_file,
@@ -110,7 +112,7 @@ async def can_processing():
         await asyncio.sleep(CAN_SOC_CHECK_PERIOD_SEC)
 
 async def controller_processing():
-    global off_level, on_level, rele_mode, f_rele_is_on, screen_timer, settings_mode, f_auto_start_oled, f_reset, ip_address, wifi_mode
+    global  off_level, on_level, rele_mode, f_rele_is_on, screen_timer, settings_mode, f_auto_start_oled, f_reset, ip_address, wifi_mode, button_controller: BUTTON_CONTROLLER
     logging.info("[controller_processing]")
     queue = RingbufQueue(20)
     if f_auto_start_oled:
@@ -201,10 +203,19 @@ async def controller_processing():
         if topic == EVENT_TYPE_CAN_SOC_READ_OLED:
             oled.draw_charge_level(message, f_rele_is_on)
         if topic == EVENT_TYPE_MQTT_IN_COMMAND:
-            c_dict = mqtt_in_command(message)
-            off_level = c_dict.get("OFF_LEVEL", 10)
-            on_level = c_dict.get("ON_LEVEL", 98)
-            rele_mode = c_dict.get("MODE", RELE_BATTERY_LEVEL)
+            command_type, c_dict = mqtt_in_command(message)
+            #if command_type in ["app_config"]:
+            if command_type == "app_config":
+                cr = ConstansReaderWriter(command_type)
+                cr.set_constants_from_config_dict(const_dict)
+                off_level = c_dict.get("OFF_LEVEL", 10)
+                on_level = c_dict.get("ON_LEVEL", 98)
+                rele_mode = c_dict.get("MODE", RELE_BATTERY_LEVEL)
+            elif command_type == TOPIC_COMMAND_PRESS_BUTTON:
+                event_type = c_dict.get("TYPE_PRESS", None)
+                btn_number = c_dict.get("BUTTON_NUMBER", None)
+                if btn_number is not None and event_type is not None:
+                    button_controller.bt_pressed(btn_number, event_type)
 
         await asyncio.sleep(0.1)
 
@@ -272,7 +283,7 @@ async def main():
         loop.run_forever()
         return None
 
-    global off_level, on_level, rele_mode, f_rele_is_on, f_auto_start_oled, ip_address, broker, wifi_mode
+    global off_level, on_level, rele_mode, f_rele_is_on, f_auto_start_oled, ip_address, broker, wifi_mode, button_controller
     file_config_name = "app_config"
     cr = ConstansReaderWriter(file_config_name)
     c_dict = cr.get_dict()
@@ -308,7 +319,7 @@ async def main():
 
     # Main loop
     asyncio.create_task(controller_processing())
-    button_controller(broker)
+    button_controller = BUTTON_CONTROLLER(broker)
     #if f_auto_start_oled:
     asyncio.create_task(start_screen_timer())
     time.sleep(2)

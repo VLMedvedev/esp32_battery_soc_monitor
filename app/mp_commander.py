@@ -1,26 +1,26 @@
 from constants import (TOPIC_COMMAND_LEVEL_UP, TOPIC_COMMAND_LEVEL_DOWN,
                        RELE_BATTERY_LEVEL, RELE_ALWAYS_ON, RELE_ALWAYS_OFF,
-                       WIFI_MODE_OFF, WIFI_MODE_AP,WIFI_MODE_CLIENT)
+                       WIFI_MODE_OFF, WIFI_MODE_AP,WIFI_MODE_CLIENT,
+                       TOPIC_COMMAND_SCAN_CAN)
 from configs.constants_saver import ConstansReaderWriter
 from phew import logging
 
 def mqtt_in_command(msg_tuple):
     import json
     try:
-        file_config_name = msg_tuple[0]
+        command_type = msg_tuple[0]
         const_dict_str = msg_tuple[1]
-        print(f"file_config_name {file_config_name}, const_dict {const_dict_str}")
-        if file_config_name in ["app_config"]:
+        try:
             const_dict_str  = const_dict_str.replace("'", '"')
             const_dict = json.loads(const_dict_str)
-            cr = ConstansReaderWriter(file_config_name)
-            cr.set_constants_from_config_dict(const_dict)
-            logging.info(f"[mqtt_in_command] save to file {file_config_name}  {const_dict}")
-            return const_dict
-        return {}
+        except ValueError:
+            return "", {}
+
+        logging.info(f"[mqtt_in_command] command_type {command_type}  {const_dict}")
+        return command_type, const_dict
     except Exception as e:
         logging.error(f"[mqtt_in_command] err  {e}")
-        return {}
+        return "", {}
 
 def set_rele_on_off(pin_rele, f_rele_is_on):
     logging.info(f"change state rele {f_rele_is_on}")
@@ -153,3 +153,4 @@ def set_wifi_mode(wifi_mode):
     cr.set_constants_from_config_dict(const_dict)
     logging.info(f"save to file {file_config_name}")
     return const_dict
+

@@ -40,6 +40,7 @@ TOPIC_COMMAND_LEVEL_UP = "level_up"
 TOPIC_COMMAND_LEVEL_DOWN = "level_down"
 TOPIC_COMMAND_DRAW_LEVEL = "draw_level"
 TOPIC_COMMAND_SCAN_CAN = "scan_can"
+TOPIC_COMMAND_PRESS_BUTTON = "press_button"
 
 
 
