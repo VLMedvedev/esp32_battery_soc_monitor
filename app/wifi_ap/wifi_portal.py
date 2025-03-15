@@ -42,6 +42,7 @@ def setup_wifi_mode():
         logging.info(f"AP: {ap_str} passwd {PASSWORD}")
         return render_template(f"{AP_TEMPLATE_PATH}/index.html",
                                ap_str = ap_str,
+                               ap_name = APP_NAME,
                                passwd = PASSWORD,
                                replace_symbol=False)
 
