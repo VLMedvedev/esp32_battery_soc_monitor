@@ -127,6 +127,7 @@ async def controller_processing():
     broker.subscribe(TOPIC_COMMAND_RELE_MODE, queue)
     broker.subscribe(TOPIC_COMMAND_LEVEL_DOWN, queue)
     broker.subscribe(TOPIC_COMMAND_LEVEL_UP, queue)
+    broker.subscribe(TOPIC_COMMAND_SCAN_CAN, queue)
     broker.subscribe(EVENT_TYPE_MQTT_IN_COMMAND, queue)
     broker.subscribe(EVENT_TYPE_CONFIG_UPDATED_WEB, queue)
     async for topic, message in queue:
