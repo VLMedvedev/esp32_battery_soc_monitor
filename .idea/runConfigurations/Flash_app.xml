@@ -1,8 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Flash app" type="micropython-tools-configuration-type" factoryName="micropython-tools-flash-configuration">
-    <option name="path" value="$PROJECT_DIR$/app" />
-    <option name="runReplOnSuccess" value="true" />
-    <option name="synchronize" value="true" />
-    <method v="2" />
-  </configuration>
-</component>

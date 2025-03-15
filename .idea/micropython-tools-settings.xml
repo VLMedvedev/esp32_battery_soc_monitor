@@ -2,6 +2,8 @@
 <project version="4">
   <component name="MicroPythonTools">
     <option name="activeStubsPackage" value="micropython-v1_24_1-esp32-esp32_generic-stubs" />
+    <option name="areStubsEnabled" value="false" />
+    <option name="cachedFTPScriptPath" />
     <option name="filterManufacturers" value="false" />
     <option name="pluginEnabled" value="true" />
     <option name="portName" value="/dev/ttyACM0" />
