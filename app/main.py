@@ -10,6 +10,10 @@ from configs.can_bus_config import CAN_SOC_CHECK_PERIOD_SEC
 from configs.wifi_config import SSID
 from mp_can import can_init, can_id_scan, can_soc_read
 from mp_button import button_controller
+import gc
+gc.threshold(50000)
+# gc.collect()
+gc.enable()
 
 broker = Broker()
 
@@ -205,7 +209,8 @@ async def start_screen_timer():
     logging.info("[start_screen_timer]")
     while True:
         await asyncio.sleep(1)
-       # logging.info(f"timer screen... {screen_timer}")
+        gc.collect()
+        # logging.info(f"timer screen... {screen_timer}")
         if screen_timer == 1:
             logging.info(f"redraw screen... reset {f_reset}")
             if msg_id_list is not None:

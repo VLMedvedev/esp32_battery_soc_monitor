@@ -1,10 +1,10 @@
 # highly recommended to set a lowish garbage collection threshold
 # to minimise memory fragmentation as we sometimes want to
 # allocate relatively large blocks of ram.
-import gc
-gc.threshold(50000)
-gc.collect()
-gc.enable()
+# import gc
+# gc.threshold(50000)
+# gc.collect()
+# gc.enable()
 
 from configs.sys_config import AUTO_START_WEBREPL, AUTO_CONNECT_TO_WIFI_AP
 from wifi_ap.wifi_portal import connect_to_wifi_ap
