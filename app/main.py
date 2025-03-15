@@ -207,7 +207,7 @@ async def controller_processing():
             #if command_type in ["app_config"]:
             if command_type == "app_config":
                 cr = ConstansReaderWriter(command_type)
-                cr.set_constants_from_config_dict(const_dict)
+                cr.set_constants_from_config_dict(c_dict)
                 off_level = c_dict.get("OFF_LEVEL", 10)
                 on_level = c_dict.get("ON_LEVEL", 98)
                 rele_mode = c_dict.get("MODE", RELE_BATTERY_LEVEL)
