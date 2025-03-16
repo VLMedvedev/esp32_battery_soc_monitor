@@ -347,7 +347,7 @@ async def main():
             if not is_connected:
                 logging.info("[AUTO_RESTART_IF_NO_WIFI]")
                 await asyncio.sleep(20)
-                #machine_reset()
+                machine_reset()
     time.sleep(2)
 
     asyncio.create_task(can_processing())
