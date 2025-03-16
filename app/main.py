@@ -350,7 +350,7 @@ async def main():
                 broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_RESET)
                 await asyncio.sleep(20)
               #  broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_RESET)
-                machine_reset()
+                #machine_reset()
     time.sleep(2)
 
     asyncio.create_task(can_processing())

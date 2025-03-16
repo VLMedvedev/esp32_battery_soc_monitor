@@ -102,10 +102,10 @@ def application_mode(broker):
     def app_reset(request):
         # Deleting the WIFI configuration file will cause the device to reboot as
         # the access point and request new configuration.
-        crw = ConstansReaderWriter("wifi_ap_config")
+        crw = ConstansReaderWriter("wifi_config")
         update_config_dict= {
-            "SSID": "",
-            "PASSWORD": "",
+            "SSID": "_",
+            "PASSWORD": "1234",
         }
         crw.set_constants_from_config_dict(update_config_dict)
         # Reboot from new thread after we have responded to the user.

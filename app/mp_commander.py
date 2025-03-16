@@ -124,12 +124,12 @@ def set_wifi_mode(wifi_mode):
                         'SEND_LOG_BY_UMQTT': False,
                         }
 
-        cr1 = ConstansReaderWriter("wifi_ap_config")
+        cr1 = ConstansReaderWriter("wifi_config")
         c_dict1 = cr1.get_dict()
         print(c_dict1)
-        const_dict = {'SSID': "0"}
+        const_dict = {'SSID': "_"}
         cr1.set_constants_from_config_dict(const_dict)
-        logging.info(f"save to file  wifi_ap_config")
+        logging.info(f"save to file  wifi_config")
 
     elif wifi_mode == WIFI_MODE_CLIENT:
         print(f"wifi_mode {wifi_mode} client")
