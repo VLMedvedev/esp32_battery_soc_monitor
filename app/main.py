@@ -288,7 +288,7 @@ async def main():
         loop.run_forever()
         return None
 
-    global off_level, on_level, rele_mode, f_rele_is_on, f_auto_start_oled, ip_address, broker, wifi_mode, button_controller
+    global off_level, on_level, rele_mode, f_rele_is_on, f_auto_start_oled, ip_address, broker, wifi_mode, button_controller, screen_timer
     file_config_name = "app_config"
     cr = ConstansReaderWriter(file_config_name)
     c_dict = cr.get_dict()
@@ -345,6 +345,7 @@ async def main():
             setup_wifi_mode()
         else:
             if not is_connected:
+                screen_timer = 30
                 logging.info("[AUTO_RESTART_IF_NO_WIFI]")
                 broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_RESET)
                 await asyncio.sleep(20)
