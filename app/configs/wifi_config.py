@@ -1,2 +1,2 @@
 SSID = "_"
-PASSWORD =  "7KBBBLX7FQ"
+PASSWORD =  "passwd"
