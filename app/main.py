@@ -316,9 +316,8 @@ async def main():
             ip_address = get_ip_address()
         else:
             ip_address = None
-        if status != 201:
-            ssid = SSID
-        else:
+        ssid = SSID
+        if status == 201:
             ssid = None
         f_auto_start_oled = AUTO_START_OLED
 
