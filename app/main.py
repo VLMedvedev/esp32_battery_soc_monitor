@@ -317,8 +317,8 @@ async def main():
         else:
             ip_address = None
         ssid = SSID
-        if status == 201:
-            ssid = None
+        # if status == 201:
+        #     ssid = None
         f_auto_start_oled = AUTO_START_OLED
 
     # Main loop
