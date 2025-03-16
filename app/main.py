@@ -346,7 +346,9 @@ async def main():
         else:
             if not is_connected:
                 logging.info("[AUTO_RESTART_IF_NO_WIFI]")
+                broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_RESET)
                 await asyncio.sleep(20)
+              #  broker.publish(TOPIC_COMMAND_VIEW_MODE, VIEW_MODE_RESET)
                 machine_reset()
     time.sleep(2)
 
