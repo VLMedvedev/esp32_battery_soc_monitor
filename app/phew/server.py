@@ -297,9 +297,9 @@ async def _handle_request(reader, writer):
         await writer.drain()
   elif type(response.body).__name__ == "generator":
     # generator
-  #  print(f"generator resp.body {response.body}")
+    #print(f"generator resp.body {response.body}")
     for chunk in response.body:
-    #  print(f"generator chunk {chunk}")
+      print(f"generator chunk {chunk}")
       writer.write(chunk)
       await writer.drain()
   else:
