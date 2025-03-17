@@ -332,11 +332,14 @@ async def main():
     f_start_loop = True
     f_auto_start_webapp = AUTO_START_WEBAPP
     f_auto_start_oled = True
+
     if AUTO_START_WIFI_AP:
         logging.info("[AUTO_START_WIFI_AP]")
-        f_auto_start_webapp = True
-        f_start_loop = True
         start_ap()
+        logging.info("[AUTO_START_WEBAPP]")
+        f_start_loop = False
+        from web_app.web_app import application_mode
+        asyncio.create_task(application_mode(broker))
     elif AUTO_CONNECT_TO_WIFI_AP:
         if ssid is None:
             logging.info("[AUTO_START_SETUP_WIFI]")
