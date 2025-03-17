@@ -81,7 +81,7 @@ def application_mode(broker):
     #async def app_get_soc(request):
     def app_get_soc(request):
         global soc_level
-        print(f"soc request: {request}")
+    #    print(f"soc request: {request}")
         # Not particularly reliable but uses built in hardware.
         # Demos how to incorporate senasor data into this application.
         # The front end polls this route and displays the output.
@@ -341,7 +341,7 @@ def application_mode(broker):
         return mode_str, val_on, val_off
 
     def app_config_page(request):
-        print(request)
+     #   print(request)
         if request.method == 'GET':
             mode_str, val_on, val_off = get_app_configs()
            # print(mode_str, val_on, val_off)
