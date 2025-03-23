@@ -7,7 +7,7 @@
 # gc.enable()
 
 from configs.sys_config import AUTO_START_WEBREPL, AUTO_CONNECT_TO_WIFI_AP
-from wifi_ap.wifi_portal import connect_to_wifi_ap
+from wifi_portal import connect_to_wifi_ap
 """Main function. Runs after board boot, before main.py
 Connects to Wi-Fi and checks for latest git version.
 """

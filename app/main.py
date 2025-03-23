@@ -2,7 +2,7 @@ import asyncio
 from phew import logging, get_ip_address
 from primitives import Broker, RingbufQueue
 from configs.sys_config import *
-from wifi_ap.wifi_portal import connect_to_wifi_ap, setup_wifi_mode, set_rtc, start_ap
+from wifi_portal import connect_to_wifi_ap, setup_wifi_mode, set_rtc, start_ap
 import time
 # Settings
 from constants import *
